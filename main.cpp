@@ -8,10 +8,13 @@
 
 #include <iostream>
 #include "Database.h"
+#include "TransactionHandler.h"
 
 int main(int argc, const char * argv[]) {
     Database database;
     database.CreateFlightReservationDB();
+    
+    TransactionHandler transactionHandler(database);
     
     
     std::cout << "Hello, World!\n";

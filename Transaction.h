@@ -1,5 +1,14 @@
 //Database
 
+/* 
+ 
+ Transaction:
+ - 1. book
+ - 2. cancel
+ - 3. list flights
+ - 4. get reservation sum
+*/
+
 #include <list>
 #include "Instruction.h"
 
