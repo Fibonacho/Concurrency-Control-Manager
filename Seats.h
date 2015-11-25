@@ -1,21 +1,22 @@
 //Database
 
-#include "ITable.h"
+#include "Table.h"
 #include "DList.h"
 
-class Seats: public ITable
+class Seats: public Table
 {
 private:
     struct Seat
     {
-        int sID; //seat ID
-        int fID; //flight ID
+        int mSID; //seat ID
+        int mFID; //flight ID
     };
     
     DList<Seat> mList;
 public:
-    virtual void initialize() override final;
-    bool add(Seat pSeat);
-    virtual bool remove(int id) override final;
+    //void initialize();// override final;
+    
+    bool add(int pFID, int pCount);
+    bool remove(int id);// override final;
     
 };

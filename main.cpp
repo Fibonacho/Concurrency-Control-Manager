@@ -7,23 +7,16 @@
 //
 
 #include <iostream>
-#include "Flights.h"
-#include "DList.h"
+#include "Database.h"
 
 int main(int argc, const char * argv[]) {
-    int a;
-    Flights f;
-    //f.testFunction();
+    Database database;
+    database.CreateFlightReservationDB();
+    
+    
     std::cout << "Hello, World!\n";
-    std::cin >> a;
-    std::cout << (a + 100) << std::endl;
     
-    int arr[] = { 4, 6, 8, 32, 19 } ;
-    DList<int> dlist (arr);
-    dlist.pushBack(11);
-    dlist.pushFront(100);
-    while (dlist)
-        std::cout << dlist.popBack()  << " ";
-    
+    std::cin.get();
+
     return 0;
 }

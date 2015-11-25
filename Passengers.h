@@ -1,21 +1,21 @@
 //Database
 #include "DList.h"
-#include "ITable.h"
+#include "Table.h"
 #include <string>
 
-class Passengers: public ITable
+class Passengers: public Table
 {
 private:
     struct Passenger
     {
-        int mID;
+        int mPID;
         std::string mName;
     };
     
     DList<Passenger> mList;
 public:
-    virtual void initialize() override final;
-    bool add(Passenger pPasseger);
-    virtual bool remove(int id) override final;
+    //void initialize(); // override final;
+    int add(std::string pName);
+    bool remove(int id); // override final;
     
 };

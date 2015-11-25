@@ -21,12 +21,23 @@ Flights::~Flights()
     //destructor
 }
 
-bool Flights::add(int pValue)
+void Flights::display()
+{
+    /*for(auto flight: mList.begin())
+    {
+        std::cout << Flights
+    }*/
+}
+
+int Flights::add(std::string pDestination)
 {
     //first check if the flight has already been inserted
     //add a value to the linked list
-    mList.pushBack(pValue);
-    return true;
+    Flight flight;
+    flight.mID = getNewID();
+    flight.mDestination = pDestination;
+    mList.pushBack(flight);
+    return flight.mID;
 }
 
 int Flights::getRandomfID()
@@ -40,11 +51,3 @@ bool Flights::remove(int id)
     return true;
 }
 
-void Flights::initialize()
-{
-    //function initialize
-    add(getNewID());
-    add(getNewID());
-   // mList.pushBack(4);
-   // mList.pushBack(9);
-}

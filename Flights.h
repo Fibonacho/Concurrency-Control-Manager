@@ -1,16 +1,25 @@
 //Database
 
-#include "ITable.h"
+#include "Table.h"
 #include "DList.h"
+#include <string>
 
-class Flights: public ITable
+class Flights: public Table
 {
 private:
-    DList<int> mList;
+    struct Flight
+    {
+        int mID;
+        std::string mDestination;
+    };
+    
+    DList<Flight> mList;
 public:
-    virtual void initialize() override final;
-    bool add(int pValue);
-    virtual bool remove(int id) override final;
+    //void initialize(); //override final;
+    int add(std::string pDestination); //generates an ID automatically - do we want this?!
+    //bool add(int pID, int pValue); //needs to check for primary key condition
+    bool remove(int id); //override final;
+    void display();
     
     int getRandomfID();
     Flights();

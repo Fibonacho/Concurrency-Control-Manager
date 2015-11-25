@@ -5,5 +5,6 @@
 
 class Instruction
 {
-
+public:
+    void execute();
 };

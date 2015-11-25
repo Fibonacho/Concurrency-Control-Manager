@@ -1,9 +1,9 @@
 //Database
 
-#include "ITable.h"
+#include "Table.h"
 #include "DList.h"
 
-class Reservations: public ITable
+class Reservations: public Table
 {
 private:
     struct Reservation
@@ -14,8 +14,9 @@ private:
     
     DList<Reservation> mList;
 public:
-    virtual void initialize() override final;
+    void initialize(); //override final;
     bool add(Reservation pReservation);
-    virtual bool remove(int id) override final;
+    //bool add(pID, s)
+    bool remove(int id); //override final;
     
 };
