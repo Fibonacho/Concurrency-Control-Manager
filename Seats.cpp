@@ -36,3 +36,19 @@ bool Seats::add(int pFID, int pCount)
     }
     return true; //exception handeling missing
 }
+
+std::list<int> Seats::getSeatList(const int pFID)
+{
+    std::list<int> list;
+    
+    int count  = mList.count();
+    for (int i = 0; i < count; i++)
+        //horrible runtime, sorry for this
+    {
+        Seat seat = mList.returnElement(i);
+        if (seat.mFID == pFID)
+            list.push_back(seat.mSID);
+    }
+    return list;
+}
+

@@ -35,12 +35,28 @@ public:
         return ( !mHead || !mTail );
     }
     
+    int count() const
+    {
+        int c = 0;
+        Node* mNode = mHead;
+        while (mNode != nullptr)
+        {
+            c++;
+            mNode = mNode->mNext;
+        }
+        return c;
+    }
+    
     operator bool() const {
         return !empty();
     }
     
+
     void pushBack(T);
     void pushFront(T);
+    void remove(T);
+    T returnElement(int pIndex);
+    void remove(int pIndex);
     
     T popBack();
     T popFront();
@@ -54,6 +70,29 @@ public:
         }
     }
 };
+
+template <typename T>
+T DList<T>::returnElement(int pIndex)
+{
+    Node* node = mHead;
+    for (int i = 0; i < pIndex; i++)
+    {
+        node = node->mNext;
+    }
+    return node->mData;
+}
+
+template <typename T>
+void DList<T>::remove(int pIndex)
+{
+    //remove object at index pIndex
+}
+
+template <typename T>
+void DList<T>::remove(T)
+{
+    //remove the object T from the list
+}
 
 template <typename T>
 void DList<T>::pushBack(T data)

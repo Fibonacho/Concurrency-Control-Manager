@@ -2,6 +2,7 @@
 
 #include "Table.h"
 #include "DList.h"
+#include <list>
 
 class Seats: public Table
 {
@@ -19,4 +20,5 @@ public:
     bool add(int pFID, int pCount);
     bool remove(int id);// override final;
     
+    std::list<int> getSeatList(const int pFID);
 };
