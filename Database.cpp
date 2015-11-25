@@ -14,7 +14,7 @@ Database::Database()
     
 }
 
-void Database::CreateFlightReservationDB()
+void Database::CreateBookingDB()
 {
     Flights flightTable;
     int TokioID = flightTable.add("Tokio");
@@ -34,7 +34,7 @@ void Database::CreateFlightReservationDB()
     reservationTable.add(BerlinID, 35, pIDEva);
     reservationTable.add(BerlinID, 38, pIDElvis);
     
-    // ----- 2. cancel --------------------------------------------------------------
+    /* ----- 2. cancel --------------------------------------------------------------
     reservationTable.remove(BerlinID, pIDElvis);
     //reservationTable.add(TokioID, 2, pIDElvis);
     // ------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ void Database::CreateFlightReservationDB()
     std::list<int>::iterator i = freeSeats.begin();
     std::advance(i, randomValue);
     reservationTable.book(1, 1, *i);
-    // ------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------  */
     
     mTables.push_back(passengerTable);
     mTables.push_back(flightTable);

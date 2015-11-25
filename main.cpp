@@ -12,14 +12,10 @@
 
 int main(int argc, const char * argv[]) {
     Database database;
-    database.CreateFlightReservationDB();
+    database.CreateBookingDB();
     
     TransactionHandler transactionHandler(database);
     
-    
-    std::cout << "Hello, World!\n";
-    
     std::cin.get();
-
     return 0;
 }

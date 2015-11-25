@@ -17,7 +17,7 @@ private: //public:
 public:
     Database();
 
-    void CreateFlightReservationDB();
+    void CreateBookingDB();
 };
 
 #endif

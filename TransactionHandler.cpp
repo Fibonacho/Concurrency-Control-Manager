@@ -9,3 +9,13 @@ TransactionHandler::~TransactionHandler()
 {
 
 }
+
+void TransactionHandler::stop()
+{
+
+}
+
+void TransactionHandler::start()
+{
+
+}

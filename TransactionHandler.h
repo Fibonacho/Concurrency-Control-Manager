@@ -5,9 +5,12 @@
 class TransactionHandler
 {
 private:
-   // operates on a Database ?!
+    //the transaction handler operates on a specific database
     Database* mDatabase;
 public:
     TransactionHandler(Database &pDatabase);
 	~TransactionHandler();
+    
+    void stop();
+    void start();
 };
