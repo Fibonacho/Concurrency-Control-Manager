@@ -18,12 +18,7 @@
 
 class Table: public StorageUnit
 {
-    //get new primary ID
     int mID;
-    
-    //void initialize();
-    //virtual bool add(int value) = 0;
-    //bool remove(int id);
 public:
     Table(Database& database): StorageUnit(database), mID(0)
     {

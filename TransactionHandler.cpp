@@ -16,7 +16,7 @@ void TransactionHandler::stop()
 
 }
 
-void TransactionHandler::start()
+void TransactionHandler::start(const int pThreads)
 {
 
 }

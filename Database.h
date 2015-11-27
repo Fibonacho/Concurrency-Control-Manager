@@ -1,6 +1,7 @@
 //  ---------------------------------------------------
 //  Database:
-//  - comment todo
+//  - the root of the storage units
+//  - The database has a concurrencyManager where locks are aquired
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -20,15 +21,10 @@
 class Database: public StorageUnit
 {
 private:
-    //LockManager of the database where locks are managed
     ConcurrencyManager mConcurrencyManager;
 public:
     void AddTable(StorageUnit& table);
-    //add bedingung?!
-    //static void CreaetBookingDB();
     Database();
-
-    //void CreateBookingDB(); -> our database is then a specific database of
 };
 
 #endif

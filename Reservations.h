@@ -1,4 +1,17 @@
-//Database
+//  ---------------------------------------------------
+//  Passengers:
+//  - Passengers Table
+//
+//  Advanced Databases: Assignment 3 Concurrency Control
+//
+//
+//  Johanna Wald  1520979  johanna.wald@stud.sbg.ac.at
+//  Elvis Milas   1223926  elvis.milas@stud.sbg.ac.at
+//  Eva Lugstein  1121035  eva.lugstein2@stud.sbg.ac.at
+//  ---------------------------------------------------
+
+#ifndef RESERVATIONS_H
+#define RESERVATIONS_H
 
 #include "Table.h"
 #include "Database.h"
@@ -10,21 +23,15 @@ private:
     //should have a pointer on all valid flight ids and passanger ids
     struct Reservation
     {
-        int* pID; //passenger ID
-        int* sID; //seat ID
-        int* fID; //flight id - can maybe removed later
+        int* pID; // Passenger ID
+        int* sID; // Seat ID
+        int* fID; // Flight ID (redundant data)
     };
-    
-    //DList<Reservation> mList;
 public:
-    
-    //void initialize(); //override final;
-    //bool add(Reservation pReservation);
-    bool add(int& pFID, int* pSID, int& pPID);
-    bool remove(int pFID, int pPID); //override final;
-    
-    //bool add(pID, s)
-    //bool book(int pFID, int pPID);
+    Reservations(Database& database);
+
+    bool add(int* pFID, int* pSID, int* pPID);
+    bool remove(int pFID, int pPID);
     bool book(int& pFID, int& pSID, int& pPID);
     
     // get flights for a specific passenger and a random one
@@ -32,12 +39,7 @@ public:
     void getBookedFlights();
     void printReservationSum();
     void book();
-    void remove(); //removes random reservation
-    
-    //std::list<int> getFlightIDs(const int pPID);
-    
-    //std::list<int> getFreeSeats(std::list<int> &SeatList);
-    
-    Reservations(Database& database);
-
+    void remove();
 };
+
+#endif

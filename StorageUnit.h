@@ -1,6 +1,9 @@
 //  ---------------------------------------------------
 //  StorageUnit:
-//  - represents a storage unit in the databse
+//  - represents a storage unit in the database
+//  - a storage unit has a parent and childs
+//  - if childs are empty the storage unit is a leaf
+//  - if the root is null, the storage unit is the databse itself
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -18,11 +21,8 @@
 class StorageUnit //: public ILockable
 {
 protected:
-    //childs
     std::vector<StorageUnit*> mChilds;
-    //parent of the storage unit, nullptr for the root = the database itself
     StorageUnit* mParent;
-    
     const bool isLeaf() const;
     const bool isRoot() const;
     const unsigned long childCount() const;

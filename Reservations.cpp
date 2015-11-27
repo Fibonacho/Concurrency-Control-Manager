@@ -114,7 +114,7 @@ bool Reservations::book(int& pFID, int& pPID, int& pSID)
 }
 
 void Reservations::book()
-{
+{ //call add
     // ----- 1. book transaction ----------------------------------------------------
     /*std::list<int> slist = seatTable.getSeatList(BerlinID);
      std::list<int> freeSeats = reservationTable.getFreeSeats(slist);
@@ -125,7 +125,7 @@ void Reservations::book()
      reservationTable.book(1, 1, *i);*/
 }
 
-bool Reservations::add(int& pFID, int* pSID, int& pPID)
+bool Reservations::add(int* pFID, int* pSID, int* pPID)
 {
     if (pSID == nullptr)
         return false;
@@ -133,8 +133,8 @@ bool Reservations::add(int& pFID, int* pSID, int& pPID)
     Row<Reservation>* row = new Row<Reservation>(*this);
     //Row<Reservations::Reservation> row(*this);
     row->mData.sID = pSID;
-    row->mData.fID = &pFID;
-    row->mData.pID = &pPID;
+    row->mData.fID = pFID;
+    row->mData.pID = pPID;
     addRow(row);
     
     /*Reservations::Reservation reservation;

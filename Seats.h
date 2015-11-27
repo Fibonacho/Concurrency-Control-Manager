@@ -1,4 +1,17 @@
-//Database
+//  ---------------------------------------------------
+//  Seats:
+//  - Seats Table
+//
+//  Advanced Databases: Assignment 3 Concurrency Control
+//
+//
+//  Johanna Wald  1520979  johanna.wald@stud.sbg.ac.at
+//  Elvis Milas   1223926  elvis.milas@stud.sbg.ac.at
+//  Eva Lugstein  1121035  eva.lugstein2@stud.sbg.ac.at
+//  ---------------------------------------------------
+
+#ifndef SEATS_H
+#define SEATS_H
 
 #include "Table.h"
 #include <list>
@@ -7,33 +20,25 @@
 class Seats: public Table
 {
 private:
-    //int mIndex;
     struct Seat
     {
-        int mSID; //seat ID
-        int* mFID; //pointer to the flight ID (in case it changes)
+        int mSID;  // Seat ID
+        int* mFID; // Pointer to flight ID
         
         Seat(int pSID, int* pFID): mSID(pSID), mFID(pFID) {};
         Seat() {};
     };
     
     int* returnSID(StorageUnit* su);
-    //std::list<Seat> mSeatIndizing;
-    //DList<Seat> mList;
-    
 public:
-    //void initialize();// override final;
-    
-    int add(int &pFID); //, int pCount);
+    int add(int &pFID);
     void add(int &pFID, int pCount);
     int* getSeat(int pIndex) const;
-    int* getSeat(int* pFID); //get seat of flight
-    int* getSeat(int pIndex, int* pFID); //get seat number x of flight pFID
+    int* getSeat(int* pFID);
+    int* getSeat(int pIndex, int* pFID);
     int* getSeat();
-    
-    //bool remove(int id);// override final;
-    
-    //std::list<int> getSeatList(const int pFID);
     
     Seats(Database& database);
 };
+
+#endif

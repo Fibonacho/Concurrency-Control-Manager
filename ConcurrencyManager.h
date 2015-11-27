@@ -1,12 +1,19 @@
-//Database
+//  ---------------------------------------------------
+//  ConcurrencyManager:
+//  - will manage the access to the relations by locking and unlocking instructions
+//
+//  Advanced Databases: Assignment 3 Concurrency Control
+//
+//
+//  Johanna Wald  1520979  johanna.wald@stud.sbg.ac.at
+//  Elvis Milas   1223926  elvis.milas@stud.sbg.ac.at
+//  Eva Lugstein  1121035  eva.lugstein2@stud.sbg.ac.at
+//  ---------------------------------------------------
 
 #ifndef CONCURRENCY_MANAGER_H
 #define CONCURRENCY_MANAGER_H
 
-#include "ILocks.h"
 #include "StorageUnit.h"
-
-// will manage the access to the relations by locking and unlocking instructions
 
 enum class LockingMode {
     unlocked = 0,

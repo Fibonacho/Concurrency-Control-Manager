@@ -1,8 +1,8 @@
 //  ---------------------------------------------------
 //  Row:
-//  - is a leaf
-//  - parent is the table
-//  - T is the type of the value
+//  - is the leaf of the store unit tree
+//  - the parent of a row is a table
+//  - T is the type of the value stored in the row
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -23,8 +23,6 @@ class Row: public StorageUnit
 public:
     T mData;
     Row(StorageUnit& table): StorageUnit(table) {};
-    
-    
 };
 
 #endif

@@ -10,15 +10,15 @@
 //  ---------------------------------------------------
 
 #include <iostream>
-
 #include "BookingDatabase.h"
 
 int main(int argc, const char * argv[]) {
-    // initialize the booking database
+    // initialize the booking database (creates the tables)
     BookingDatabase::initializeData();
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandler();
-    BookingDatabase::transactionHandler.start();
+    // start the transaction handler with x threads
+    BookingDatabase::transactionHandler.start(2);
     std::cin.get();
     return 0;
 }
