@@ -1,13 +1,13 @@
 //Database
 
 #include "Table.h"
-#include "DList.h"
-#include <list>
 #include "Database.h"
 
 class Reservations: public Table
 {
 private:
+    
+    //should have a pointer on all valid flight ids and passanger ids
     struct Reservation
     {
         int* pID; //passenger ID
@@ -17,6 +17,7 @@ private:
     
     //DList<Reservation> mList;
 public:
+    
     //void initialize(); //override final;
     //bool add(Reservation pReservation);
     bool add(int& pFID, int* pSID, int& pPID);
@@ -24,7 +25,14 @@ public:
     
     //bool add(pID, s)
     //bool book(int pFID, int pPID);
-    //bool book(int pFID, int pSID, int pPID);
+    bool book(int& pFID, int& pSID, int& pPID);
+    
+    // get flights for a specific passenger and a random one
+    void getBookedFlights(const int pPID);
+    void getBookedFlights();
+    void printReservationSum();
+    void book();
+    void remove(); //removes random reservation
     
     //std::list<int> getFlightIDs(const int pPID);
     

@@ -1,6 +1,7 @@
 #include "Seats.h"
 #include "Row.h"
 #include "Common.h"
+#include <iostream>
 
 Seats::Seats(Database& database): Table(database)
 {

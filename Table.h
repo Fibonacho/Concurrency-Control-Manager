@@ -14,6 +14,7 @@
 #define TABLE_H
 
 #include "StorageUnit.h"
+#include "Database.h"
 
 class Table: public StorageUnit
 {
@@ -24,7 +25,10 @@ class Table: public StorageUnit
     //virtual bool add(int value) = 0;
     //bool remove(int id);
 public:
-    Table(StorageUnit& database): StorageUnit(database), mID(0) {};
+    Table(Database& database): StorageUnit(database), mID(0)
+    {
+        database.AddTable(*this);
+    };
     
     void addRow(StorageUnit* row) {
         //check if id has already been taken!?

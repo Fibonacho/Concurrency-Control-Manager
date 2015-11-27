@@ -10,44 +10,15 @@
 //  ---------------------------------------------------
 
 #include <iostream>
-#include "Database.h"
-#include "Flights.h"
-#include "Passengers.h"
-#include "Seats.h"
-#include "Reservations.h"
-#include "TransactionHandler.h"
+
+#include "BookingDatabase.h"
 
 int main(int argc, const char * argv[]) {
-    std::vector<int> mFlightID;
-    
-    Database database;
-    Flights flightsTable(database); //link reservation and seat table?!
-    int TokioID = flightsTable.add("Tokio");
-    int BerlinID = flightsTable.add("Berlin");
-    mFlightID.push_back(TokioID);
-    mFlightID.push_back(BerlinID);
-    
-    Passengers passengerTable(database);
-    int pIDEva = passengerTable.add("Eva");
-    int pIDElvis = passengerTable.add("Elvis");
-    int pIDJohanna = passengerTable.add("Johanna");
-    
-    Seats seatTable(database);
-    seatTable.add(TokioID, 10);
-    seatTable.add(BerlinID, 20);
-    
-    Reservations reservationTable(database);
-    reservationTable.add(TokioID, seatTable.getSeat(10), pIDEva);
-    
-    // ----- 2. cancel --------------------------------------------------------------
-    // reservationTable.remove(BerlinID, pIDElvis);
-    bool removed = reservationTable.remove(BerlinID, pIDElvis);
-
-    //reservationTable.add(BerlinID, seatTable.getSeat(30), pIDEva);
-    //reservationTable.add(BerlinID, seatTable.getSeat(1), pIDElvis);
-    
-    TransactionHandler transactionHandler(database);
-    
+    // initialize the booking database
+    BookingDatabase::initializeData();
+    // initialize the transaction handler with the 4 transactions
+    BookingDatabase::initializeTransactionHandler();
+    BookingDatabase::transactionHandler.start();
     std::cin.get();
     return 0;
 }

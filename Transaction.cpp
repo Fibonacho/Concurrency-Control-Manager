@@ -4,9 +4,9 @@
 
 void Transaction::execute()
 {
-    for (Instruction instruction : mInstructions)
+    /*for (Instruction instruction : mInstructions)
     {
         //try to
         instruction.execute();
-    }
+    }*/
 }

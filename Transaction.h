@@ -10,12 +10,11 @@
 */
 
 #include <vector>
-#include "Instruction.h"
 
 class Transaction
 {
 private:
-    std::vector<Instruction> mInstructions;
+    //std::vector<Instruction> mInstructions;
 public:
     void execute();
     

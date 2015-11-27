@@ -1,5 +1,7 @@
 #include "Reservations.h"
 #include "Row.h"
+#include "Common.h"
+#include <iostream>
 
 Reservations::Reservations(Database& database): Table(database)
 {
@@ -35,6 +37,39 @@ bool Reservations::remove(int pFID, int pPID)
     return false;
 }
 
+void Reservations::remove()
+{
+    StorageUnit* child = mChilds[RandomInt((int)mChilds.size())];
+    mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
+}
+
+void Reservations::getBookedFlights(const int pPID)
+{
+    for (auto child: mChilds)
+    {
+        std::cout << "List of flights of passenger " << pPID << ": ";
+        Row<Reservations::Reservation>* reservation = static_cast<Row<Reservations::Reservation>*>(child);
+        if (reservation != nullptr)
+        {
+            if (*reservation->mData.pID == pPID)
+                std::cout << *reservation->mData.fID << " " << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Reservations::getBookedFlights()
+{
+    //get random passanger
+    int pid = 0;
+    getBookedFlights(pid);
+}
+
+void Reservations::printReservationSum()
+{
+    std::cout << "Sum of Reservations: " << childCount() << std::endl;
+}
+
 /*
 void Reservations::initialize()
 {
@@ -46,8 +81,8 @@ void Reservations::initialize()
     //more ...
 }*/
 
-//bool Reservations::book(int pFID, int pPID, int pSID)
-//{
+bool Reservations::book(int& pFID, int& pPID, int& pSID)
+{
     /*1. choose a specific passenger and specific flight
     check if passenger already booked the seat for that flight
         if already booked that flight; go back step 1.
@@ -73,10 +108,22 @@ void Reservations::initialize()
     }
     
     //std::list<int> list = getSeats(fid);
-    
+    */
     
     return true;
-}*/
+}
+
+void Reservations::book()
+{
+    // ----- 1. book transaction ----------------------------------------------------
+    /*std::list<int> slist = seatTable.getSeatList(BerlinID);
+     std::list<int> freeSeats = reservationTable.getFreeSeats(slist);
+     srand(time(NULL));
+     int randomValue = rand() % freeSeats.size();         // v1 in the range 0 to 99
+     std::list<int>::iterator i = freeSeats.begin();
+     std::advance(i, randomValue);
+     reservationTable.book(1, 1, *i);*/
+}
 
 bool Reservations::add(int& pFID, int* pSID, int& pPID)
 {
@@ -100,23 +147,11 @@ bool Reservations::add(int& pFID, int* pSID, int& pPID)
     return true;
 }
 
-/*uint Reservations::count() const
-{
-    return mList.count();
-}
+/*
 
 std::list<int> Reservations::getFlightIDs(const int pPID)
 {
-    std::list<int> list;
-    int count  = mList.count();
-    for (int i = 0; i < count; i++)
-    //horrible runtime, sorry for this
-    {
-        Reservation res = mList.returnElement(i);
-        if (res.pID == pPID)
-            list.push_back(res.fID);
-    }
-    return list;
+
 }
 
 std::list<int> Reservations::getFreeSeats(std::list<int> &SeatList)

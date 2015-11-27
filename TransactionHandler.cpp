@@ -1,6 +1,7 @@
 #include "TransactionHandler.h"
+#include "Common.h"
 
-TransactionHandler::TransactionHandler(Database &pDatabase)
+TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
 {
     mDatabase = &pDatabase;
 }
@@ -20,6 +21,7 @@ void TransactionHandler::start()
 
 }
 
-void TransactionHandler::Transaction1() {}
-void TransactionHandler::Transaction2() {}
-void TransactionHandler::Transaction3() {}
+void TransactionHandler::addTransaction(Transaction pTransaction)
+{
+    mTransactions.push_back(pTransaction);
+}

@@ -14,8 +14,6 @@
 #define DATABASE_H
 
 #include <vector>
-#include "Table.h"
-#include "Instruction.h"
 #include "StorageUnit.h"
 #include "ConcurrencyManager.h"
 
@@ -24,11 +22,10 @@ class Database: public StorageUnit
 private:
     //LockManager of the database where locks are managed
     ConcurrencyManager mConcurrencyManager;
-    std::vector<Instruction> mInstructions;
 public:
     void AddTable(StorageUnit& table);
     //add bedingung?!
-    
+    //static void CreaetBookingDB();
     Database();
 
     //void CreateBookingDB(); -> our database is then a specific database of
