@@ -29,7 +29,7 @@ namespace BookingDatabase {
             std::string mDestination;
         };
     public:
-        int add(std::string pDestination);
+        int* add(std::string pDestination);
         void display();
     
         Flights(Database& database);

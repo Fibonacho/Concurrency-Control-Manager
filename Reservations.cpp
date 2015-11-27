@@ -3,7 +3,7 @@
 #include "Common.h"
 #include <iostream>
 
-Reservations::Reservations(Database& database): Table(database)
+BookingDatabase::Reservations::Reservations(Database& database): Table(database)
 {
 }
 
@@ -15,7 +15,7 @@ Reservations::Reservations(Database& database): Table(database)
 }
 */
 
-bool Reservations::remove(int pFID, int pPID)
+bool BookingDatabase::Reservations::remove(int pFID, int pPID)
 {
     for (auto child: mChilds)
     {
@@ -37,13 +37,13 @@ bool Reservations::remove(int pFID, int pPID)
     return false;
 }
 
-void Reservations::remove()
+void BookingDatabase::Reservations::remove()
 {
     StorageUnit* child = mChilds[RandomInt((int)mChilds.size())];
     mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
 }
 
-void Reservations::getBookedFlights(const int pPID)
+void BookingDatabase::Reservations::getBookedFlights(const int pPID)
 {
     for (auto child: mChilds)
     {
@@ -58,14 +58,26 @@ void Reservations::getBookedFlights(const int pPID)
     }
 }
 
-void Reservations::getBookedFlights()
+void BookingDatabase::Reservations::display()
+{
+    std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
+    for(auto res: mChilds)
+    {
+        Row<Reservation>* rowRes = static_cast<Row<Reservation>*>(res);
+        
+        std::cout << "FID: " << rowRes->mData.fID << ", SID: " << rowRes->mData.sID << ", PID: " << rowRes->mData.pID << std::endl;
+    }
+    std::cout << "----------------------------" << std::endl;
+}
+
+void BookingDatabase::Reservations::getBookedFlights()
 {
     //get random passanger
     int pid = 0;
     getBookedFlights(pid);
 }
 
-void Reservations::printReservationSum()
+void BookingDatabase::Reservations::printReservationSum()
 {
     std::cout << "Sum of Reservations: " << childCount() << std::endl;
 }
@@ -81,7 +93,7 @@ void Reservations::initialize()
     //more ...
 }*/
 
-bool Reservations::book(int& pFID, int& pPID, int& pSID)
+bool BookingDatabase::Reservations::book(int& pFID, int& pPID, int& pSID)
 {
     /*1. choose a specific passenger and specific flight
     check if passenger already booked the seat for that flight
@@ -113,7 +125,7 @@ bool Reservations::book(int& pFID, int& pPID, int& pSID)
     return true;
 }
 
-void Reservations::book()
+void BookingDatabase::Reservations::book()
 { //call add
     // ----- 1. book transaction ----------------------------------------------------
     /*std::list<int> slist = seatTable.getSeatList(BerlinID);
@@ -125,7 +137,7 @@ void Reservations::book()
      reservationTable.book(1, 1, *i);*/
 }
 
-bool Reservations::add(int* pFID, int* pSID, int* pPID)
+bool BookingDatabase::Reservations::add(int* pFID, int* pSID, int* pPID)
 {
     if (pSID == nullptr)
         return false;

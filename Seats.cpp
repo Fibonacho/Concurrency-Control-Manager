@@ -67,45 +67,18 @@ int* Seats::getSeat(int pIndex, int* pFID) //get seat number x of flight pFID
     return &a;
 }
 
-int Seats::add(int& pFID) //, int pCount) //pFID as pointer
+int Seats::add(int* pFID) //, int pCount) //pFID as pointer
 {
-    //mSeatIndizing.push_back(Seat(pCount, &pFID));
-    //mIndex += pCount;
-    
-    //for (int i = 0; i < pCount; i++)
-    //{
-        Row<Seat>* row = new Row<Seat>(*this);
-        row->mData.mSID = getNewID();
-        row->mData.mFID = &pFID;
-        addRow(row);
-        
-        /*Seats::Seat seat;
-        seat.mSID = getNewID();
-        seat.mFID = pFID;
-        mList.pushBack(seat);*/
-        std::cout << " Added seat number " << row->mData.mSID << " to the flight " << pFID << std::endl;
-    //}
+    Row<Seat>* row = new Row<Seat>(*this);
+    row->mData.mSID = getNewID();
+    row->mData.mFID = pFID;
+    addRow(row);
+    std::cout << "Added seat " << row->mData.mSID << " (" << &row->mData.mSID << ") to flight " << *pFID << " (" << pFID << ")" << std::endl;
     return row->mData.mSID;
 }
 
-void Seats::add(int &pFID, int pCount)
+void Seats::add(int* pFID, int pCount)
 {
     for (int i = 0; i < pCount; i++)
         add(pFID);
 }
-
-/*std::list<int> Seats::getSeatList(const int pFID)
-{
-    std::list<int> list;
-    
-    int count  = mList.count();
-    for (int i = 0; i < count; i++)
-        //horrible runtime, sorry for this
-    {
-        Seat seat = mList.returnElement(i);
-        if (seat.mFID == pFID)
-            list.push_back(seat.mSID);
-    }
-    return list;
-}*/
-

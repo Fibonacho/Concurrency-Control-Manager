@@ -16,6 +16,12 @@ void TransactionHandler::stop()
 
 }
 
+void TransactionHandler::call()
+{
+    for(auto transaction: mTransactions)
+        transaction();
+}
+
 void TransactionHandler::start(const int pThreads)
 {
 

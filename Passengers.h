@@ -29,6 +29,7 @@ namespace BookingDatabase {
     public:
         Passengers(Database& database);
         int* add(std::string pName);
+        void display();
     };
 }
 

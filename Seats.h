@@ -31,8 +31,8 @@ private:
     
     int* returnSID(StorageUnit* su);
 public:
-    int add(int &pFID);
-    void add(int &pFID, int pCount);
+    int add(int* pFID);
+    void add(int* pFID, int pCount);
     int* getSeat(int pIndex) const;
     int* getSeat(int* pFID);
     int* getSeat(int pIndex, int* pFID);

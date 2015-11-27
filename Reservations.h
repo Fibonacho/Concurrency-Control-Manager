@@ -16,30 +16,36 @@
 #include "Table.h"
 #include "Database.h"
 
-class Reservations: public Table
-{
-private:
-    
-    //should have a pointer on all valid flight ids and passanger ids
-    struct Reservation
+namespace BookingDatabase {
+    class Reservations: public Table
     {
-        int* pID; // Passenger ID
-        int* sID; // Seat ID
-        int* fID; // Flight ID (redundant data)
-    };
-public:
-    Reservations(Database& database);
+    private:
+        struct Reservation
+        {
+            int* pID; // Passenger ID
+            int* sID; // Seat ID
+            int* fID; // Flight ID (redundant data)
+        };
+    public:
+        // List auf Flights
+        std::vector<int*>* mFlightList;
+        // List of Passengers
+        std::vector<int*>* mPassengerList;
+        
+        Reservations(Database& database);
 
-    bool add(int* pFID, int* pSID, int* pPID);
-    bool remove(int pFID, int pPID);
-    bool book(int& pFID, int& pSID, int& pPID);
+        bool add(int* pFID, int* pSID, int* pPID);
+        bool remove(int pFID, int pPID);
+        bool book(int& pFID, int& pSID, int& pPID);
     
-    // get flights for a specific passenger and a random one
-    void getBookedFlights(const int pPID);
-    void getBookedFlights();
-    void printReservationSum();
-    void book();
-    void remove();
-};
+        // get flights for a specific passenger and a random one
+        void getBookedFlights(const int pPID);
+        void getBookedFlights();
+        void printReservationSum();
+        void book();
+        void remove();
+        void display();
+    };
+}
 
 #endif

@@ -16,6 +16,7 @@
 #define ROW_H
 
 #include "StorageUnit.h"
+#include <iostream>
 
 template <typename T>
 class Row: public StorageUnit
@@ -23,6 +24,7 @@ class Row: public StorageUnit
 public:
     T mData;
     Row(StorageUnit& table): StorageUnit(table) {};
+    ~Row() {std::cout << "row destructor " << std::endl;}
 };
 
 #endif

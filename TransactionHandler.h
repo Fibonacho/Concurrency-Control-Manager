@@ -27,5 +27,6 @@ public:
     
     void stop();
     void start(const int pThreads);
+    void call();
     void addTransaction(Transaction pTransaction);
 };

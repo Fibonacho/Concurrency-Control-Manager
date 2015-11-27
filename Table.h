@@ -22,12 +22,12 @@ class Table: public StorageUnit
 public:
     Table(Database& database): StorageUnit(database), mID(0)
     {
-        database.AddTable(*this);
+       // database.AddTable(*this);
     };
     
     void addRow(StorageUnit* row) {
         //check if id has already been taken!?
-        mChilds.push_back(row);
+        this->mChilds.push_back(row);
     }
 protected:
     int getNewID()

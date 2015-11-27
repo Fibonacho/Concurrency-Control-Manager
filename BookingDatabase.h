@@ -32,49 +32,60 @@ namespace BookingDatabase {
     TransactionHandler transactionHandler(database);
     
     std::vector<int*> FlightList;
+    std::vector<int> FlightSeats;
     std::vector<int*> PassengerList;
     int MaxSeatID = 0;
     
-    void addFlight(const std::string pDestination, const int pSeats)
+    void addFlight(std::string pDestination, int pSeats)
     {
-        int FlightID = flightsTable.add(pDestination);
-        seatTable.add(FlightID, pSeats);
-        FlightList.push_back(&FlightID);
+        int* FlightID = flightsTable.add(pDestination);
+        FlightList.push_back(FlightID);
+        FlightSeats.push_back(pSeats);
         MaxSeatID += pSeats;
+        seatTable.add(FlightID, pSeats);
     }
     
     int* getRandomPassenger()
     {
-        return PassengerList[RandomInt((int)PassengerList.size()-1)];
+        int random = RandomInt((int)PassengerList.size()-1);
+        return PassengerList[random];
     }
     
     int* getRandomFlight()
     {
-        return FlightList[RandomInt((int)FlightList.size()-1)];
+        int random = RandomInt((int)FlightList.size()-1);
+        return FlightList[random];
     }
     
     int getRandomSeat()
     {
-        return RandomInt(MaxSeatID);
+        return RandomInt(MaxSeatID)+1;
     }
     
     void initializeData()
     {
         // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
-        addFlight("Tokio", 2);
-        addFlight("New York", 3);
-        addFlight("Berlin", 10);
+        addFlight("Tokio", 1);
+        addFlight("New York", 1);
+        addFlight("Berlin", 2);
+        flightsTable.display();
         
         PassengerList.push_back(passengerTable.add("Eva"));
         PassengerList.push_back(passengerTable.add("Elvis"));
         PassengerList.push_back(passengerTable.add("Johanna"));
+        passengerTable.display();
         
+        reservationTable.mFlightList = &FlightList;
+        reservationTable.mPassengerList = &PassengerList;
+        
+        reservationTable.add(FlightList[0], seatTable.getSeat(getRandomSeat()), PassengerList[2]);
         reservationTable.add(getRandomFlight(), seatTable.getSeat(getRandomSeat()), getRandomPassenger());
+        reservationTable.display();
     }
     
     void removeReservation()
     {
-        // reservationTable.remove(BerlinID, pIDElvis)
+        reservationTable.remove(*getRandomFlight(), *getRandomPassenger());
         reservationTable.remove();
     }
     
@@ -96,12 +107,11 @@ namespace BookingDatabase {
     
     void initializeTransactionHandler()
     {
+        transactionHandler.addTransaction(getReservationSum);
         transactionHandler.addTransaction(removeReservation);
         transactionHandler.addTransaction(getBookedFlights);
-        transactionHandler.addTransaction(getReservationSum);
         transactionHandler.addTransaction(bookFlight);
     }
-
 }
 
 #endif

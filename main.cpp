@@ -13,12 +13,17 @@
 #include "BookingDatabase.h"
 
 int main(int argc, const char * argv[]) {
+    /*StorageUnit* test(nullptr);
+    StorageUnit* a(test);
+    a->add(test);
+    StorageUnit* b(test);*/
+    
     // initialize the booking database (creates the tables)
     BookingDatabase::initializeData();
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandler();
     // start the transaction handler with x threads
-    BookingDatabase::transactionHandler.start(2);
+    BookingDatabase::transactionHandler.call();
     std::cin.get();
     return 0;
 }
