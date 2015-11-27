@@ -1,6 +1,11 @@
 #include "Reservations.h"
+#include "Row.h"
 
-bool Reservations::add(Reservation pReservation)
+Reservations::Reservations(Database& database): Table(database)
+{
+}
+
+/*bool Reservations::add(Reservation pReservation)
 {
     //is id already in the data structure
     mList.pushBack(pReservation);
@@ -28,10 +33,10 @@ void Reservations::initialize()
     reservation.pID = 3; //getRandomPassangerID(); we need a connection to the flight "table"
     //add(passeger);
     //more ...
-}
+}*/
 
-bool Reservations::book(int pFID, int pPID, int pSID)
-{
+//bool Reservations::book(int pFID, int pPID, int pSID)
+//{
     /*1. choose a specific passenger and specific flight
     check if passenger already booked the seat for that flight
         if already booked that flight; go back step 1.
@@ -47,7 +52,7 @@ bool Reservations::book(int pFID, int pPID, int pSID)
                 unlock the seat
                 6. create new row in list reservations with that reservation pID and sID.*/
     
-    int count  = mList.count();
+  /*  int count  = mList.count();
     for (int i = 0; i < count; i++)
     //horrible runtime, sorry for this
     {
@@ -60,21 +65,27 @@ bool Reservations::book(int pFID, int pPID, int pSID)
     
     
     return true;
-}
+}*/
 
-bool Reservations::add(int pFID, int pSID, int pPID)
+bool Reservations::add(int& pFID, int& pSID, int& pPID)
 {
-    Reservations::Reservation reservation;
-    reservation.fID = pFID;
-    reservation.sID = pSID;
-    reservation.pID = pPID;
+    Row<Reservations::Reservation> row(*this);
+    row.mData.sID = &pSID;
+    row.mData.fID = &pFID;
+    row.mData.pID = &pPID;
+    addRow(row);
+    
+    /*Reservations::Reservation reservation;
+    reservation.fID = &pFID;
+    reservation.sID = &pSID;
+    reservation.pID = &pPID;
 
-    mList.pushBack(reservation);
-    std::cout << "Added reservation to seat " << reservation.sID << " for passanger " << reservation.pID << " and flight " << reservation.fID << std::endl;
+    mList.pushBack(reservation);*/
+    std::cout << "Added reservation to seat " << row.mData.sID << " for passanger " << row.mData.pID << " and flight " << row.mData.fID << std::endl;
     return true;
 }
 
-uint Reservations::count() const
+/*uint Reservations::count() const
 {
     return mList.count();
 }
@@ -103,4 +114,4 @@ std::list<int> Reservations::getFreeSeats(std::list<int> &SeatList)
         SeatList.remove(res.sID);
     }
     return SeatList;
-}
+}*/

@@ -1,22 +1,33 @@
 #include "Passengers.h"
+#include "Row.h"
+
+Passengers::Passengers(Database& database): Table(database)
+{
+}
 
 int Passengers::add(std::string pName)
 {
     //is id already in the data structure
-    Passenger passenger;
+    /*Passenger passenger;
     passenger.mPID = getNewID();
     passenger.mName = pName;
     mList.pushBack(passenger);
-    return passenger.mPID;
+    return passenger.mPID;*/
+    
+    Row<Passenger> row(*this);
+    row.mData.mName = pName;
+    row.mData.mPID = getNewID();
+    addRow(row);
+    return row.mData.mPID;
 }
 
-bool Passengers::remove(int id)
+/*bool Passengers::remove(int id)
 {
     //remove an item from the linked list
     return true;
 }
 
-/*void Passengers::initialize()
+void Passengers::initialize()
 {
     //function initialize
     Passengers::Passenger passeger;

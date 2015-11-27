@@ -2,13 +2,13 @@
 
 #include "ConcurrencyManager.h"
 
-bool ConcurrencyManager::getSL()
+bool ConcurrencyManager::getSL(StorageUnit* storageUnit)
 {
   //  SL = true;
     return true;
 }
 
-bool ConcurrencyManager::getXL()
+bool ConcurrencyManager::getXL(StorageUnit* storageUnit)
 {
   //  XL = true;
     return true;

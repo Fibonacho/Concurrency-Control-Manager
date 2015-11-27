@@ -1,4 +1,9 @@
 #include "Seats.h"
+#include "Row.h"
+
+Seats::Seats(Database& database): Table(database)
+{
+}
 
 /*bool Seats::add(Seat pSeat)
 {
@@ -7,11 +12,11 @@
     return true;
 }*/
 
-bool Seats::remove(int id)
+/*bool Seats::remove(int id)
 {
     //remove an item from the linked list
     return true;
-}
+}*/
 
 /*void Seats::initialize()
 {
@@ -24,20 +29,25 @@ bool Seats::remove(int id)
 }
 */
 
-bool Seats::add(int pFID, int pCount)
+bool Seats::add(int& pFID, int pCount) //pFID as pointer
 {
     for (int i = 0; i < pCount; i++)
     {
-        Seats::Seat seat;
+        Row<Seat> row(*this);
+        row.mData.mSID = getNewID();
+        row.mData.mFID = &pFID;
+        addRow(row);
+        
+        /*Seats::Seat seat;
         seat.mSID = getNewID();
         seat.mFID = pFID;
-        mList.pushBack(seat);
-        std::cout << " Added seat number " << seat.mSID << " to the flight " << pFID << std::endl;
+        mList.pushBack(seat);*/
+        std::cout << " Added seat number " << row.mData.mSID << " to the flight " << pFID << std::endl;
     }
     return true; //exception handeling missing
 }
 
-std::list<int> Seats::getSeatList(const int pFID)
+/*std::list<int> Seats::getSeatList(const int pFID)
 {
     std::list<int> list;
     
@@ -50,5 +60,5 @@ std::list<int> Seats::getSeatList(const int pFID)
             list.push_back(seat.mSID);
     }
     return list;
-}
+}*/
 

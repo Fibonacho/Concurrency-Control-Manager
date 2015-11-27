@@ -2,9 +2,9 @@
 
 #include "Flights.h"
 #include <iostream>
+#include "Row.h"
 
-
-Flights::Flights()
+Flights::Flights(Database& database): Table(database)
 {
     //dlist.push_back(11);
     //constructor
@@ -21,26 +21,26 @@ Flights::~Flights()
     //destructor
 }
 
-void Flights::display()
+/*void Flights::display()
 {
-    /*for(auto flight: mList.begin())
+    for(auto flight: mList.begin())
     {
         std::cout << Flights
-    }*/
-}
+    }
+}*/
 
 int Flights::add(std::string pDestination)
 {
-    //first check if the flight has already been inserted
-    //add a value to the linked list
-    Flight flight;
-    flight.mID = getNewID();
-    flight.mDestination = pDestination;
-    mList.pushBack(flight);
-    return flight.mID;
+    // first check if the flight has already been inserted
+    // add a value to the linked list
+    Row<Flight> row(*this);
+    row.mData.mID = getNewID();
+    row.mData.mDestination = pDestination;
+    addRow(row);
+    return row.mData.mID;
 }
 
-int Flights::getRandomfID()
+/*int Flights::getRandomfID()
 {
     return 5; //get a random flight id from the list
 }
@@ -49,5 +49,5 @@ bool Flights::remove(int id)
 {
     //remove an item from the linked list
     return true;
-}
+}*/
 

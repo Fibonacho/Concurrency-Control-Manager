@@ -8,13 +8,19 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-Database::Database()
+Database::Database(): StorageUnit(nullptr) //this is the root = the database
 {
     
     
 }
 
-void Database::CreateBookingDB()
+void Database::AddTable(StorageUnit& table)
+{
+    //StorageUnit storageUnitTable = new StorageUnit(this);
+    mChilds.push_back(&table);
+}
+
+/*void Database::CreateBookingDB()
 {
     Flights flightTable;
     int TokioID = flightTable.add("Tokio");
@@ -34,7 +40,7 @@ void Database::CreateBookingDB()
     reservationTable.add(BerlinID, 35, pIDEva);
     reservationTable.add(BerlinID, 38, pIDElvis);
     
-    /* ----- 2. cancel --------------------------------------------------------------
+     ----- 2. cancel --------------------------------------------------------------
     reservationTable.remove(BerlinID, pIDElvis);
     //reservationTable.add(TokioID, 2, pIDElvis);
     // ------------------------------------------------------------------------------
@@ -55,10 +61,10 @@ void Database::CreateBookingDB()
     std::list<int>::iterator i = freeSeats.begin();
     std::advance(i, randomValue);
     reservationTable.book(1, 1, *i);
-    // ---------------------------------------------------------------------------  */
+    // ---------------------------------------------------------------------------  
     
     mTables.push_back(passengerTable);
     mTables.push_back(flightTable);
     mTables.push_back(seatTable);
     mTables.push_back(reservationTable);
-}
+}*/
