@@ -12,18 +12,12 @@ private:
     {
         int mID;
         std::string mDestination;
+        //std::list<int> mSeats;
     };
-    
-    //DList<Flight> mList;
 public:
+    int add(std::string pDestination);
+    void display();
     
-    //void initialize(); //override final;
-    int add(std::string pDestination); //generates an ID automatically - do we want this?!
-    //bool add(int pID, int pValue); //needs to check for primary key condition
-    //bool remove(int id); //override final;
-    //void display();
-    
-    //int getRandomfID();
     Flights(Database& database);
     ~Flights();
 };

@@ -22,27 +22,12 @@ void Database::AddTable(StorageUnit& table)
 
 /*void Database::CreateBookingDB()
 {
-    Flights flightTable;
-    int TokioID = flightTable.add("Tokio");
-    int BerlinID = flightTable.add("Berlin");
-    
+ 
     Seats seatTable;
     seatTable.add(TokioID, 20);
     seatTable.add(BerlinID, 40);
+ 
     
-    Passengers passengerTable;
-    int pIDEva = passengerTable.add("Eva");
-    int pIDElvis = passengerTable.add("Elvis");
-    int pIDJohanna = passengerTable.add("Johanna");
-    
-    Reservations reservationTable;
-    reservationTable.add(TokioID, 1, pIDEva);
-    reservationTable.add(BerlinID, 35, pIDEva);
-    reservationTable.add(BerlinID, 38, pIDElvis);
-    
-     ----- 2. cancel --------------------------------------------------------------
-    reservationTable.remove(BerlinID, pIDElvis);
-    //reservationTable.add(TokioID, 2, pIDElvis);
     // ------------------------------------------------------------------------------
     
     // ----- 3. list flights --------------------------------------------------------

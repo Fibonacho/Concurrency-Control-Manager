@@ -1,5 +1,6 @@
 #include "Seats.h"
 #include "Row.h"
+#include "Common.h"
 
 Seats::Seats(Database& database): Table(database)
 {
@@ -29,22 +30,67 @@ Seats::Seats(Database& database): Table(database)
 }
 */
 
-bool Seats::add(int& pFID, int pCount) //pFID as pointer
+int* Seats::getSeat(int pIndex) const
 {
-    for (int i = 0; i < pCount; i++)
-    {
-        Row<Seat> row(*this);
-        row.mData.mSID = getNewID();
-        row.mData.mFID = &pFID;
+    StorageUnit* su = mChilds[pIndex];
+    if (su != nullptr)
+        return &static_cast<Row<Seat>*>(su)->mData.mSID;
+    else
+        return nullptr;
+}
+
+int* Seats::returnSID(StorageUnit* su)
+{
+    if (su != nullptr)
+        return &static_cast<Row<Seat>*>(su)->mData.mSID;
+    else
+        return nullptr;
+}
+
+int* Seats::getSeat(int* pFID) //get seat of flight
+{
+    //check for pFID
+    //while ()
+    return returnSID(mChilds[RandomInt(mChilds.size())]);
+}
+
+int* Seats::getSeat()
+{
+    //returns a random seat
+    return returnSID(mChilds[RandomInt(mChilds.size())]);
+}
+
+int* Seats::getSeat(int pIndex, int* pFID) //get seat number x of flight pFID
+{
+    int a;
+    return &a;
+}
+
+int Seats::add(int& pFID) //, int pCount) //pFID as pointer
+{
+    //mSeatIndizing.push_back(Seat(pCount, &pFID));
+    //mIndex += pCount;
+    
+    //for (int i = 0; i < pCount; i++)
+    //{
+        Row<Seat>* row = new Row<Seat>(*this);
+        row->mData.mSID = getNewID();
+        row->mData.mFID = &pFID;
         addRow(row);
         
         /*Seats::Seat seat;
         seat.mSID = getNewID();
         seat.mFID = pFID;
         mList.pushBack(seat);*/
-        std::cout << " Added seat number " << row.mData.mSID << " to the flight " << pFID << std::endl;
-    }
-    return true; //exception handeling missing
+        std::cout << " Added seat number " << row->mData.mSID << " to the flight " << pFID << std::endl;
+    //}
+    return row->mData.mSID;
+}
+
+void Seats::add(int &pFID, int pCount)
+{
+    for (int i = 0; i < pCount; i++)
+        add(pFID);
 }
 
 /*std::list<int> Seats::getSeatList(const int pFID)

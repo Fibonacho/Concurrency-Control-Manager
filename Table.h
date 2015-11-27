@@ -26,9 +26,9 @@ class Table: public StorageUnit
 public:
     Table(StorageUnit& database): StorageUnit(database), mID(0) {};
     
-    void addRow(StorageUnit& row) {
+    void addRow(StorageUnit* row) {
         //check if id has already been taken!?
-        mChilds.push_back(&row);
+        mChilds.push_back(row);
     }
 protected:
     int getNewID()

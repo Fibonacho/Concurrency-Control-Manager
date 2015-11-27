@@ -11,20 +11,31 @@ Reservations::Reservations(Database& database): Table(database)
     mList.pushBack(pReservation);
     return true;
 }
+*/
 
 bool Reservations::remove(int pFID, int pPID)
 {
-    int count  = mList.count();
-    for (int i = 0; i < count; i++)
-    //horrible runtime, sorry for this
+    for (auto child: mChilds)
     {
-        Reservation res = mList.returnElement(i);
-        if ((res.pID == pPID) && (res.fID == pFID))
-            mList.remove(i);
+        Row<Reservation>* reservation = static_cast<Row<Reservation>*>(child);
+        if (reservation != nullptr)
+        {
+            //mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), ' '), mChilds.end());
+            
+            int pID = *reservation->mData.pID;
+            int fID = *reservation->mData.fID;
+            if ((pID == pPID) && (fID == pFID))
+            {
+                mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
+                return true;
+                break;
+            }
+        }
     }
     return false;
 }
 
+/*
 void Reservations::initialize()
 {
     //function initialize
@@ -67,12 +78,16 @@ void Reservations::initialize()
     return true;
 }*/
 
-bool Reservations::add(int& pFID, int& pSID, int& pPID)
+bool Reservations::add(int& pFID, int* pSID, int& pPID)
 {
-    Row<Reservations::Reservation> row(*this);
-    row.mData.sID = &pSID;
-    row.mData.fID = &pFID;
-    row.mData.pID = &pPID;
+    if (pSID == nullptr)
+        return false;
+    
+    Row<Reservation>* row = new Row<Reservation>(*this);
+    //Row<Reservations::Reservation> row(*this);
+    row->mData.sID = pSID;
+    row->mData.fID = &pFID;
+    row->mData.pID = &pPID;
     addRow(row);
     
     /*Reservations::Reservation reservation;
@@ -81,7 +96,7 @@ bool Reservations::add(int& pFID, int& pSID, int& pPID)
     reservation.pID = &pPID;
 
     mList.pushBack(reservation);*/
-    std::cout << "Added reservation to seat " << row.mData.sID << " for passanger " << row.mData.pID << " and flight " << row.mData.fID << std::endl;
+    std::cout << "Added reservation to seat " << *row->mData.sID << " for passanger " << *row->mData.pID << " and flight " << *row->mData.fID << std::endl;
     return true;
 }
 

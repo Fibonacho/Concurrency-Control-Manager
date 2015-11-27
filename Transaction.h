@@ -9,13 +9,13 @@
  - 4. get reservation sum
 */
 
-#include <list>
+#include <vector>
 #include "Instruction.h"
 
 class Transaction
 {
 private:
-    std::list<Instruction> mInstructions;
+    std::vector<Instruction> mInstructions;
 public:
     void execute();
     

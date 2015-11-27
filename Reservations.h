@@ -19,13 +19,12 @@ private:
 public:
     //void initialize(); //override final;
     //bool add(Reservation pReservation);
-    bool add(int& pFID, int& pSID, int& pPID);
+    bool add(int& pFID, int* pSID, int& pPID);
+    bool remove(int pFID, int pPID); //override final;
+    
     //bool add(pID, s)
-    //bool remove(int pFID, int pPID); //override final;
     //bool book(int pFID, int pPID);
     //bool book(int pFID, int pSID, int pPID);
-
-    //uint count() const;
     
     //std::list<int> getFlightIDs(const int pPID);
     

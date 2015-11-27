@@ -13,18 +13,19 @@
 #ifndef STORAGEUNIT_H
 #define STORAGEUNIT_H
 
-#include <list>
+#include <vector>
 
 class StorageUnit //: public ILockable
 {
 protected:
     //childs
-    std::list<StorageUnit*> mChilds;
+    std::vector<StorageUnit*> mChilds;
     //parent of the storage unit, nullptr for the root = the database itself
     StorageUnit* mParent;
     
-    bool isLeaf() const;
-    bool isRoot() const;
+    const bool isLeaf() const;
+    const bool isRoot() const;
+    const unsigned long childCount() const;
 public:
     StorageUnit(StorageUnit* parent);
     virtual ~StorageUnit();

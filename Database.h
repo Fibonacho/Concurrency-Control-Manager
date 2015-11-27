@@ -13,7 +13,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <list>
+#include <vector>
 #include "Table.h"
 #include "Instruction.h"
 #include "StorageUnit.h"
@@ -24,9 +24,10 @@ class Database: public StorageUnit
 private:
     //LockManager of the database where locks are managed
     ConcurrencyManager mConcurrencyManager;
-    std::list<Instruction> mInstructions;
+    std::vector<Instruction> mInstructions;
 public:
     void AddTable(StorageUnit& table);
+    //add bedingung?!
     
     Database();
 

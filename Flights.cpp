@@ -21,23 +21,24 @@ Flights::~Flights()
     //destructor
 }
 
-/*void Flights::display()
+void Flights::display()
 {
-    for(auto flight: mList.begin())
+    for(auto flight: mChilds)
     {
-        std::cout << Flights
+        std::cout << static_cast<Row<Flight>>(*flight).mData.mID << " "
+                  << static_cast<Row<Flight>>(*flight).mData.mDestination << std::endl;
     }
-}*/
+}
 
 int Flights::add(std::string pDestination)
 {
     // first check if the flight has already been inserted
     // add a value to the linked list
-    Row<Flight> row(*this);
-    row.mData.mID = getNewID();
-    row.mData.mDestination = pDestination;
+    Row<Flight>* row = new Row<Flight>(*this);
+    row->mData.mID = getNewID();
+    row->mData.mDestination = pDestination;
     addRow(row);
-    return row.mData.mID;
+    return row->mData.mID;
 }
 
 /*int Flights::getRandomfID()

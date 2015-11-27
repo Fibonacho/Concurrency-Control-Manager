@@ -13,12 +13,12 @@ int Passengers::add(std::string pName)
     passenger.mName = pName;
     mList.pushBack(passenger);
     return passenger.mPID;*/
-    
-    Row<Passenger> row(*this);
-    row.mData.mName = pName;
-    row.mData.mPID = getNewID();
+    Row<Passenger>* row = new Row<Passenger>(*this);
+
+    row->mData.mName = pName;
+    row->mData.mPID = getNewID();
     addRow(row);
-    return row.mData.mPID;
+    return row->mData.mPID;
 }
 
 /*bool Passengers::remove(int id)
