@@ -22,16 +22,17 @@ namespace BookingDatabase {
     class Flights: public Table
     {
     private:
-        //stores a flight item, which is a row
         struct Flight
         {
             int mID;
             std::string mDestination;
         };
     public:
-        int* add(std::string pDestination);
-        void display();
-    
+        int add(std::string pDestination);
+        void display() const;
+        Flight* getRandomFlight() const;
+        int getRandomFlightID() const;
+
         Flights(Database& database);
         ~Flights();
     };

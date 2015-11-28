@@ -19,14 +19,14 @@
 #include <unistd.h>
 
 // random double between 0 and max
-static double RandomDouble(const double max) {
-    srand (time(NULL));
+/*static double RandomDouble(const double max) {
+    srand ((unsigned int)time(NULL));
     return max * (static_cast<double>(rand()) / static_cast<double>(RAND_MAX));
-}
+}*/
 
 static int RandomInt(const int max)
 {
-    srand (time(NULL));
+    srand ((unsigned int)time(NULL));
     return (rand() % max);
 }
 

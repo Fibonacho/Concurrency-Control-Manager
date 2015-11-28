@@ -3,7 +3,7 @@
 #include "Common.h"
 #include <iostream>
 
-Seats::Seats(Database& database): Table(database)
+BookingDatabase::Seats::Seats(Database& database): Table(database)
 {
 }
 
@@ -31,54 +31,86 @@ Seats::Seats(Database& database): Table(database)
 }
 */
 
-int* Seats::getSeat(int pIndex) const
+int BookingDatabase::Seats::getSeat(int pIndex) const
 {
     StorageUnit* su = mChilds[pIndex];
-    if (su != nullptr)
-        return &static_cast<Row<Seat>*>(su)->mData.mSID;
-    else
-        return nullptr;
+    return returnSID(su);
 }
 
-int* Seats::returnSID(StorageUnit* su)
+int BookingDatabase::Seats::returnSID(StorageUnit* su) const
 {
     if (su != nullptr)
-        return &static_cast<Row<Seat>*>(su)->mData.mSID;
+        return static_cast<Row<Seat>*>(su)->mData.mSID;
     else
-        return nullptr;
+        return -1;
 }
 
-int* Seats::getSeat(int* pFID) //get seat of flight
+int BookingDatabase::Seats::getSeat(int pFID) //get seat of flight
 {
     //check for pFID
     //while ()
-    return returnSID(mChilds[RandomInt(mChilds.size())]);
+    return returnSID(mChilds[RandomInt((int)mChilds.size())]);
 }
 
-int* Seats::getSeat()
+int BookingDatabase::Seats::getSeat()
 {
     //returns a random seat
-    return returnSID(mChilds[RandomInt(mChilds.size())]);
+    return returnSID(mChilds[RandomInt((int)mChilds.size())]);
 }
 
-int* Seats::getSeat(int pIndex, int* pFID) //get seat number x of flight pFID
+int BookingDatabase::Seats::getSeat(int pIndex, int pFID) //get seat number x of flight pFID
 {
     int a;
-    return &a;
+    return a;
 }
 
-int Seats::add(int* pFID) //, int pCount) //pFID as pointer
+int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
 {
     Row<Seat>* row = new Row<Seat>(*this);
     row->mData.mSID = getNewID();
     row->mData.mFID = pFID;
     addRow(row);
-    std::cout << "Added seat " << row->mData.mSID << " (" << &row->mData.mSID << ") to flight " << *pFID << " (" << pFID << ")" << std::endl;
+    std::cout << "Added seat " << row->mData.mSID << " (" << &row->mData.mSID << ") to flight " << pFID << " (" << &pFID << ")" << std::endl;
     return row->mData.mSID;
 }
 
-void Seats::add(int* pFID, int pCount)
+void BookingDatabase::Seats::add(int pFID, int pCount)
 {
     for (int i = 0; i < pCount; i++)
         add(pFID);
 }
+
+
+BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat() const
+{
+    if (mChilds.size() == 0)
+        return nullptr;
+    
+    int random = RandomInt((int)mChilds.size()-1);
+    StorageUnit* seat = mChilds[random];
+    Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
+    if (seatRow != nullptr)
+        return &seatRow->mData;
+    else return nullptr;
+}
+
+int BookingDatabase::Seats::getRandomSeatID() const
+{
+    Seat* data = getRandomSeat();
+    if (data == nullptr)
+        return -1;
+    else
+        return data->mSID;
+}
+
+BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat(int pFID) const
+{
+    //TODO
+    int random = RandomInt((int)mChilds.size()-1);
+    StorageUnit* seat = mChilds[random];
+    Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
+    if (seatRow != nullptr)
+        return &seatRow->mData;
+    else return nullptr;
+}
+

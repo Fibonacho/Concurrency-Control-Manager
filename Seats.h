@@ -17,28 +17,34 @@
 #include <list>
 #include "Database.h"
 
-class Seats: public Table
-{
-private:
-    struct Seat
+namespace BookingDatabase {
+    class Seats: public Table
     {
-        int mSID;  // Seat ID
-        int* mFID; // Pointer to flight ID
+    private:
+        struct Seat
+        {
+            int mSID;  // Seat ID
+            int mFID;  // Flight ID
         
-        Seat(int pSID, int* pFID): mSID(pSID), mFID(pFID) {};
-        Seat() {};
+            Seat(int pSID, int pFID): mSID(pSID), mFID(pFID) {};
+            Seat() {};
+        };
+    
+        int returnSID(StorageUnit* su) const;
+    public:
+        int add(int pFID);
+        void add(int pFID, int pCount);
+        int getSeat(int pIndex) const;
+        int getSeat(int pFID);
+        int getSeat(int pIndex, int pFID);
+        int getSeat();
+    
+        Seat* getRandomSeat() const;
+        Seat* getRandomSeat(int pFID) const;
+        int getRandomSeatID() const;
+
+        Seats(Database& database);
     };
-    
-    int* returnSID(StorageUnit* su);
-public:
-    int add(int* pFID);
-    void add(int* pFID, int pCount);
-    int* getSeat(int pIndex) const;
-    int* getSeat(int* pFID);
-    int* getSeat(int pIndex, int* pFID);
-    int* getSeat();
-    
-    Seats(Database& database);
-};
+}
 
 #endif

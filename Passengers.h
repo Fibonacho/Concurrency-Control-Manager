@@ -28,8 +28,10 @@ namespace BookingDatabase {
         };
     public:
         Passengers(Database& database);
-        int* add(std::string pName);
-        void display();
+        int add(std::string pName);
+        Passenger* getRandomPassenger() const;
+        int getRandomPassengerID() const;
+        void display() const;
     };
 }
 

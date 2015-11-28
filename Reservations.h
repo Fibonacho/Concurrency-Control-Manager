@@ -19,32 +19,32 @@
 namespace BookingDatabase {
     class Reservations: public Table
     {
-    private:
+    public:
         struct Reservation
         {
-            int* pID; // Passenger ID
-            int* sID; // Seat ID
-            int* fID; // Flight ID (redundant data)
+            int mPID; // Passenger ID
+            int mSID; // Seat ID
+            int mFID; // Flight ID (redundant data)
         };
-    public:
-        // List auf Flights
-        std::vector<int*>* mFlightList;
-        // List of Passengers
-        std::vector<int*>* mPassengerList;
+        // Pointer to the List auf Flights
+        // std::vector<int>* mFlightList; //probably not needed
+        // Pointer to the List of Passengers
+        // std::vector<int>* mPassengerList;
         
         Reservations(Database& database);
 
-        bool add(int* pFID, int* pSID, int* pPID);
-        bool remove(int pFID, int pPID);
-        bool book(int& pFID, int& pSID, int& pPID);
+        bool add(int pFID, int pSID, int pPID);
+        bool removeRes(int pFID, int pPID);
+        bool book(int pFID, int pSID, int pPID);
     
         // get flights for a specific passenger and a random one
         void getBookedFlights(const int pPID);
         void getBookedFlights();
         void printReservationSum();
         void book();
-        void remove();
-        void display();
+        void removeRes();
+        void display() const;
+        Reservation* getRandomReservation();
     };
 }
 

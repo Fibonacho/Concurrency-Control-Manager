@@ -8,8 +8,7 @@
 
 Database::Database(): StorageUnit(nullptr)
 {
-    
-    
+
 }
 
 //gets automatically called by the table class

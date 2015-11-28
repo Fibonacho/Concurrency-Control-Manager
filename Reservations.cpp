@@ -15,7 +15,7 @@ BookingDatabase::Reservations::Reservations(Database& database): Table(database)
 }
 */
 
-bool BookingDatabase::Reservations::remove(int pFID, int pPID)
+bool BookingDatabase::Reservations::removeRes(int pFID, int pPID)
 {
     for (auto child: mChilds)
     {
@@ -23,10 +23,8 @@ bool BookingDatabase::Reservations::remove(int pFID, int pPID)
         if (reservation != nullptr)
         {
             //mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), ' '), mChilds.end());
-            
-            int pID = *reservation->mData.pID;
-            int fID = *reservation->mData.fID;
-            if ((pID == pPID) && (fID == pFID))
+
+            if ((reservation->mData.mPID == pPID) && (reservation->mData.mFID == pFID))
             {
                 mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
                 return true;
@@ -37,7 +35,7 @@ bool BookingDatabase::Reservations::remove(int pFID, int pPID)
     return false;
 }
 
-void BookingDatabase::Reservations::remove()
+void BookingDatabase::Reservations::removeRes()
 {
     StorageUnit* child = mChilds[RandomInt((int)mChilds.size())];
     mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
@@ -51,21 +49,21 @@ void BookingDatabase::Reservations::getBookedFlights(const int pPID)
         Row<Reservations::Reservation>* reservation = static_cast<Row<Reservations::Reservation>*>(child);
         if (reservation != nullptr)
         {
-            if (*reservation->mData.pID == pPID)
-                std::cout << *reservation->mData.fID << " " << std::endl;
+            if (reservation->mData.mPID == pPID)
+                std::cout << reservation->mData.mFID << " " << std::endl;
         }
         std::cout << std::endl;
     }
 }
 
-void BookingDatabase::Reservations::display()
+void BookingDatabase::Reservations::display() const
 {
     std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
     for(auto res: mChilds)
     {
         Row<Reservation>* rowRes = static_cast<Row<Reservation>*>(res);
         
-        std::cout << "FID: " << rowRes->mData.fID << ", SID: " << rowRes->mData.sID << ", PID: " << rowRes->mData.pID << std::endl;
+        std::cout << "FID: " << rowRes->mData.mFID << ", SID: " << rowRes->mData.mSID << ", PID: " << rowRes->mData.mPID << std::endl;
     }
     std::cout << "----------------------------" << std::endl;
 }
@@ -93,7 +91,7 @@ void Reservations::initialize()
     //more ...
 }*/
 
-bool BookingDatabase::Reservations::book(int& pFID, int& pPID, int& pSID)
+bool BookingDatabase::Reservations::book(int pFID, int pPID, int pSID)
 {
     /*1. choose a specific passenger and specific flight
     check if passenger already booked the seat for that flight
@@ -137,16 +135,16 @@ void BookingDatabase::Reservations::book()
      reservationTable.book(1, 1, *i);*/
 }
 
-bool BookingDatabase::Reservations::add(int* pFID, int* pSID, int* pPID)
+bool BookingDatabase::Reservations::add(int pFID, int pSID, int pPID)
 {
-    if (pSID == nullptr)
+    if (pSID == -1)
         return false;
     
     Row<Reservation>* row = new Row<Reservation>(*this);
     //Row<Reservations::Reservation> row(*this);
-    row->mData.sID = pSID;
-    row->mData.fID = pFID;
-    row->mData.pID = pPID;
+    row->mData.mSID = pSID;
+    row->mData.mFID = pFID;
+    row->mData.mPID = pPID;
     addRow(row);
     
     /*Reservations::Reservation reservation;
@@ -155,8 +153,21 @@ bool BookingDatabase::Reservations::add(int* pFID, int* pSID, int* pPID)
     reservation.pID = &pPID;
 
     mList.pushBack(reservation);*/
-    std::cout << "Added reservation to seat " << *row->mData.sID << " for passanger " << *row->mData.pID << " and flight " << *row->mData.fID << std::endl;
+    std::cout << "Added reservation to seat " << row->mData.mSID << " for passanger " << row->mData.mPID << " and flight " << row->mData.mFID << std::endl;
     return true;
+}
+
+BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandomReservation()
+{
+    if (mChilds.size() == 0)
+        return nullptr;
+        
+    int random = RandomInt((int)mChilds.size()-1);
+    StorageUnit* child = mChilds[random];
+    Row<Reservation>* childRow = static_cast<Row<Reservation>*>(child);
+    if (childRow != nullptr)
+        return &childRow->mData;
+    else return nullptr;
 }
 
 /*

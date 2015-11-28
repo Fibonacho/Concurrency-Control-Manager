@@ -27,6 +27,7 @@ protected:
     const bool isRoot() const;
     const unsigned long childCount() const;
 public:
+    const bool isEmpty() const;
     StorageUnit(StorageUnit* parent);
     virtual ~StorageUnit();
 };

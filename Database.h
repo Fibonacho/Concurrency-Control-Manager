@@ -1,6 +1,5 @@
 //  ---------------------------------------------------
 //  Database:
-//  - the root of the storage units
 //  - The database has a concurrencyManager where locks are aquired
 //
 //  Advanced Databases: Assignment 3 Concurrency Control

@@ -24,38 +24,51 @@
 #include "Common.h"
 
 namespace BookingDatabase {
+    // creates database
     Database database;
+    // creates tables
     Flights flightsTable(database);
     Passengers passengerTable(database);
     Reservations reservationTable(database);
     Seats seatTable(database);
+    // adds tables to database
+    
     TransactionHandler transactionHandler(database);
     
-    std::vector<int*> FlightList;
-    std::vector<int> FlightSeats;
-    std::vector<int*> PassengerList;
+    struct FlightListElement {
+        int mID;
+        std::vector<int> mSID;
+        FlightListElement(int pID) : mID(pID) {}
+    };
+    
+    std::vector<FlightListElement> FlightList;
+    //std::vector<int> FlightSeats;
+    std::vector<int> PassengerList;
+    
     int MaxSeatID = 0;
     
     void addFlight(std::string pDestination, int pSeats)
     {
-        int* FlightID = flightsTable.add(pDestination);
-        FlightList.push_back(FlightID);
-        FlightSeats.push_back(pSeats);
+        int FlightID = flightsTable.add(pDestination);
+        FlightListElement listElement(FlightID);
+        //listElement.mSID.push_back();
+        //FlightSeats.push_back(pSeats);
+        //FlightList.push_back(listElement);
         MaxSeatID += pSeats;
         seatTable.add(FlightID, pSeats);
     }
     
-    int* getRandomPassenger()
+    /*int getRandomPassenger()
     {
         int random = RandomInt((int)PassengerList.size()-1);
         return PassengerList[random];
     }
     
-    int* getRandomFlight()
+    int getRandomFlight()
     {
         int random = RandomInt((int)FlightList.size()-1);
-        return FlightList[random];
-    }
+        return FlightList[random].mID;
+    }*/
     
     int getRandomSeat()
     {
@@ -64,6 +77,11 @@ namespace BookingDatabase {
     
     void initializeData()
     {
+        database.AddTable(passengerTable);
+        database.AddTable(flightsTable);
+        database.AddTable(reservationTable);
+        database.AddTable(seatTable);
+        
         // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
         addFlight("Tokio", 1);
         addFlight("New York", 1);
@@ -75,24 +93,36 @@ namespace BookingDatabase {
         PassengerList.push_back(passengerTable.add("Johanna"));
         passengerTable.display();
         
-        reservationTable.mFlightList = &FlightList;
-        reservationTable.mPassengerList = &PassengerList;
+        // reservationTable.mFlightList = &FlightList;
+        // reservationTable.mPassengerList = &PassengerList;
         
-        reservationTable.add(FlightList[0], seatTable.getSeat(getRandomSeat()), PassengerList[2]);
-        reservationTable.add(getRandomFlight(), seatTable.getSeat(getRandomSeat()), getRandomPassenger());
-        reservationTable.display();
+        //reservationTable.add(FlightList[0].mID, seatTable.getSeat(getRandomSeat()), PassengerList[2]);
+        //reservationTable.add(getRandomFlight(), seatTable.getSeat(getRandomSeat()), getRandomPassenger());
+        //reservationTable.display();
     }
     
     void removeReservation()
     {
-        reservationTable.remove(*getRandomFlight(), *getRandomPassenger());
-        reservationTable.remove();
+        // if reservation do exist
+        if (!reservationTable.isEmpty())
+        {
+            Reservations::Reservation* randomReservation = reservationTable.getRandomReservation();
+            // childCount = 0 (no data in table - should usually not happen)
+            if (randomReservation != nullptr)
+            {
+                std::cout << "Random Reservation to be removed: " << randomReservation->mFID << ", " << randomReservation->mPID << std::endl;
+                // remove this reservation
+                reservationTable.removeRes(randomReservation->mFID, randomReservation->mPID);
+            }
+        }
     }
     
     void getBookedFlights()
     {
-        reservationTable.getBookedFlights();
-        //reservationTable.getBookedFlights(pIDEva);
+        //get a Random Passanger ID
+        int randomPID = passengerTable.getRandomPassengerID();
+        std::cout << "Random Passanger to list bookings: " << randomPID << std::endl;
+        reservationTable.getBookedFlights(randomPID);
     }
 
     void getReservationSum()

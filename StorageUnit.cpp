@@ -10,8 +10,10 @@ StorageUnit::~StorageUnit()
     // free all the memory of the storage unit
     std::cout << "~StorageUnit" << std::endl;
     for (auto child: mChilds)
-        delete child;
-    delete mParent;
+        if (child != nullptr)
+            delete child;
+    if (mParent != nullptr)
+        delete mParent;
 }
 
 const bool StorageUnit::isLeaf() const
@@ -22,6 +24,11 @@ const bool StorageUnit::isLeaf() const
 const bool StorageUnit::isRoot() const
 {
     return mParent == nullptr;
+}
+
+const bool StorageUnit::isEmpty() const
+{
+    return isLeaf(); // a leaf or e.g. table or database is empty
 }
 
 const unsigned long StorageUnit::childCount() const

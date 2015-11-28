@@ -1,6 +1,7 @@
 #include "Flights.h"
 #include <iostream>
 #include "Row.h"
+#include "Common.h"
 
 BookingDatabase::Flights::Flights(Database& database): Table(database)
 {
@@ -11,7 +12,7 @@ BookingDatabase::Flights::~Flights()
     std::cout << "Flights destructur " << std::endl;
 }
 
-void BookingDatabase::Flights::display()
+void BookingDatabase::Flights::display() const
 {
     std::cout << "----------------------------" << std::endl << "Display Flights: " << std::endl;
     for(auto flight: mChilds)
@@ -24,7 +25,29 @@ void BookingDatabase::Flights::display()
     std::cout << "----------------------------" << std::endl;
 }
 
-int* BookingDatabase::Flights::add(std::string pDestination)
+BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandomFlight() const
+{
+    if (mChilds.size() == 0)
+        return nullptr;
+    
+    int random = RandomInt((int)mChilds.size()-1);
+    StorageUnit* flight = mChilds[random];
+    Row<Flight>* flightrow = static_cast<Row<Flight>*>(flight);
+    if (flightrow != nullptr)
+        return &flightrow->mData;
+    else return nullptr;
+}
+
+int BookingDatabase::Flights::getRandomFlightID() const
+{
+    Flight* data = getRandomFlight();
+    if (data == nullptr)
+        return -1;
+    else
+        return data->mID;
+}
+
+int BookingDatabase::Flights::add(std::string pDestination)
 {
     // first check if the flight has already been inserted
     // add a value to the linked list
@@ -33,6 +56,6 @@ int* BookingDatabase::Flights::add(std::string pDestination)
     std::cout << pDestination << " ID stored at " << &row->mData.mID << std::endl;
     row->mData.mDestination = pDestination;
     addRow(row);
-    return &row->mData.mID;
+    return row->mData.mID;
 }
 

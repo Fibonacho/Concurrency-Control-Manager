@@ -22,7 +22,7 @@ class Table: public StorageUnit
 public:
     Table(Database& database): StorageUnit(database), mID(0)
     {
-       // database.AddTable(*this);
+        //database.AddTable(*this);
     };
     
     void addRow(StorageUnit* row) {
