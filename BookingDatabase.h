@@ -58,18 +58,6 @@ namespace BookingDatabase {
         seatTable.add(FlightID, pSeats);
     }
     
-    /*int getRandomPassenger()
-    {
-        int random = RandomInt((int)PassengerList.size()-1);
-        return PassengerList[random];
-    }
-    
-    int getRandomFlight()
-    {
-        int random = RandomInt((int)FlightList.size()-1);
-        return FlightList[random].mID;
-    }*/
-    
     int getRandomSeat()
     {
         return RandomInt(MaxSeatID)+1;
@@ -136,7 +124,10 @@ namespace BookingDatabase {
         int randomPID = passengerTable.getRandomPassengerID();
         // get an existing flight - make sure they are not deleted (locks)
         int randomFID = flightsTable.getRandomFlightID();
-        reservationTable.book(randomFID, randomPID);
+        
+        std::vector<int> seatList = seatTable.getSeats(randomFID);
+        reservationTable.book(randomFID, randomPID, seatList);
+        reservationTable.display();
     }
     
     void initializeTransactionHandler()
