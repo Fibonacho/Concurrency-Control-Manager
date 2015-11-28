@@ -63,25 +63,6 @@ namespace BookingDatabase {
         return RandomInt(MaxSeatID)+1;
     }
     
-    void initializeData()
-    {
-        database.AddTable(passengerTable);
-        database.AddTable(flightsTable);
-        database.AddTable(reservationTable);
-        database.AddTable(seatTable);
-        
-        // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
-        addFlight("Tokio", 1);
-        addFlight("New York", 1);
-        addFlight("Berlin", 2);
-        flightsTable.display();
-        
-        PassengerList.push_back(passengerTable.add("Eva"));
-        PassengerList.push_back(passengerTable.add("Elvis"));
-        PassengerList.push_back(passengerTable.add("Johanna"));
-        passengerTable.display();
-    }
-    
     // cancel(flight_id, passenger_id): cancel reservation for passenger on a flight
     // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
     void removeReservation()
@@ -109,7 +90,7 @@ namespace BookingDatabase {
         std::cout << "Random Passanger to list bookings: " << randomPID << std::endl;
         reservationTable.getBookedFlights(randomPID);
     }
-
+    
     // total_reservations(): return the total sum of all reservations on all flights
     // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
     void getReservationSum()
@@ -127,7 +108,6 @@ namespace BookingDatabase {
         
         std::vector<int> seatList = seatTable.getSeats(randomFID);
         reservationTable.book(randomFID, randomPID, seatList);
-        reservationTable.display();
     }
     
     void initializeTransactionHandler()
@@ -137,6 +117,33 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(getBookedFlights);
         transactionHandler.addTransaction(bookFlight);
     }
+
+    void initializeData()
+    {
+        initRand();
+        
+        database.AddTable(passengerTable);
+        database.AddTable(flightsTable);
+        database.AddTable(reservationTable);
+        database.AddTable(seatTable);
+        
+        // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
+        addFlight("Tokio", 100);
+        addFlight("New York", 100);
+        addFlight("Berlin", 200);
+        flightsTable.display();
+        
+        PassengerList.push_back(passengerTable.add("Eva"));
+        PassengerList.push_back(passengerTable.add("Elvis"));
+        PassengerList.push_back(passengerTable.add("Johanna"));
+        passengerTable.display();
+        
+        bookFlight();
+        bookFlight();
+        bookFlight();
+        reservationTable.display();
+    }
+
 }
 
 #endif

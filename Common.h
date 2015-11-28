@@ -24,9 +24,14 @@
     return max * (static_cast<double>(rand()) / static_cast<double>(RAND_MAX));
 }*/
 
-static int RandomInt(const int max)
+static void initRand()
 {
     srand ((unsigned int)time(NULL));
+
+}
+
+static int RandomInt(const int max)
+{
     return (rand() % max);
 }
 
