@@ -21,9 +21,19 @@
 template <typename T>
 class Row: public StorageUnit
 {
-public:
+private:
     T mData;
+public:
+    T getData() const
+    {
+        return mData;
+    }
+    void setData(T pData) //this needs to lock
+    {
+        mData = pData;
+    }
     Row(StorageUnit& table): StorageUnit(table) {};
+    Row(StorageUnit& table, T pData): StorageUnit(table), mData(pData) {}; //this doesn't need a lock
     ~Row() {std::cout << "row destructor " << std::endl;}
 };
 

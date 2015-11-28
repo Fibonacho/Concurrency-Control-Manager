@@ -25,11 +25,13 @@ namespace BookingDatabase {
         {
             int mPID;
             std::string mName;
+            
+            Passenger(): mPID(-1), mName("") {}
         };
     public:
         Passengers(Database& database);
         int add(std::string pName);
-        Passenger* getRandomPassenger() const;
+        Passenger getRandomPassenger() const;
         int getRandomPassengerID() const;
         void display() const;
     };

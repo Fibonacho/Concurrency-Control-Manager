@@ -70,14 +70,10 @@ namespace BookingDatabase {
         // if reservation exists
         if (!reservationTable.isEmpty())
         {
-            Reservations::Reservation* randomReservation = reservationTable.getRandomReservation();
-            // childCount = 0 (no data in table - should usually not happen)
-            if (randomReservation != nullptr)
-            {
-                std::cout << "Random Reservation to be removed: " << randomReservation->mFID << ", " << randomReservation->mPID << std::endl;
-                // remove this reservation
-                reservationTable.removeRes(randomReservation->mFID, randomReservation->mPID);
-            }
+            Reservations::Reservation randomReservation = reservationTable.getRandomReservation();
+            std::cout << "Random Reservation to be removed: " << randomReservation.mFID << ", " << randomReservation.mPID << std::endl;
+            // remove this reservation
+            reservationTable.removeRes(randomReservation.mFID, randomReservation.mPID);
         }
     }
     

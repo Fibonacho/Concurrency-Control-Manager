@@ -9,34 +9,32 @@ BookingDatabase::Passengers::Passengers(Database& database): Table(database)
 
 int BookingDatabase::Passengers::add(std::string pName)
 {
-    Row<Passenger>* row = new Row<Passenger>(*this);
-    row->mData.mName = pName;
-    row->mData.mPID = getNewID();
+    Passenger passenger;
+    passenger.mName = pName;
+    passenger.mPID = getNewID();
+    Row<Passenger>* row = new Row<Passenger>(*this, passenger);
     addRow(row);
-    std::cout << "Passenger " << row->mData.mPID << " " << pName << " at " << &row->mData.mPID << std::endl;
-    return row->mData.mPID;
+    std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
+    return row->getData().mPID;
 }
 
-BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandomPassenger() const
+BookingDatabase::Passengers::Passenger BookingDatabase::Passengers::getRandomPassenger() const
 {
     if (mChilds.size() == 0)
-        return nullptr;
+        return Passenger();
     
     int random = RandomInt((int)mChilds.size());
     StorageUnit* passenger = mChilds[random];
     Row<Passenger>* passengerRow = static_cast<Row<Passenger>*>(passenger);
     if (passengerRow != nullptr)
-        return &passengerRow->mData;
-    else return nullptr;
+        return passengerRow->getData();
+    else return Passenger();
 }
 
 int BookingDatabase::Passengers::getRandomPassengerID() const
 {
-    Passenger* data = getRandomPassenger();
-    if (data == nullptr)
-        return -1;
-    else
-        return data->mPID;
+    Passenger data = getRandomPassenger();
+    return data.mPID;
 }
 
 void BookingDatabase::Passengers::display() const
@@ -46,8 +44,7 @@ void BookingDatabase::Passengers::display() const
     {
         Row<Passenger>* rowPassenger = static_cast<Row<Passenger>*>(passenger);
         
-        std::cout << rowPassenger->mData.mPID << " (" << &(rowPassenger->mData.mPID) << ") "
-        << rowPassenger->mData.mName << std::endl;
+        std::cout << rowPassenger->getData().mPID << " " << rowPassenger->getData().mName << std::endl;
     }
     std::cout << "----------------------------" << std::endl;
 }

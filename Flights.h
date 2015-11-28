@@ -26,11 +26,14 @@ namespace BookingDatabase {
         {
             int mID;
             std::string mDestination;
+            
+            Flight(): mID(-1), mDestination("") {}
+            Flight(int pID, std::string pDestination): mID(pID), mDestination(pDestination) {}
         };
     public:
         int add(std::string pDestination);
         void display() const;
-        Flight* getRandomFlight() const;
+        Flight getRandomFlight() const;
         int getRandomFlightID() const;
 
         Flights(Database& database);

@@ -25,6 +25,9 @@ namespace BookingDatabase {
             int mPID; // Passenger ID
             int mSID; // Seat ID
             int mFID; // Flight ID (redundant data)
+            
+            Reservation(int pPID, int pSID, int pFID): mPID(pPID), mFID(pFID), mSID(pSID) {}
+            Reservation(): mPID(-1), mFID(-1), mSID(-1) {}
         };
         
         Reservations(Database& database);
@@ -40,7 +43,7 @@ namespace BookingDatabase {
         void book();
         void removeRes();
         void display() const;
-        Reservation* getRandomReservation();
+        Reservation getRandomReservation();
     };
 }
 

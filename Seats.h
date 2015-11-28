@@ -27,7 +27,7 @@ namespace BookingDatabase {
             int mFID;  // Flight ID
             
             Seat(int pSID, int pFID): mSID(pSID), mFID(pFID) {};
-            Seat() {};
+            Seat(): mSID(-1), mFID(-1) {};
         };
     
         int returnSID(StorageUnit* su) const;
@@ -37,8 +37,8 @@ namespace BookingDatabase {
         int getFreeSeat(int pFID);
         std::vector<int> getSeats(int pFID) const;
         
-        Seat* getRandomSeat() const;
-        Seat* getRandomSeat(int pFID) const;
+        Seat getRandomSeat() const;
+        Seat getRandomSeat(int pFID) const;
         int getRandomSeatID() const;
 
         Seats(Database& database);

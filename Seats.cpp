@@ -10,7 +10,7 @@ BookingDatabase::Seats::Seats(Database& database): Table(database)
 int BookingDatabase::Seats::returnSID(StorageUnit* su) const
 {
     if (su != nullptr)
-        return static_cast<Row<Seat>*>(su)->mData.mSID;
+        return static_cast<Row<Seat>*>(su)->getData().mSID;
     else
         return -1;
 }
@@ -29,8 +29,8 @@ std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
         Row<Seat>* row = static_cast<Row<Seat>*>(child);
         if (row != nullptr)
         {
-            if (row->mData.mFID == pFID)
-                list.push_back(row->mData.mSID);
+            if (row->getData().mFID == pFID)
+                list.push_back(row->getData().mSID);
         }
     }
     return list;
@@ -38,12 +38,14 @@ std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
 
 int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
 {
-    Row<Seat>* row = new Row<Seat>(*this);
-    row->mData.mSID = getNewID();
-    row->mData.mFID = pFID;
+    Seat seat;
+    seat.mSID = getNewID();
+    seat.mFID = pFID;
+
+    Row<Seat>* row = new Row<Seat>(*this, seat);
     addRow(row);
-    std::cout << "Added seat " << row->mData.mSID << " (" << &row->mData.mSID << ") to flight " << pFID << " (" << &pFID << ")" << std::endl;
-    return row->mData.mSID;
+    std::cout << "Added seat " << row->getData().mSID << " to flight " << pFID << " (" << &pFID << ")" << std::endl;
+    return row->getData().mSID;
 }
 
 void BookingDatabase::Seats::add(int pFID, int pCount)
@@ -52,36 +54,33 @@ void BookingDatabase::Seats::add(int pFID, int pCount)
         add(pFID);
 }
 
-BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat() const
+BookingDatabase::Seats::Seat BookingDatabase::Seats::getRandomSeat() const
 {
     if (mChilds.size() == 0)
-        return nullptr;
+        return Seat();
     
     int random = RandomInt((int)mChilds.size());
     StorageUnit* seat = mChilds[random];
     Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
     if (seatRow != nullptr)
-        return &seatRow->mData;
-    else return nullptr;
+        return seatRow->getData();
+    else return Seat();
 }
 
 int BookingDatabase::Seats::getRandomSeatID() const
 {
-    Seat* data = getRandomSeat();
-    if (data == nullptr)
-        return -1;
-    else
-        return data->mSID;
+    Seat data = getRandomSeat();
+    return data.mSID;
 }
 
-BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat(int pFID) const
+BookingDatabase::Seats::Seat BookingDatabase::Seats::getRandomSeat(int pFID) const
 {
     //TODO
     int random = RandomInt((int)mChilds.size());
     StorageUnit* seat = mChilds[random];
     Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
     if (seatRow != nullptr)
-        return &seatRow->mData;
-    else return nullptr;
+        return seatRow->getData();
+    else return Seat();
 }
 

@@ -18,44 +18,39 @@ void BookingDatabase::Flights::display() const
     for(auto flight: mChilds)
     {
         Row<Flight>* rowFlight = static_cast<Row<Flight>*>(flight);
-        
-        std::cout << rowFlight->mData.mID << " (" << &(rowFlight->mData.mID) << ") "
-                  << rowFlight->mData.mDestination << std::endl;
+        std::cout << rowFlight->getData().mID << " " << rowFlight->getData().mDestination << std::endl;
     }
     std::cout << "----------------------------" << std::endl;
 }
 
-BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandomFlight() const
+BookingDatabase::Flights::Flight BookingDatabase::Flights::getRandomFlight() const
 {
     if (mChilds.size() == 0)
-        return nullptr;
+        return Flight();
     
     int random = RandomInt((int)mChilds.size());
     StorageUnit* flight = mChilds[random];
     Row<Flight>* flightrow = static_cast<Row<Flight>*>(flight);
     if (flightrow != nullptr)
-        return &flightrow->mData;
-    else return nullptr;
+        return flightrow->getData();
+    else return Flight();
 }
 
 int BookingDatabase::Flights::getRandomFlightID() const
 {
-    Flight* data = getRandomFlight();
-    if (data == nullptr)
-        return -1;
-    else
-        return data->mID;
+    Flight data = getRandomFlight();
+    return data.mID;
 }
 
 int BookingDatabase::Flights::add(std::string pDestination)
 {
     // first check if the flight has already been inserted
     // add a value to the linked list
-    Row<Flight>* row = new Row<Flight>(*this);
-    row->mData.mID = getNewID();
-    std::cout << pDestination << " ID stored at " << &row->mData.mID << std::endl;
-    row->mData.mDestination = pDestination;
+    
+    Flight flight(getNewID(), pDestination);
+    Row<Flight>* row = new Row<Flight>(*this, flight);
+    std::cout << pDestination << " ID stored." << std::endl;
     addRow(row);
-    return row->mData.mID;
+    return row->getData().mID;
 }
 

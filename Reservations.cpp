@@ -24,7 +24,7 @@ bool BookingDatabase::Reservations::removeRes(int pFID, int pPID)
         {
             //mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), ' '), mChilds.end());
 
-            if ((reservation->mData.mPID == pPID) && (reservation->mData.mFID == pFID))
+            if ((reservation->getData().mPID == pPID) && (reservation->getData().mFID == pFID))
             {
                 mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
                 return true;
@@ -49,8 +49,8 @@ void BookingDatabase::Reservations::getBookedFlights(const int pPID)
         Row<Reservations::Reservation>* reservation = static_cast<Row<Reservations::Reservation>*>(child);
         if (reservation != nullptr)
         {
-            if (reservation->mData.mPID == pPID)
-                std::cout << reservation->mData.mFID << " " << std::endl;
+            if (reservation->getData().mPID == pPID)
+                std::cout << reservation->getData().mFID << " " << std::endl;
         }
         std::cout << std::endl;
     }
@@ -63,7 +63,7 @@ void BookingDatabase::Reservations::display() const
     {
         Row<Reservation>* rowRes = static_cast<Row<Reservation>*>(res);
         
-        std::cout << "FID: " << rowRes->mData.mFID << ", SID: " << rowRes->mData.mSID << ", PID: " << rowRes->mData.mPID << std::endl;
+        std::cout << "FID: " << rowRes->getData().mFID << ", SID: " << rowRes->getData().mSID << ", PID: " << rowRes->getData().mPID << std::endl;
     }
     std::cout << "----------------------------" << std::endl;
 }
@@ -81,7 +81,7 @@ bool BookingDatabase::Reservations::hasBooked(int pFID, int pPID) const
         Row<Reservation>* row = static_cast<Row<Reservation>*>(child);
         if (row != nullptr)
         {
-            if ((row->mData.mFID == pFID) && (row->mData.mPID))
+            if ((row->getData().mFID == pFID) && (row->getData().mPID))
                 return true;
         }
     }
@@ -100,13 +100,10 @@ bool BookingDatabase::Reservations::book(int pFID, int pSID, int pPID)
     if (hasBooked(pFID, pPID))
         return false;
     
-    Row<Reservation>* row = new Row<Reservation>(*this);
-    row->mData.mSID = pSID;
-    row->mData.mFID = pFID;
-    row->mData.mPID = pPID;
+    Reservation reservation(pPID, pSID, pFID);
+    Row<Reservation>* row = new Row<Reservation>(*this, reservation);
     addRow(row);
-    
-    std::cout << "Added reservation to seat " << row->mData.mSID << " for passanger " << row->mData.mPID << " and flight " << row->mData.mFID << std::endl;
+    std::cout << "Added reservation to seat " << row->getData().mSID << " for passanger " << row->getData().mPID << " and flight " << row->getData().mFID << std::endl;
     return true;
 }
 
@@ -121,7 +118,7 @@ bool BookingDatabase::Reservations::book(int pFID, int pPID, std::vector<int> &p
     {
         Row<Reservation>* row = static_cast<Row<Reservation>*>(child);
         // remove the booked reservations from the vector of free seats
-        pFlightSeatIDs.erase(std::remove(pFlightSeatIDs.begin(), pFlightSeatIDs.end(), row->mData.mSID), pFlightSeatIDs.end());
+        pFlightSeatIDs.erase(std::remove(pFlightSeatIDs.begin(), pFlightSeatIDs.end(), row->getData().mSID), pFlightSeatIDs.end());
     }
     if (pFlightSeatIDs.size() == 0)
         return false; // the flight is booked out
@@ -131,15 +128,15 @@ bool BookingDatabase::Reservations::book(int pFID, int pPID, std::vector<int> &p
     return booked;
 }
 
-BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandomReservation()
+BookingDatabase::Reservations::Reservation BookingDatabase::Reservations::getRandomReservation()
 {
     if (mChilds.size() == 0)
-        return nullptr;
+        return Reservation();
         
     int random = RandomInt((int)mChilds.size());
     StorageUnit* child = mChilds[random];
     Row<Reservation>* childRow = static_cast<Row<Reservation>*>(child);
     if (childRow != nullptr)
-        return &childRow->mData;
-    else return nullptr;
+        return childRow->getData();
+    else return Reservation();
 }
