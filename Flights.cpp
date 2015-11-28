@@ -30,7 +30,7 @@ BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandomFlight() co
     if (mChilds.size() == 0)
         return nullptr;
     
-    int random = RandomInt((int)mChilds.size()-1);
+    int random = RandomInt((int)mChilds.size());
     StorageUnit* flight = mChilds[random];
     Row<Flight>* flightrow = static_cast<Row<Flight>*>(flight);
     if (flightrow != nullptr)

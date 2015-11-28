@@ -26,18 +26,14 @@ namespace BookingDatabase {
             int mSID; // Seat ID
             int mFID; // Flight ID (redundant data)
         };
-        // Pointer to the List auf Flights
-        // std::vector<int>* mFlightList; //probably not needed
-        // Pointer to the List of Passengers
-        // std::vector<int>* mPassengerList;
         
         Reservations(Database& database);
 
         bool book(int pFID, int pSID, int pPID);
-        bool book(int pFID, int pPID);
+        bool book(int pFID, int pPID, std::vector<int> &pFlightSeatIDs);
         bool removeRes(int pFID, int pPID);
         bool hasBooked(int pFID, int pPID) const;
-    
+        
         // get flights for a specific passenger and a random one
         void getBookedFlights(const int pPID);
         void printReservationSum();

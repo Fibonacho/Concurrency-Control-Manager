@@ -7,36 +7,6 @@ BookingDatabase::Seats::Seats(Database& database): Table(database)
 {
 }
 
-/*bool Seats::add(Seat pSeat)
-{
-    //is id already in the data structure
-    mList.pushBack(pSeat);
-    return true;
-}*/
-
-/*bool Seats::remove(int id)
-{
-    //remove an item from the linked list
-    return true;
-}*/
-
-/*void Seats::initialize()
-{
-    //function initialize
-    Seats::Seat seat;
-    seat.sID = 2; //getNewID();
-    seat.fID = 3; //getRandomfID(); we need a connection to the flight "table"
-    //add(passeger);
-    //more ...
-}
-*/
-
-int BookingDatabase::Seats::getSeat(int pIndex) const
-{
-    StorageUnit* su = mChilds[pIndex];
-    return returnSID(su);
-}
-
 int BookingDatabase::Seats::returnSID(StorageUnit* su) const
 {
     if (su != nullptr)
@@ -45,23 +15,25 @@ int BookingDatabase::Seats::returnSID(StorageUnit* su) const
         return -1;
 }
 
-int BookingDatabase::Seats::getSeat(int pFID) //get seat of flight
+int BookingDatabase::Seats::getFreeSeat(int pFID) //get seat of flight
 {
-    //check for pFID
-    //while ()
+    // flights are stored in a serial order
     return returnSID(mChilds[RandomInt((int)mChilds.size())]);
 }
 
-int BookingDatabase::Seats::getSeat()
+std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
 {
-    //returns a random seat
-    return returnSID(mChilds[RandomInt((int)mChilds.size())]);
-}
-
-int BookingDatabase::Seats::getSeat(int pIndex, int pFID) //get seat number x of flight pFID
-{
-    int a;
-    return a;
+    std::vector<int> list;
+    for (auto child: mChilds)
+    {
+        Row<Seat>* row = static_cast<Row<Seat>*>(child);
+        if (row != nullptr)
+        {
+            if (row->mData.mFID == pFID)
+                list.push_back(row->mData.mSID);
+        }
+    }
+    return list;
 }
 
 int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
@@ -80,13 +52,12 @@ void BookingDatabase::Seats::add(int pFID, int pCount)
         add(pFID);
 }
 
-
 BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat() const
 {
     if (mChilds.size() == 0)
         return nullptr;
     
-    int random = RandomInt((int)mChilds.size()-1);
+    int random = RandomInt((int)mChilds.size());
     StorageUnit* seat = mChilds[random];
     Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
     if (seatRow != nullptr)
@@ -106,7 +77,7 @@ int BookingDatabase::Seats::getRandomSeatID() const
 BookingDatabase::Seats::Seat* BookingDatabase::Seats::getRandomSeat(int pFID) const
 {
     //TODO
-    int random = RandomInt((int)mChilds.size()-1);
+    int random = RandomInt((int)mChilds.size());
     StorageUnit* seat = mChilds[random];
     Row<Seat>* seatRow = static_cast<Row<Seat>*>(seat);
     if (seatRow != nullptr)

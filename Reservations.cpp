@@ -110,10 +110,25 @@ bool BookingDatabase::Reservations::book(int pFID, int pSID, int pPID)
     return true;
 }
 
-bool BookingDatabase::Reservations::book(int pFID, int pPID)
+bool BookingDatabase::Reservations::book(int pFID, int pPID, std::vector<int> &pFlightSeatIDs)
 {
     // book a flight for passanger pPID and flight pFID
-    // returns false if the flight is already booked by the passanger
+    // returns false if the flight is already booked by the passanger or the flight is full
+    // get list of seat ids of specific flight
+    // remove all seats from pFlightSeatIDs which are already booked and then just get a random seat for the passanger by:
+    // iterate over all reservations
+    for (auto child: mChilds)
+    {
+        Row<Reservation>* row = static_cast<Row<Reservation>*>(child);
+        // remove the booked reservations from the vector of free seats
+        pFlightSeatIDs.erase(std::remove(pFlightSeatIDs.begin(), pFlightSeatIDs.end(), row->mData.mSID), pFlightSeatIDs.end());
+    }
+    if (pFlightSeatIDs.size() == 0)
+        return false; // the flight is booked out
+    int random = RandomInt((int)pFlightSeatIDs.size());
+    int FreeSeatID = pFlightSeatIDs[random];
+    bool booked = book(pFID, FreeSeatID, pPID);
+    return booked;
 }
 
 BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandomReservation()
@@ -121,7 +136,7 @@ BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRa
     if (mChilds.size() == 0)
         return nullptr;
         
-    int random = RandomInt((int)mChilds.size()-1);
+    int random = RandomInt((int)mChilds.size());
     StorageUnit* child = mChilds[random];
     Row<Reservation>* childRow = static_cast<Row<Reservation>*>(child);
     if (childRow != nullptr)

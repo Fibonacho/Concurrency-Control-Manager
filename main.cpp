@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandler();
     // start the transaction handler with x threads
-    BookingDatabase::transactionHandler.call();
+    BookingDatabase::transactionHandler.callAll();
     std::cin.get();
     return 0;
 }

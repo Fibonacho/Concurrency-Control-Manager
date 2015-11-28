@@ -11,11 +11,6 @@ TransactionHandler::~TransactionHandler()
 
 }
 
-void TransactionHandler::stop()
-{
-
-}
-
 void TransactionHandler::callAll()
 {
     for(auto transaction: mTransactions)
@@ -27,7 +22,7 @@ void TransactionHandler::callAll()
 void TransactionHandler::callRandom()
 {
     // TODO: sleep random time
-    int random = RandomInt((int)mTransactions.size()-1);
+    int random = RandomInt((int)mTransactions.size());
     mTransactions[random]();
 }
 

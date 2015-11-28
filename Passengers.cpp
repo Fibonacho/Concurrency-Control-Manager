@@ -22,7 +22,7 @@ BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandomPa
     if (mChilds.size() == 0)
         return nullptr;
     
-    int random = RandomInt((int)mChilds.size()-1);
+    int random = RandomInt((int)mChilds.size());
     StorageUnit* passenger = mChilds[random];
     Row<Passenger>* passengerRow = static_cast<Row<Passenger>*>(passenger);
     if (passengerRow != nullptr)
