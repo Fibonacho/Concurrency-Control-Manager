@@ -17,9 +17,12 @@
 #define STORAGEUNIT_H
 
 #include <vector>
+#include "Lock.h"
 
-class StorageUnit //: public ILockable
+class StorageUnit
 {
+private:
+    Lock lock;
 protected:
     std::vector<StorageUnit*> mChilds;
     StorageUnit* mParent;

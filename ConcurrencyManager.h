@@ -15,27 +15,16 @@
 
 #include "StorageUnit.h"
 
-enum class LockingMode {
-    unlocked = 0,
-    shared = 1,
-    exclusive = 2,
-};
-
 class ConcurrencyManager //: public ILockManager
 {
-    //knows all locks on a specific database
-    //decides if a lock can be aquired
-    virtual bool getSL(StorageUnit* storageUnit); //get lock on a specific storage unit
-    virtual bool getXL(StorageUnit* storageUnit);
+    std::vector<Lock*> mLocks; // maybe useful
+    // knows all locks on a specific database
+    // decides if a lock can be aquired
+    bool getSharedLock(StorageUnit* pStorageUnit); //get lock on a specific storage unit
+    bool getExclusiveLock(StorageUnit* pStorageUnit);
+    void releaseLock(StorageUnit* pStorageUnit);
 public:
-    //virtual bool Read(); //Txn* txn, const Key& key) = 0;
-    //virtual bool Write(); //Txn* txn, const Key& key) = 0;
-    //virtual void Release(); //Txn* txn, const Key& key) = 0;
-    
-    // Sets '*owners' to contain the txn IDs of all txns holding the lock, and
-    // returns the current LockMode of the lock: UNLOCKED if it is not currently
-    // held, SHARED or EXCLUSIVE if it is, depending on the current state.
-    //virtual LockMode Status(); //const Key& key, vector<Txn*>* owners) = 0;
+
 };
 
 #endif

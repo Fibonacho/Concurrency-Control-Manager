@@ -26,10 +26,12 @@ private:
 public:
     T getData() const
     {
+        // needs a shared lock
         return mData;
     }
     void setData(T pData) //this needs to lock
     {
+        // needs an exclusive lock
         mData = pData;
     }
     Row(StorageUnit& table): StorageUnit(table) {};

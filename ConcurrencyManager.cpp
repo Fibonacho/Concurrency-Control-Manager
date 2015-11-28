@@ -2,14 +2,21 @@
 
 #include "ConcurrencyManager.h"
 
-bool ConcurrencyManager::getSL(StorageUnit* storageUnit)
+bool ConcurrencyManager::getSharedLock(StorageUnit* pStorageUnit)
 {
-  //  SL = true;
-    return true;
+    // add item to mLocks
+    // this function waits until the lock is acquired
+    return false;
 }
 
-bool ConcurrencyManager::getXL(StorageUnit* storageUnit)
+bool ConcurrencyManager::getExclusiveLock(StorageUnit* pStorageUnit)
 {
-  //  XL = true;
-    return true;
+    // add item to mLocks
+    // this function waits until the lock is acquired
+    return false;
+}
+
+void ConcurrencyManager::releaseLock(StorageUnit* pStorageUnit)
+{
+    // remove item from mLocks
 }
