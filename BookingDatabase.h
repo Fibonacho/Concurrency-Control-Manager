@@ -92,18 +92,13 @@ namespace BookingDatabase {
         PassengerList.push_back(passengerTable.add("Elvis"));
         PassengerList.push_back(passengerTable.add("Johanna"));
         passengerTable.display();
-        
-        // reservationTable.mFlightList = &FlightList;
-        // reservationTable.mPassengerList = &PassengerList;
-        
-        //reservationTable.add(FlightList[0].mID, seatTable.getSeat(getRandomSeat()), PassengerList[2]);
-        //reservationTable.add(getRandomFlight(), seatTable.getSeat(getRandomSeat()), getRandomPassenger());
-        //reservationTable.display();
     }
     
+    // cancel(flight_id, passenger_id): cancel reservation for passenger on a flight
+    // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
     void removeReservation()
     {
-        // if reservation do exist
+        // if reservation exists
         if (!reservationTable.isEmpty())
         {
             Reservations::Reservation* randomReservation = reservationTable.getRandomReservation();
@@ -117,6 +112,8 @@ namespace BookingDatabase {
         }
     }
     
+    // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
+    // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
     void getBookedFlights()
     {
         //get a Random Passanger ID
@@ -125,14 +122,21 @@ namespace BookingDatabase {
         reservationTable.getBookedFlights(randomPID);
     }
 
+    // total_reservations(): return the total sum of all reservations on all flights
+    // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
     void getReservationSum()
     {
         reservationTable.printReservationSum();
     }
     
+    // book(flight_id, passenger_id): book a seat for a passenger on a flight
     void bookFlight()
     {
-        reservationTable.book();
+        // get an existing passenger
+        int randomPID = passengerTable.getRandomPassengerID();
+        // get an existing flight - make sure they are not deleted (locks)
+        int randomFID = flightsTable.getRandomFlightID();
+        reservationTable.book(randomFID, randomPID);
     }
     
     void initializeTransactionHandler()

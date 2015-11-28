@@ -33,13 +33,13 @@ namespace BookingDatabase {
         
         Reservations(Database& database);
 
-        bool add(int pFID, int pSID, int pPID);
-        bool removeRes(int pFID, int pPID);
         bool book(int pFID, int pSID, int pPID);
+        bool book(int pFID, int pPID);
+        bool removeRes(int pFID, int pPID);
+        bool hasBooked(int pFID, int pPID) const;
     
         // get flights for a specific passenger and a random one
         void getBookedFlights(const int pPID);
-        void getBookedFlights();
         void printReservationSum();
         void book();
         void removeRes();

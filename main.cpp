@@ -13,11 +13,6 @@
 #include "BookingDatabase.h"
 
 int main(int argc, const char * argv[]) {
-    /*StorageUnit* test(nullptr);
-    StorageUnit* a(test);
-    a->add(test);
-    StorageUnit* b(test);*/
-    
     // initialize the booking database (creates the tables)
     BookingDatabase::initializeData();
     // initialize the transaction handler with the 4 transactions

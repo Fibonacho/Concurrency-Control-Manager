@@ -25,8 +25,8 @@ public:
     TransactionHandler(Database &pDatabase);
 	~TransactionHandler();
     
-    void stop();
-    void start(const int pThreads);
-    void call();
+    void start(const int pThreads, const int pCount);
+    void callAll();
+    void callRandom();
     void addTransaction(Transaction pTransaction);
 };
