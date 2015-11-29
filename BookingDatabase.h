@@ -22,6 +22,7 @@
 #include "Reservations.h"
 #include "TransactionHandler.h"
 #include "Common.h"
+#include "Transaction.h"
 
 namespace BookingDatabase {
     // creates database
@@ -67,6 +68,7 @@ namespace BookingDatabase {
     // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
     void removeReservation()
     {
+        // 2PL: get exclusive lock on reservation row + shared lock on reservation
         // if reservation exists
         if (!reservationTable.isEmpty())
         {
@@ -75,43 +77,61 @@ namespace BookingDatabase {
             // remove this reservation
             reservationTable.removeRes(randomReservation.mFID, randomReservation.mPID);
         }
+        // 2PL: release lock on reservation
     }
     
     // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
     // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
     void getBookedFlights()
     {
-        //get a Random Passanger ID
+        // 2PL: get shared lock on passenger and reservation
+        // get a Random Passanger ID
         int randomPID = passengerTable.getRandomPassengerID();
         std::cout << "Random Passanger to list bookings: " << randomPID << std::endl;
         reservationTable.getBookedFlights(randomPID);
+        // 2PL: release lock on reservation
     }
     
     // total_reservations(): return the total sum of all reservations on all flights
     // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
     void getReservationSum()
     {
+        // 2PL: get shared lock on reservation
         reservationTable.printReservationSum();
+        // 2PL: release lock on reservation
     }
     
     // book(flight_id, passenger_id): book a seat for a passenger on a flight
     void bookFlight()
     {
+        // 2PL: get passanger, flight, seat shared lock und exclusive lock on booking
         // get an existing passenger
         int randomPID = passengerTable.getRandomPassengerID();
         // get an existing flight - make sure they are not deleted (locks)
         int randomFID = flightsTable.getRandomFlightID();
-        
         std::vector<int> seatList = seatTable.getSeats(randomFID);
         reservationTable.book(randomFID, randomPID, seatList);
+        // 2PL: release passanger, flight, seat and reservation lock
     }
     
     void initializeTransactionHandler()
     {
-        transactionHandler.addTransaction(getReservationSum);
-        transactionHandler.addTransaction(removeReservation);
-        transactionHandler.addTransaction(getBookedFlights);
-        transactionHandler.addTransaction(bookFlight);
+        Transaction transaction1(getReservationSum);
+        //Add all necessary locks to the transaction, they will be acquired before the transaction is excecuted
+        transaction1.addObjectLock(Lock::LockingMode::exclusive, &database);
+        transactionHandler.addTransaction(transaction1);
+        
+        Transaction transaction2(removeReservation);
+        transaction2.addObjectLock(Lock::LockingMode::exclusive, &database);
+        transactionHandler.addTransaction(transaction2);
+        
+        Transaction transaction3(getBookedFlights);
+        transaction3.addObjectLock(Lock::LockingMode::exclusive, &database);
+        transactionHandler.addTransaction(transaction3);
+        
+        Transaction transaction4(bookFlight);
+        transaction4.addObjectLock(Lock::LockingMode::exclusive, &database);
+        transactionHandler.addTransaction(transaction4);
     }
 
     void initializeData()

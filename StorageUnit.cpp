@@ -16,6 +16,11 @@ StorageUnit::~StorageUnit()
         delete mParent;
 }
 
+/*const Lock StorageUnit::getLock() const
+{
+    return mLock;
+}*/
+
 const bool StorageUnit::isLeaf() const
 {
     return mChilds.size() == 0;

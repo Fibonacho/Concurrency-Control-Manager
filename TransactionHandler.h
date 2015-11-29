@@ -13,8 +13,9 @@
 
 #include "Database.h"
 #include <vector>
+#include "Transaction.h"
 
-typedef void (*Transaction)(void);
+//typedef void (*Transaction)(void);
 
 class TransactionHandler
 {
@@ -25,7 +26,7 @@ public:
     TransactionHandler(Database &pDatabase);
 	~TransactionHandler();
     
-    void start(const int pThreads, const int pCount);
+    //void stat(const int pThreads, const int pCount);
     void callAll();
     void callRandom();
     void addTransaction(Transaction pTransaction);

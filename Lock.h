@@ -13,7 +13,7 @@
 #ifndef LOCK_H
 #define LOCK_H
 
-typedef void (*Transaction)(void);
+//typedef void (*Transaction)(void);
 
 class Lock
 {
@@ -26,13 +26,17 @@ public:
     
     Lock();
     
-    void Exclusive(const Transaction pTransaction);
-    void Shared(const Transaction pTransaction);
+    void Exclusive(); //const Transaction pTransaction);
+    void Shared(); //const Transaction pTransaction);
     void Release();
+    
+    bool isExclusiveLocked() const;
+    bool isSharedLocked() const;
+    bool isUnocked() const;
 private:
     LockingMode mLockingMode;
     // if LockingMode is unlocked the lockOwner has to be nullptr
-    Transaction mLockOwner;
+    //Transaction mLockOwner;
 };
 
 #endif

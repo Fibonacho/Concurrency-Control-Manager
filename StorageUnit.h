@@ -21,8 +21,6 @@
 
 class StorageUnit
 {
-private:
-    Lock lock;
 protected:
     std::vector<StorageUnit*> mChilds;
     StorageUnit* mParent;
@@ -30,6 +28,7 @@ protected:
     const bool isRoot() const;
     const unsigned long childCount() const;
 public:
+    Lock mLock;
     const bool isEmpty() const;
     StorageUnit(StorageUnit* parent);
     virtual ~StorageUnit();

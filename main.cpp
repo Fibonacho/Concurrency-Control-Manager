@@ -19,6 +19,7 @@ int main(int argc, const char * argv[]) {
     BookingDatabase::initializeTransactionHandler();
     // start the transaction handler with x threads
     BookingDatabase::transactionHandler.callAll();
+    BookingDatabase::transactionHandler.callRandom();
     std::cin.get();
     return 0;
 }

@@ -1,24 +1,38 @@
 #include "Lock.h"
 
-Lock::Lock(): mLockingMode(LockingMode::unlocked), mLockOwner(nullptr)
+Lock::Lock(): mLockingMode(LockingMode::unlocked) //, mLockOwner(nullptr)
 {
 }
 
-void Lock::Exclusive(const Transaction pTransaction)
+void Lock::Exclusive() //const Transaction pTransaction)
 {
     mLockingMode = LockingMode::exclusive;
-    mLockOwner = pTransaction;
+    //mLockOwner = pTransaction;
 }
 
-void Lock::Shared(const Transaction pTransaction)
+void Lock::Shared() //const Transaction pTransaction)
 {
     mLockingMode = LockingMode::shared;
-    mLockOwner = pTransaction;
+    //mLockOwner = pTransaction;
 }
 
 void Lock::Release()
 {
     mLockingMode = LockingMode::unlocked;
-    mLockOwner = nullptr;
+    //mLockOwner = nullptr;
 }
 
+bool Lock::isExclusiveLocked() const
+{
+    return (mLockingMode == LockingMode::exclusive);
+}
+
+bool Lock::isSharedLocked() const
+{
+    return (mLockingMode == LockingMode::shared);
+}
+
+bool Lock::isUnocked() const
+{
+    return (mLockingMode == LockingMode::unlocked);
+}
