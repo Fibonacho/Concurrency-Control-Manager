@@ -114,7 +114,7 @@ namespace BookingDatabase {
         // 2PL: release passanger, flight, seat and reservation lock
     }
     
-    void initializeTransactionHandler()
+    void initializeTransactionHandlerSerial()
     {
         Transaction transaction1(getReservationSum);
         //Add all necessary locks to the transaction, they will be acquired before the transaction is excecuted
@@ -131,6 +131,25 @@ namespace BookingDatabase {
         
         Transaction transaction4(bookFlight);
         transaction4.addObjectLock(Lock::LockingMode::exclusive, &database);
+        transactionHandler.addTransaction(transaction4);
+    }
+    
+    void initializeTransactionHandlerConcurrent()
+    {
+        Transaction transaction1(getReservationSum);
+        transaction1.addObjectLock(Lock::LockingMode::shared, &reservationTable);
+        transactionHandler.addTransaction(transaction1);
+        
+        Transaction transaction2(removeReservation);
+        transaction1.addObjectLock(Lock::LockingMode::exclusive, &reservationTable);
+        transactionHandler.addTransaction(transaction2);
+        
+        Transaction transaction3(getBookedFlights);
+        transaction3.addObjectLock(Lock::LockingMode::shared, &reservationTable);
+        transactionHandler.addTransaction(transaction3);
+        
+        Transaction transaction4(bookFlight);
+        transaction3.addObjectLock(Lock::LockingMode::exclusive, &reservationTable);
         transactionHandler.addTransaction(transaction4);
     }
 

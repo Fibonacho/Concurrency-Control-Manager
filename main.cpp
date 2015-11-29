@@ -16,10 +16,11 @@ int main(int argc, const char * argv[]) {
     // initialize the booking database (creates the tables)
     BookingDatabase::initializeData();
     // initialize the transaction handler with the 4 transactions
-    BookingDatabase::initializeTransactionHandler();
-    // start the transaction handler with x threads
+    BookingDatabase::initializeTransactionHandlerSerial();
+    // BookingDatabase::initializeTransactionHandlerConcurrent();
     BookingDatabase::transactionHandler.callAll();
-    BookingDatabase::transactionHandler.callRandom();
+    // BookingDatabase::transactionHandler.callRandom(-1);
+    // BookingDatabase::transactionHandler.run(2,2);
     std::cin.get();
     return 0;
 }

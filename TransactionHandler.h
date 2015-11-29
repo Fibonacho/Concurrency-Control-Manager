@@ -14,20 +14,20 @@
 #include "Database.h"
 #include <vector>
 #include "Transaction.h"
-
-//typedef void (*Transaction)(void);
+#include <thread>
 
 class TransactionHandler
 {
 private:
     std::vector<Transaction> mTransactions;
+    std::vector<std::thread*> mThreads;
     Database* mDatabase;
 public:
     TransactionHandler(Database &pDatabase);
 	~TransactionHandler();
     
-    //void stat(const int pThreads, const int pCount);
+    void run(const int pThreads, const int pCount);
     void callAll();
-    void callRandom();
+    void callRandom(const int pID, const int pTimes = 1);
     void addTransaction(Transaction pTransaction);
 };

@@ -15,7 +15,7 @@
 
 #include "StorageUnit.h"
 
-class ConcurrencyManager //: public ILockManager
+class ConcurrencyManager
 {
     std::vector<Lock*> mLocks; // maybe useful
     // knows all locks on a specific database

@@ -1,5 +1,6 @@
 #include "TransactionHandler.h"
 #include "Common.h"
+#include <iostream>
 
 TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
 {
@@ -17,33 +18,34 @@ void TransactionHandler::callAll()
         transaction.call();
 }
 
-void TransactionHandler::callRandom()
+void TransactionHandler::callRandom(const int pID, const int pTimes)
 {
-    // TODO: sleep random time
-    int random = RandomInt((int)mTransactions.size());
-    bool executedTransaction = false;
-    while (!executedTransaction)
+    for (int i = 0; i < pTimes; i++)
     {
-        if (mTransactions[random].ObjectsUnlocked())
-        {
-            // mTransactions add a list of objects and their locks
-            mTransactions[random].acquireLocks();
-            mTransactions[random].call();
-            mTransactions[random].releaseLocks();
-            executedTransaction = true;
-        }
-        else Sleep(10); //wait for a specific time and try again
+        // TODO: sleep random time
+        int random = RandomInt((int)mTransactions.size());
+        std::cout << "---- callRandom Thread " << pID << " " << random << std::endl;
+        mTransactions[random].call();
     }
 }
 
-//void TransactionHandler::stat(const int pThreads, const int pCount)
-//{
-    // TODO: x threads call callRandom(), pCount times
-    // repeat some number of times (pCount)
-    // select a transaction type randomly (callRandom)
-    // select object (flight and passenger id) for transaction randomly (is done in the transaction itself)
-    // invoke transaction (done in callRandom())
-//}
+// TODO: x threads call callRandom(), pCount times
+// repeat some number of times (pCount)
+// select a transaction type randomly (callRandom)
+// select object (flight and passenger id) for transaction randomly (is done in the transaction itself)
+// invoke transaction (done in callRandom())
+
+void TransactionHandler::run(const int pThreads, const int pCount)
+{
+    // pCount treads call callRandom
+    //std::cout << "Started " <
+    for (int i = 0; i < pThreads; i++)
+    {
+        std::thread* t = new std::thread(&TransactionHandler::callRandom, this,  i, pCount);
+        t->join();
+        mThreads.push_back(t);
+    }
+}
 
 void TransactionHandler::addTransaction(Transaction pTransaction)
 {

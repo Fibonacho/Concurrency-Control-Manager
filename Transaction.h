@@ -23,13 +23,17 @@ class Transaction
 private:
     typedef void (*Function)(void);
     
-    struct ObjectLock //create new file for this
+    struct ObjectLock
     {
         Lock::LockingMode mLockingMode;
         StorageUnit* mStorageUnit;
         
         ObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit): mLockingMode(pLockingMode), mStorageUnit(pStorageUnit) {}
     };
+    
+    void acquireLocks();
+    void releaseLocks();
+    bool isUnlocked() const;
     
     std::vector<ObjectLock> mObjectLocks;
     Function mFunction;
@@ -38,9 +42,6 @@ public:
     
     void addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit);
     void call();
-    void acquireLocks();
-    void releaseLocks();
-    bool ObjectsUnlocked();
 };
 
 #endif

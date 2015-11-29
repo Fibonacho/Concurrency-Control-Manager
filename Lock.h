@@ -32,7 +32,7 @@ public:
     
     bool isExclusiveLocked() const;
     bool isSharedLocked() const;
-    bool isUnocked() const;
+    bool isUnlocked() const;
 private:
     LockingMode mLockingMode;
     // if LockingMode is unlocked the lockOwner has to be nullptr

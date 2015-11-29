@@ -1,5 +1,6 @@
 #include "Transaction.h"
 #include "StorageUnit.h"
+#include "Common.h"
 
 Transaction::Transaction(Function pFunction): mFunction(pFunction)
 {
@@ -12,17 +13,32 @@ void Transaction::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pSt
     
 void Transaction::call()
 {
+    acquireLocks();
     mFunction();
+    releaseLocks();
 }
     
 void Transaction::acquireLocks()
 {
-    for (auto objectLocks: mObjectLocks)
+    // could take a while
+    for (auto objectLock: mObjectLocks)
     {
-        if (objectLocks.mLockingMode == Lock::LockingMode::exclusive)
-            objectLocks.mStorageUnit->mLock.Exclusive();
-        else if (objectLocks.mLockingMode == Lock::LockingMode::shared)
-            objectLocks.mStorageUnit->mLock.Shared();
+        bool locked = false;
+        while (!locked)
+        {
+            // check if storage unit is not already locked
+            if ((objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->mLock.isUnlocked())
+            {
+                objectLock.mStorageUnit->mLock.Exclusive();
+                locked = true;
+            }
+            else if ((objectLock.mLockingMode == Lock::LockingMode::shared) && (!objectLock.mStorageUnit->mLock.isExclusiveLocked()))
+            {
+                objectLock.mStorageUnit->mLock.Shared();
+                locked = true;
+            }
+            else Sleep(10); //try again later
+        }
     }
 }
     
@@ -32,7 +48,7 @@ void Transaction::releaseLocks()
         objectLocks.mStorageUnit->mLock.Release();
 }
 
-bool Transaction::ObjectsUnlocked()
+bool Transaction::isUnlocked() const
 {
     for (auto objectLocks: mObjectLocks)
     {

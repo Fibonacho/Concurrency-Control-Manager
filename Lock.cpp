@@ -32,7 +32,7 @@ bool Lock::isSharedLocked() const
     return (mLockingMode == LockingMode::shared);
 }
 
-bool Lock::isUnocked() const
+bool Lock::isUnlocked() const
 {
     return (mLockingMode == LockingMode::unlocked);
 }
