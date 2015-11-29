@@ -16,7 +16,7 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-#include <unistd.h>
+//#include <unistd.h>
 
 // random double between 0 and max
 /*static double RandomDouble(const double max) {
@@ -37,7 +37,7 @@ static int RandomInt(const int max)
 
 // Sleeps <duration>
 static void Sleep(double duration) {
-    usleep(1000000 * duration);
+    //usleep(1000000 * duration);
 }
 
 #endif
