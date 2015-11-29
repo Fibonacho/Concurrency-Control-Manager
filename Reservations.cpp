@@ -2,6 +2,7 @@
 #include "Row.h"
 #include "Common.h"
 #include <iostream>
+#include <algorithm>
 
 BookingDatabase::Reservations::Reservations(Database& database): Table(database)
 {

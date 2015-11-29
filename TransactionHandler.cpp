@@ -41,9 +41,9 @@ void TransactionHandler::run(const int pThreads, const int pCount)
     //std::cout << "Started " <
     for (int i = 0; i < pThreads; i++)
     {
-        std::thread* t = new std::thread(&TransactionHandler::callRandom, this,  i, pCount);
-        t->join();
-        mThreads.push_back(t);
+        //std::thread* t = new std::thread(&TransactionHandler::callRandom, this,  i, pCount);
+        //t->join();
+        //mThreads.push_back(t);
     }
 }
 
