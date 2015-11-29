@@ -51,3 +51,4 @@ void TransactionHandler::addTransaction(Transaction pTransaction)
 {
     mTransactions.push_back(pTransaction);
 }
+

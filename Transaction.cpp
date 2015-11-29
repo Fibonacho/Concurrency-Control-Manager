@@ -17,7 +17,7 @@ void Transaction::call()
     mFunction();
     releaseLocks();
 }
-    
+
 void Transaction::acquireLocks()
 {
     // could take a while

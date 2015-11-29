@@ -36,25 +36,11 @@ namespace BookingDatabase {
     
     TransactionHandler transactionHandler(database);
     
-    struct FlightListElement {
-        int mID;
-        std::vector<int> mSID;
-        FlightListElement(int pID) : mID(pID) {}
-    };
-    
-    std::vector<FlightListElement> FlightList;
-    //std::vector<int> FlightSeats;
-    std::vector<int> PassengerList;
-    
     int MaxSeatID = 0;
     
     void addFlight(std::string pDestination, int pSeats)
     {
         int FlightID = flightsTable.add(pDestination);
-        FlightListElement listElement(FlightID);
-        //listElement.mSID.push_back();
-        //FlightSeats.push_back(pSeats);
-        //FlightList.push_back(listElement);
         MaxSeatID += pSeats;
         seatTable.add(FlightID, pSeats);
     }
@@ -168,9 +154,9 @@ namespace BookingDatabase {
         addFlight("Berlin", 200);
         flightsTable.display();
         
-        PassengerList.push_back(passengerTable.add("Eva"));
-        PassengerList.push_back(passengerTable.add("Elvis"));
-        PassengerList.push_back(passengerTable.add("Johanna"));
+        passengerTable.add("Eva");
+        passengerTable.add("Elvis");
+        passengerTable.add("Johanna");
         passengerTable.display();
         
         bookFlight();
