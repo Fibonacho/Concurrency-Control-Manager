@@ -1,6 +1,12 @@
 # Concurrency-Control-Manager
 
 -----------
+Compilation
+-----------
+
+The program can be compiled using XCode, Visual Studio or g++ using the command: g++ -std=c++11 *.cpp
+
+-----------
 Description
 -----------
 
