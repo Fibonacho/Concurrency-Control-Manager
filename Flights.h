@@ -31,9 +31,13 @@ namespace BookingDatabase {
             Flight(int pID, std::string pDestination): mID(pID), mDestination(pDestination) {}
         };
     public:
+        // add a flight (row) to the flight table
         int add(std::string pDestination);
+        // display flights, i.e. print content of flight table to console
         void display() const;
+        // get a random flight from the table
         Flight getRandomFlight() const;
+        // get a random flight id by calling getRandomFlight() and accessing it's ID
         int getRandomFlightID() const;
 
         Flights(Database& database);

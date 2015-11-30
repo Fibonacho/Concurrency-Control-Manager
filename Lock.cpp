@@ -22,19 +22,16 @@ void Lock::Release()
     //mLockOwner = nullptr;
 }
 
-// tell if locking mode is exclusive
 bool Lock::isExclusiveLocked() const
 {
     return (mLockingMode == LockingMode::exclusive);
 }
 
-// tell if locking mode is shared
 bool Lock::isSharedLocked() const
 {
     return (mLockingMode == LockingMode::shared);
 }
 
-// tell if resource is unlocked (locking mode is 0)
 bool Lock::isUnlocked() const
 {
     return (mLockingMode == LockingMode::unlocked);

@@ -16,13 +16,13 @@
 
 #include <vector>
 #include "StorageUnit.h"
-#include "ConcurrencyManager.h"
 
 class Database: public StorageUnit
 {
 private:
-    ConcurrencyManager mConcurrencyManager;
+    //ConcurrencyManager mConcurrencyManager;
 public:
+    // adds a table to the childs of the database 
     void AddTable(StorageUnit& table);
     Database();
     ~Database();

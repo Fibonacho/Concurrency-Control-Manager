@@ -16,7 +16,6 @@ Database::~Database()
 
 }
 
-// gets automatically called by the table class
 void Database::AddTable(StorageUnit& table)
 {
     mChilds.push_back(&table);

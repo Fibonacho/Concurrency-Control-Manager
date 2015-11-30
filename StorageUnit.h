@@ -25,11 +25,15 @@ class StorageUnit
 protected:
     std::vector<StorageUnit*> mChilds;
     StorageUnit* mParent;
+    // returns true if the storage unit is a leaf (i.e. has NO children)
     const bool isLeaf() const;
+    // returns if the storage unit is root (i.e. has no parent)
     const bool isRoot() const;
+    // get number of children (e.g. number of rows in a table)
     const unsigned long childCount() const;
 public:
     Lock mLock;
+    // tell if storage unit is empty
     const bool isEmpty() const;
     StorageUnit(StorageUnit* parent);
     virtual ~StorageUnit();

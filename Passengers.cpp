@@ -11,7 +11,6 @@ BookingDatabase::Passengers::~Passengers()
 {
 }
 
-// add a passenger (row) to the passenger table
 int BookingDatabase::Passengers::add(std::string pName)
 {
     Passenger passenger;
@@ -23,7 +22,6 @@ int BookingDatabase::Passengers::add(std::string pName)
     return row->getData().mPID;
 }
 
-// get a random passenger from the table
 BookingDatabase::Passengers::Passenger BookingDatabase::Passengers::getRandomPassenger() const
 {
     if (mChilds.size() == 0)
@@ -37,15 +35,12 @@ BookingDatabase::Passengers::Passenger BookingDatabase::Passengers::getRandomPas
     else return Passenger();
 }
 
-// get a random passenger id by calling getRandomPassenger() and accessing it's ID
 int BookingDatabase::Passengers::getRandomPassengerID() const
 {
     Passenger data = getRandomPassenger();
     return data.mPID;
 }
 
-// display passengers, i.e. print content of passenger table to console
-// print every row in a new line
 void BookingDatabase::Passengers::display() const
 {
     std::cout << "----------------------------" << std::endl << "Display Passengers: " << std::endl;

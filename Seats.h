@@ -31,14 +31,18 @@ namespace BookingDatabase {
         };
     
         int returnSID(StorageUnit* su) const;
+        // add a new seat with id pFID to seats table
         int add(int pFID);
     public:
+        // add pCount seats to flight with id pFID
         void add(int pFID, int pCount);
+        // get a free seat (randomly chosen) of flight with id pFID
         int getFreeSeat(int pFID);
         std::vector<int> getSeats(int pFID) const;
-        
+        // get a random seat
         Seat getRandomSeat() const;
         Seat getRandomSeat(int pFID) const;
+        // get a random seat id
         int getRandomSeatID() const;
 
         Seats(Database& database);

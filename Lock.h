@@ -31,8 +31,11 @@ public:
     void Shared(); //const Transaction pTransaction);
     void Release();
     
+    // returns true if locking mode is exclusive
     bool isExclusiveLocked() const;
+    // returns true if locking mode is shared
     bool isSharedLocked() const;
+    // returns true if the resource is unlocked (locking mode is 0)
     bool isUnlocked() const;
 private:
     LockingMode mLockingMode;

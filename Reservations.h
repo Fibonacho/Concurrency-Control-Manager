@@ -19,6 +19,9 @@
 namespace BookingDatabase {
     class Reservations: public Table
     {
+    private:
+        // book a seat on a flight
+        bool book(int pFID, int pSID, int pPID);
     public:
         struct Reservation
         {
@@ -33,17 +36,25 @@ namespace BookingDatabase {
         Reservations(Database& database);
         ~Reservations();
         
-        bool book(int pFID, int pSID, int pPID);
+        // book a flight for passenger pPID and flight pFID
         bool book(int pFID, int pPID, std::vector<int> &pFlightSeatIDs);
+        // remove a reservation with flight id pFID and passenger id pPID
+        // i.e. delete a certain row from the reservations table
         bool removeRes(int pFID, int pPID);
+        // tell if passenger with id pPID has booked flight with id pFID
         bool hasBooked(int pFID, int pPID) const;
         
-        // get flights for a specific passenger and a random one
+        // get / print booked flights of a passenger with id pPID
         void getBookedFlights(const int pPID);
+        // print number of reservations (sum of rows)
         void printReservationSum();
-        //void book(); // not implemented?
+        // remove a random reservation
+        // i.e. delete a random row from the reservations table
         void removeRes();
+        // display reservations, i.e. print content of reservation table to console
+        // print every row in a new line
         void display() const;
+        // get a random reservation
         Reservation getRandomReservation();
     };
 }

@@ -31,10 +31,13 @@ namespace BookingDatabase {
     public:
         Passengers(Database& database);
         ~Passengers();
-        
+        // add a passenger (row) to the passenger table
         int add(std::string pName);
+        // get a random passenger from the table
         Passenger getRandomPassenger() const;
+        // get a random passenger id by calling getRandomPassenger() and accessing it's ID
         int getRandomPassengerID() const;
+        // display passengers, i.e. print content of passenger table to console
         void display() const;
     };
 }
