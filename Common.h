@@ -16,7 +16,12 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-//#include <unistd.h>
+#ifdef LINUX
+#include <unistd.h>
+#endif
+#ifdef WINDOWS
+#include <windows.h>
+#endif
 
 // random double between 0 and max
 /*static double RandomDouble(const double max) {
@@ -36,8 +41,13 @@ static int RandomInt(const int max)
 }
 
 // Sleeps <duration>
-static void Sleep(double duration) {
-    //usleep(1000000 * duration);
+static void Sleep(double duration)
+{
+#ifdef WINDOWS
+	Sleep(duration);
+#ifelse
+	usleep(1000000 * duration);   // usleep takes sleep time in us (1 millionth of a second)
+#endif
 }
 
 #endif
