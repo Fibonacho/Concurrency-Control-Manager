@@ -1,9 +1,10 @@
 //  ---------------------------------------------------
 //  StorageUnit:
 //  - represents a storage unit in the database
-//  - a storage unit has a parent and childs
+//  - a storage unit has a parent and can have children
 //  - if childs are empty the storage unit is a leaf
-//  - if the root is null, the storage unit is the databse itself
+//  - if the root is null, the storage unit is the
+//    database itself
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //

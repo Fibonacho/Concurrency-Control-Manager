@@ -1,6 +1,7 @@
 //  ---------------------------------------------------
 //  Transaction:
-//  -
+//  - a transaction has a locking mode
+//  - a transaction can acquire a lock for a storage unit
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //

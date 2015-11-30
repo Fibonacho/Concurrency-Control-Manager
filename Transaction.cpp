@@ -10,7 +10,11 @@ void Transaction::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pSt
 {
     mObjectLocks.push_back(ObjectLock(pLockingMode, pStorageUnit));
 }
-    
+
+// call a transaction
+// - first acquire all locks
+// - then execute the function
+// - and in the end release the lock again
 void Transaction::call()
 {
     acquireLocks();
@@ -18,6 +22,9 @@ void Transaction::call()
     releaseLocks();
 }
 
+// acquire a lock for a storage unit
+// if an object should be locked exclusively, it has to be unlocked before
+// if an object has to be locked in shared mode, it only has to be NOT in exclusive lock mode
 void Transaction::acquireLocks()
 {
     // could take a while
@@ -42,12 +49,14 @@ void Transaction::acquireLocks()
     }
 }
     
+// release a lock, i.e. set locking mode to 0
 void Transaction::releaseLocks()
 {
     for (auto objectLocks: mObjectLocks)
         objectLocks.mStorageUnit->mLock.Release();
 }
 
+// tell if an object is unlocked
 bool Transaction::isUnlocked() const
 {
     for (auto objectLocks: mObjectLocks)

@@ -1,6 +1,6 @@
 //  ---------------------------------------------------
-//  Passengers:
-//  - Passengers Table
+//  Reservations:
+//  - Reservations Table
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -41,7 +41,7 @@ namespace BookingDatabase {
         // get flights for a specific passenger and a random one
         void getBookedFlights(const int pPID);
         void printReservationSum();
-        void book();
+        //void book(); // not implemented?
         void removeRes();
         void display() const;
         Reservation getRandomReservation();

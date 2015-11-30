@@ -20,12 +20,14 @@ int BookingDatabase::Seats::returnSID(StorageUnit* su) const
         return -1;
 }
 
-int BookingDatabase::Seats::getFreeSeat(int pFID) //get seat of flight
+// get a free seat (randomly chosen) of flight with id pFID 
+int BookingDatabase::Seats::getFreeSeat(int pFID)
 {
     // flights are stored in a serial order
     return returnSID(mChilds[RandomInt((int)mChilds.size())]);
 }
 
+// get a "list" of all seats (a vector object containing int values)
 std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
 {
     std::vector<int> list;
@@ -41,6 +43,7 @@ std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
     return list;
 }
 
+// add a new seat with id pFID to seats table
 int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
 {
     Seat seat;
@@ -53,12 +56,14 @@ int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
     return row->getData().mSID;
 }
 
+// add pCount seats to flight with id pFID
 void BookingDatabase::Seats::add(int pFID, int pCount)
 {
     for (int i = 0; i < pCount; i++)
         add(pFID);
 }
 
+// get a random seat
 BookingDatabase::Seats::Seat BookingDatabase::Seats::getRandomSeat() const
 {
     if (mChilds.size() == 0)
@@ -72,6 +77,7 @@ BookingDatabase::Seats::Seat BookingDatabase::Seats::getRandomSeat() const
     else return Seat();
 }
 
+// get a random seat id
 int BookingDatabase::Seats::getRandomSeatID() const
 {
     Seat data = getRandomSeat();
