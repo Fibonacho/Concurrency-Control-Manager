@@ -1,6 +1,7 @@
 //  ---------------------------------------------------
 //  Lock:
-//  - this class stores the lock modes etc. but doesn't know about their logic
+//  - this class stores the lock modes etc.
+//  - but does NOT know about their logic
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //

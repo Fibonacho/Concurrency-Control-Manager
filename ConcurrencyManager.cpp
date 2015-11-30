@@ -1,4 +1,4 @@
-//Table
+// ConcurrencyManager
 
 #include "ConcurrencyManager.h"
 

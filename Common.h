@@ -1,6 +1,8 @@
 //  ---------------------------------------------------
 //  Common:
 //  - general functions
+//  - generating random values
+//  - sleep function
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -35,6 +37,7 @@ static void initRand()
 
 }
 
+// generate a random integer value in the range 0 to max-1
 static int RandomInt(const int max)
 {
     return (rand() % max);

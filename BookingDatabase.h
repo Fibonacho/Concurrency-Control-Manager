@@ -38,6 +38,7 @@ namespace BookingDatabase {
     
     int MaxSeatID = 0;
     
+	// add a flight to the table
     void addFlight(std::string pDestination, int pSeats)
     {
         int FlightID = flightsTable.add(pDestination);
@@ -45,6 +46,7 @@ namespace BookingDatabase {
         seatTable.add(FlightID, pSeats);
     }
     
+	// obtain a random seat value (with usage of RandomInt-function from Common.h)
     int getRandomSeat()
     {
         return RandomInt(MaxSeatID)+1;
@@ -100,6 +102,10 @@ namespace BookingDatabase {
         // 2PL: release passanger, flight, seat and reservation lock
     }
     
+	// serial transaction handler:
+	// - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
+	// - add locks to transaction objects
+	// - add transactions to transaction handler
     void initializeTransactionHandlerSerial()
     {
         Transaction transaction1(getReservationSum);
@@ -119,7 +125,11 @@ namespace BookingDatabase {
         transaction4.addObjectLock(Lock::LockingMode::exclusive, &database);
         transactionHandler.addTransaction(transaction4);
     }
-    
+
+	// concurrent transaction handler:
+	// - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
+	// - add locks to transaction objects
+	// - add transactions to transaction handler
     void initializeTransactionHandlerConcurrent()
     {
         Transaction transaction1(getReservationSum);
@@ -139,6 +149,12 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(transaction4);
     }
 
+	// initialize data:
+	// - setup database
+	// - add tables to database (tables for passengers, flights, reservations, seats)
+	// - add rows to tables (flights and passengers)
+	// - book flights (which creates rows in the table for reservations)
+	// - display tables (i.e. print to console)
     void initializeData()
     {
         initRand();
@@ -152,7 +168,7 @@ namespace BookingDatabase {
         addFlight("Tokio", 100);
         addFlight("New York", 100);
         addFlight("Berlin", 200);
-        flightsTable.display();
+        flightsTable.display(); // print flightsTable to console
         
         passengerTable.add("Eva");
         passengerTable.add("Elvis");
@@ -162,7 +178,7 @@ namespace BookingDatabase {
         bookFlight();
         bookFlight();
         bookFlight();
-        reservationTable.display();
+        reservationTable.display(); // print reservationTable to console
     }
 
 }

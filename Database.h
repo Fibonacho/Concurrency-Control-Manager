@@ -1,6 +1,7 @@
 //  ---------------------------------------------------
 //  Database:
-//  - The database has a concurrencyManager where locks are aquired
+//  - a database has a ConcurrencyManager where
+//    (exclusive and shared) locks are aquired
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //

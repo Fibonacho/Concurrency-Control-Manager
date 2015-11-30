@@ -1,6 +1,6 @@
 //  ---------------------------------------------------
 //  Flights:
-//  - Flight Table
+//  - Flights Table 
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //

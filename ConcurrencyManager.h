@@ -1,6 +1,7 @@
 //  ---------------------------------------------------
 //  ConcurrencyManager:
-//  - will manage the access to the relations by locking and unlocking instructions
+//  - will manage the access to the relations by
+//    locking and unlocking instructions
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -20,9 +21,9 @@ class ConcurrencyManager
     std::vector<Lock*> mLocks; // maybe useful
     // knows all locks on a specific database
     // decides if a lock can be aquired
-    bool getSharedLock(StorageUnit* pStorageUnit); //get lock on a specific storage unit
-    bool getExclusiveLock(StorageUnit* pStorageUnit);
-    void releaseLock(StorageUnit* pStorageUnit);
+    bool getSharedLock(StorageUnit* pStorageUnit);    // get a  (shared)    lock on a specific storage unit
+    bool getExclusiveLock(StorageUnit* pStorageUnit); //     an (exclusive) lock
+    void releaseLock(StorageUnit* pStorageUnit);      // release the lock on a specific storage unit again
 public:
 
 };
