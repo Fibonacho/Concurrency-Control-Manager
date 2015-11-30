@@ -24,6 +24,7 @@ private:
 public:
     void AddTable(StorageUnit& table);
     Database();
+    ~Database();
 };
 
 #endif

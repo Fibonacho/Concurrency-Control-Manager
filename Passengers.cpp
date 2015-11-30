@@ -7,6 +7,10 @@ BookingDatabase::Passengers::Passengers(Database& database): Table(database)
 {
 }
 
+BookingDatabase::Passengers::~Passengers()
+{
+}
+
 int BookingDatabase::Passengers::add(std::string pName)
 {
     Passenger passenger;

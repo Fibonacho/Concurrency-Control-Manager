@@ -7,6 +7,11 @@ BookingDatabase::Seats::Seats(Database& database): Table(database)
 {
 }
 
+BookingDatabase::Seats::~Seats()
+{
+    std::cout << "Seats destructur " << std::endl;
+}
+
 int BookingDatabase::Seats::returnSID(StorageUnit* su) const
 {
     if (su != nullptr)

@@ -8,6 +8,10 @@ BookingDatabase::Reservations::Reservations(Database& database): Table(database)
 {
 }
 
+BookingDatabase::Reservations::~Reservations()
+{
+}
+
 /*bool Reservations::add(Reservation pReservation)
 {
     //is id already in the data structure

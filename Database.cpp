@@ -11,6 +11,11 @@ Database::Database(): StorageUnit(nullptr)
 
 }
 
+Database::~Database()
+{
+
+}
+
 //gets automatically called by the table class
 void Database::AddTable(StorageUnit& table)
 {

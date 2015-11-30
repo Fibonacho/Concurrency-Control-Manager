@@ -31,7 +31,8 @@ namespace BookingDatabase {
         };
         
         Reservations(Database& database);
-
+        ~Reservations();
+        
         bool book(int pFID, int pSID, int pPID);
         bool book(int pFID, int pPID, std::vector<int> &pFlightSeatIDs);
         bool removeRes(int pFID, int pPID);

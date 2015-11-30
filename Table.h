@@ -23,7 +23,11 @@ public:
     Table(Database& database): StorageUnit(database), mID(0)
     {
         //database.AddTable(*this);
-    };
+    }
+
+    virtual ~Table()
+    {
+    }
     
     void addRow(StorageUnit* row) {
         //check if id has already been taken!?
