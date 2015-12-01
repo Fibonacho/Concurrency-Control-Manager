@@ -92,14 +92,14 @@ namespace BookingDatabase {
     // book(flight_id, passenger_id): book a seat for a passenger on a flight
     void bookFlight()
     {
-        // 2PL: get passanger, flight, seat shared lock und exclusive lock on booking
+        // 2PL: get passenger, flight, seat shared lock und exclusive lock on booking
         // get an existing passenger
         int randomPID = passengerTable.getRandomPassengerID();
         // get an existing flight - make sure they are not deleted (locks)
         int randomFID = flightsTable.getRandomFlightID();
         std::vector<int> seatList = seatTable.getSeats(randomFID);
         reservationTable.book(randomFID, randomPID, seatList);
-        // 2PL: release passanger, flight, seat and reservation lock
+        // 2PL: release passenger, flight, seat and reservation lock
     }
     
 	// serial transaction handler:

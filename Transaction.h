@@ -50,7 +50,7 @@ public:
     // call a transaction
     // - first acquire all locks
     // - then execute the function using the function pointer
-    // - and in the end release the lock again
+    // - in the end release the lock again
     void call();
 };
 
