@@ -17,10 +17,11 @@ int main(int argc, const char * argv[]) {
     BookingDatabase::initializeData();
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandlerSerial();
-    // BookingDatabase::initializeTransactionHandlerConcurrent();
-    BookingDatabase::transactionHandler.callAll();
-    // BookingDatabase::transactionHandler.callRandom(-1);
-    // BookingDatabase::transactionHandler.run(2,2);
+    //BookingDatabase::initializeTransactionHandlerConcurrent();
+    //BookingDatabase::transactionHandler.callAll();
+    //BookingDatabase::transactionHandler.callRandom(-1);
+    // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
+    BookingDatabase::transactionHandler.run(5, 2);
     std::cin.get();
     return 0;
 }
