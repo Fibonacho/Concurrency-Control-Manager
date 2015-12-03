@@ -1,9 +1,6 @@
 #include "TransactionHandler.h"
 #include "Common.h"
 #include <iostream>
-#ifdef WINDOWS
-#include <windows.h> // for threading
-#endif
 
 TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
 {
@@ -17,7 +14,7 @@ TransactionHandler::~TransactionHandler()
 
 void TransactionHandler::callAll()
 {
-    for(auto transaction: mTransactions)
+    for (auto transaction: mTransactions)
         transaction.call();
 }
 
@@ -25,28 +22,25 @@ void TransactionHandler::callRandom(const int pID, const int pTimes)
 {
     for (int i = 0; i < pTimes; i++)
     {
-        // TODO: sleep random time
         int random = RandomInt((int)mTransactions.size());
         std::cout << "---- callRandom Thread " << pID << " " << random << std::endl;
         mTransactions[random].call();
+        // sleep random time - between 0 and 10 (?) seconds
+        Sleep(RandomInt(10));
     }
 }
 
-// TODO: x threads call callRandom(), pCount times
-// repeat some number of times (pCount)
-// select a transaction type randomly (callRandom)
-// select object (flight and passenger id) for transaction randomly (is done in the transaction itself)
-// invoke transaction (done in callRandom())
-
 void TransactionHandler::run(const int pThreads, const int pCount)
 {
-    // pCount threads call callRandom
-    //std::cout << "Started " <
+    // pThreads are executed
     for (int i = 0; i < pThreads; i++)
     {
-        //std::thread* t = new std::thread(&TransactionHandler::callRandom, this,  i, pCount);
-        //t->join();
-        //mThreads.push_back(t);
+        std::cout << "Loop " << i << std::endl;
+        // pCount threads call callRandom
+        std::thread* t = new std::thread(&TransactionHandler::callRandom, this, i, pCount);
+        t->join();
+        std::cout << "Thread started " << std::endl;
+        mThreads.push_back(t);
     }
 }
 
