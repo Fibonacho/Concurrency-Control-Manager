@@ -73,7 +73,7 @@ namespace BookingDatabase {
     void getBookedFlights()
     {
         // 2PL: get shared lock on passenger and reservation
-        // get a Random Passanger ID
+        // get a Random Passenger ID
         int randomPID = passengerTable.getRandomPassengerID();
         std::cout << "Random Passenger to list bookings: " << randomPID << std::endl;
         reservationTable.getBookedFlights(randomPID);
