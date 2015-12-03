@@ -25,8 +25,10 @@ void TransactionHandler::callRandom(const int pID, const int pTimes)
         int random = RandomInt((int)mTransactions.size());
         std::cout << "---- callRandom Thread " << pID << " " << random << std::endl;
         mTransactions[random].call();
-        // sleep random time - between 0 and 10 (?) seconds
-        Sleep(RandomInt(10));
+        // sleep random time - between 1 and 10 seconds
+        int r = RandomInt(10) + 1;
+        std::cout << "sleep for " << r << " seconds " << std::endl;
+        sleep(r);
     }
 }
 
@@ -39,7 +41,7 @@ void TransactionHandler::run(const int pThreads, const int pCount)
         // pCount threads call callRandom
         std::thread* t = new std::thread(&TransactionHandler::callRandom, this, i, pCount);
         t->join();
-        std::cout << "Thread started " << std::endl;
+        //std::cout << "Thread started " << std::endl;
         mThreads.push_back(t);
     }
 }
