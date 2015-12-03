@@ -21,7 +21,7 @@
 #ifdef LINUX
 #include <unistd.h>
 #endif
-#ifdef WINDOWS
+#ifdef _WIN32
 #include <windows.h>
 #endif
 
@@ -43,12 +43,12 @@ static int RandomInt(const int max)
     return (rand() % max);
 }
 
-// Sleeps <duration>
-static void Sleep(double duration)
+// sleeps <duration>
+static void sleep(int duration)
 {
-#ifdef WINDOWS
-    Sleep(1000 * duration);
-#ifelse
+#ifdef _WIN32
+    Sleep(1000 * duration); // Sleep takes milliseconds
+#else
     usleep(1000000 * duration);   // usleep takes sleep time in us (1 millionth of a second)
 #endif
 }
