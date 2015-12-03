@@ -47,9 +47,9 @@ static int RandomInt(const int max)
 static void Sleep(double duration)
 {
 #ifdef WINDOWS
-	Sleep(duration);
+    Sleep(duration);
 #ifelse
-	usleep(1000000 * duration);   // usleep takes sleep time in us (1 millionth of a second)
+    usleep(1000000 * duration);   // usleep takes sleep time in us (1 millionth of a second)
 #endif
 }
 

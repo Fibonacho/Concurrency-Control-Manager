@@ -38,7 +38,7 @@ namespace BookingDatabase {
     
     int MaxSeatID = 0;
     
-	// add a flight to the table
+    // add a flight to the table
     void addFlight(std::string pDestination, int pSeats)
     {
         int FlightID = flightsTable.add(pDestination);
@@ -46,7 +46,7 @@ namespace BookingDatabase {
         seatTable.add(FlightID, pSeats);
     }
     
-	// obtain a random seat value (with usage of RandomInt-function from Common.h)
+    // obtain a random seat value (with usage of RandomInt-function from Common.h)
     int getRandomSeat()
     {
         return RandomInt(MaxSeatID)+1;
@@ -102,10 +102,10 @@ namespace BookingDatabase {
         // 2PL: release passenger, flight, seat and reservation lock
     }
     
-	// serial transaction handler:
-	// - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
-	// - add locks to transaction objects
-	// - add transactions to transaction handler
+    // serial transaction handler:
+    // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
+    // - add locks to transaction objects
+    // - add transactions to transaction handler
     void initializeTransactionHandlerSerial()
     {
         Transaction transaction1(getReservationSum);
@@ -126,10 +126,10 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(transaction4);
     }
 
-	// concurrent transaction handler:
-	// - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
-	// - add locks to transaction objects
-	// - add transactions to transaction handler
+    // concurrent transaction handler:
+    // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
+    // - add locks to transaction objects
+    // - add transactions to transaction handler
     void initializeTransactionHandlerConcurrent()
     {
         Transaction transaction1(getReservationSum);
@@ -149,12 +149,12 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(transaction4);
     }
 
-	// initialize data:
-	// - setup database
-	// - add tables to database (tables for passengers, flights, reservations, seats)
-	// - add rows to tables (flights and passengers)
-	// - book flights (which creates rows in the table for reservations)
-	// - display tables (i.e. print to console)
+    // initialize data:
+    // - setup database
+    // - add tables to database (tables for passengers, flights, reservations, seats)
+    // - add rows to tables (flights and passengers)
+    // - book flights (which creates rows in the table for reservations)
+    // - display tables (i.e. print to console)
     void initializeData()
     {
         initRand();

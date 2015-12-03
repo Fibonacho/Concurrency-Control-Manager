@@ -24,7 +24,7 @@ private:
     Database* mDatabase;
 public:
     TransactionHandler(Database &pDatabase);
-	~TransactionHandler();
+    ~TransactionHandler();
     
     void run(const int pThreads, const int pCount);
     void callAll();

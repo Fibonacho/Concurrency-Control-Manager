@@ -2,10 +2,10 @@
 
 class ILockManager
 {
-	//Interface
-	bool SL;
-	bool XL;
+    //Interface
+    bool SL;
+    bool XL;
 
-	virtual bool getSL() = 0;
-	virtual bool getXL() = 0;
+    virtual bool getSL() = 0;
+    virtual bool getXL() = 0;
 };
