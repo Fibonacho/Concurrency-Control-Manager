@@ -26,8 +26,17 @@ public:
     TransactionHandler(Database &pDatabase);
     ~TransactionHandler();
     
+    // pThreads threads call callRandom(), pCount times
+    // repeat some number of times (pCount)
+    // select a transaction type randomly (callRandom)
+    // select object (flight and passenger id) for transaction randomly (is done in the transaction itself)
+    // invoke transaction (done in callRandom())
     void run(const int pThreads, const int pCount);
+    // call all transactions from Transaction-vector mTransactions
     void callAll();
+    // call a random transaction pTimes times (at least once)
+    // from thread with id pID
+    // sleep after calling transaction
     void callRandom(const int pID, const int pTimes = 1);
     void addTransaction(Transaction pTransaction);
 };
