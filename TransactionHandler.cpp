@@ -1,6 +1,9 @@
 #include "TransactionHandler.h"
 #include "Common.h"
 #include <iostream>
+#ifdef WINDOWS
+#include <windows.h> // for threading
+#endif
 
 TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
 {
@@ -37,7 +40,7 @@ void TransactionHandler::callRandom(const int pID, const int pTimes)
 
 void TransactionHandler::run(const int pThreads, const int pCount)
 {
-    // pCount treads call callRandom
+    // pCount threads call callRandom
     //std::cout << "Started " <
     for (int i = 0; i < pThreads; i++)
     {
