@@ -76,6 +76,8 @@ namespace UnitTestLocking {
         else
             std::cout << "db does not allow further lock (shared)" << std::endl;
         assert(db.allowSharedLock());
+        db.mLock.Release();
+        assert(db.mLock.isUnlocked());
 
         // 5 //////////////////////////////////////////////////////////////////
         // check if there are NOT more seats than flights /////////////////////
@@ -121,6 +123,7 @@ namespace UnitTestLocking {
         else
             std::cout << "table is locked exclusively, db can not be locked" << std::endl;
         assert(!db.allowExclusiveLock());
+        db.mLock.Release();
     }
 }
 
