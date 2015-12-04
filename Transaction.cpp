@@ -38,7 +38,7 @@ void Transaction::acquireLocks()
                 objectLock.mStorageUnit->mLock.Shared();
                 locked = true;
             }
-            else Sleep(10); //try again later
+            else sleep(10); //try again later
         }
     }
 }
