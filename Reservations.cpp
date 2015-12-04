@@ -76,7 +76,7 @@ bool BookingDatabase::Reservations::hasBooked(int pFID, int pPID) const
         Row<Reservation>* row = static_cast<Row<Reservation>*>(child);
         if (row != nullptr)
         {
-            if ((row->getData().mFID == pFID) && (row->getData().mPID))
+            if ((row->getData().mFID == pFID) && (row->getData().mPID) == pPID)
                 return true;
         }
     }
