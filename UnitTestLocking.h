@@ -108,8 +108,19 @@ namespace UnitTestLocking {
         if (flightsTable.mLock.isExclusiveLocked())
             std::cout << "db is locked exclusively, table is also" << std::endl;
         else
-            std::cout << "db is locked exclusively, table is not" << std::endl;
+            std::cout << "db is locked exclusively, table is not" << std::endl; // intended behavior?
         //assert(flightsTable.mLock.isExclusiveLocked());
+
+        // 8 //////////////////////////////////////////////////////////////////
+        // lock child (table) exclusively and check if parent can be locked ///
+        std::cout << "TEST  8:   ";
+        db.mLock.Release();
+        reservationTable.mLock.Exclusive();
+        if (db.allowExclusiveLock())
+            std::cout << "table is locked exclusively, db can also be locked" << std::endl;
+        else
+            std::cout << "table is locked exclusively, db can not be locked" << std::endl;
+        assert(!db.allowExclusiveLock());
     }
 }
 
