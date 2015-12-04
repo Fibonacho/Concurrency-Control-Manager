@@ -22,9 +22,9 @@
 #include <assert.h>
     
 namespace UnitTestLocking {
-    // creates database
+    // create database
     Database db;
-    // creates tables
+    // create tables
     BookingDatabase::Flights flightsTable(db);
     BookingDatabase::Passengers passengerTable(db);
     BookingDatabase::Reservations reservationTable(db);
@@ -100,6 +100,16 @@ namespace UnitTestLocking {
         else
             std::cout << "number of reservations <= 0" << std::endl;
         assert((reservationCount > 0 && passengerCount > 0) || reservationCount <= 0);
+
+        // 7 //////////////////////////////////////////////////////////////////
+        // lock parent (exclusively) and check if child is also locked ////////
+        std::cout << "TEST  7:   ";
+        db.mLock.Exclusive();
+        if (flightsTable.mLock.isExclusiveLocked())
+            std::cout << "db is locked exclusively, table is also" << std::endl;
+        else
+            std::cout << "db is locked exclusively, table is not" << std::endl;
+        //assert(flightsTable.mLock.isExclusiveLocked());
     }
 }
 
