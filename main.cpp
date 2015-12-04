@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "BookingDatabase.h"
+#include "UnitTestLocking.h"
 
 int main(int argc, const char * argv[]) {
 
@@ -30,6 +31,7 @@ int main(int argc, const char * argv[]) {
     //BookingDatabase::transactionHandler.callRandom(-1);
     // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
     BookingDatabase::transactionHandler.run(10, 2);
+    UnitTestLocking::test();
     std::cin.get();
     return 0;
 }
