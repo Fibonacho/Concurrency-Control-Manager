@@ -65,6 +65,7 @@ namespace BookingDatabase {
             // remove this reservation
             reservationTable.removeRes(randomReservation.mFID, randomReservation.mPID);
         }
+        reservationTable.display();
         // 2PL: release lock on reservation
     }
     
@@ -100,6 +101,7 @@ namespace BookingDatabase {
         std::vector<int> seatList = seatTable.getSeats(randomFID);
         reservationTable.book(randomFID, randomPID, seatList);
         // 2PL: release passenger, flight, seat and reservation lock
+        reservationTable.display();
     }
     
     // serial transaction handler:
@@ -165,16 +167,32 @@ namespace BookingDatabase {
         database.AddTable(seatTable);
         
         // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
-        addFlight("Tokio", 100);
+        addFlight("Tokio", 150);
         addFlight("New York", 100);
-        addFlight("Berlin", 200);
+        addFlight("Berlin", 250);
+        addFlight("London", 150);
+        addFlight("Salzburg", 130);
+        addFlight("Vienna", 220);
         flightsTable.display(); // print flightsTable to console
         
         passengerTable.add("Eva");
         passengerTable.add("Elvis");
         passengerTable.add("Johanna");
+        passengerTable.add("Rick");
+        passengerTable.add("Glenn");
+        passengerTable.add("Carol");
+        passengerTable.add("Maggie");
+        passengerTable.add("Andrea");
+        passengerTable.add("Daryl");
+        passengerTable.add("Michonne");
         passengerTable.display();
         
+        bookFlight();
+        bookFlight();
+        bookFlight();
+        bookFlight();
+        bookFlight();
+        bookFlight();
         bookFlight();
         bookFlight();
         bookFlight();
