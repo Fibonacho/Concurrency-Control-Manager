@@ -38,6 +38,8 @@ namespace BookingDatabase {
         void add(int pFID, int pCount);
         // get a free seat (randomly chosen) of flight with id pFID
         int getFreeSeat(int pFID);
+        // return number of seats
+        long count();
         std::vector<int> getSeats(int pFID) const;
         // get a random seat
         Seat getRandomSeat() const;
