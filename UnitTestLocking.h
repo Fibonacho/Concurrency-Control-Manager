@@ -37,17 +37,32 @@ namespace UnitTestLocking {
         db.AddTable(reservationTable);
         db.AddTable(seatTable);
         
+        // 1 //////////////////////////////////////////////////////////////////
+        // lock (exclusively) and check if another exclusive lock is allowed
         passengerTable.mLock.Exclusive();
-        //std::cout << database.() << std::endl;
         if (db.allowExclusiveLock())
-            std::cout << "can be locked" << std::endl;
+            std::cout << "db can be locked (exclusively)" << std::endl;
         else
-            std::cout << "can't be locked" << std::endl;
-        //test different / all the cases of locking
-        
+            std::cout << "db can't be locked (exclusively)" << std::endl;
         assert(!db.allowExclusiveLock());
-        // assert(false); this should only happen if there is a programming error
         
+        // 2 //////////////////////////////////////////////////////////////////
+        // release (exclusive) lock and check if unlocked
+        db.mLock.Release();
+        if (db.mLock.isUnlocked())
+            std::cout << "db is unlocked" << std::endl;
+        else
+            std::cout << "db is not unlocked" << std::endl;
+        assert(db.mLock.isUnlocked());
+
+        // 3 //////////////////////////////////////////////////////////////////
+        // lock (shared) and check if there's a shared lock
+        reservationTable.mLock.Shared();
+        if (reservationTable.mLock.isSharedLocked())
+            std::cout << "db is locked (shared)" << std::endl;
+        else
+            std::cout << "db is not locked (shared)" << std::endl;
+        assert(reservationTable.mLock.isSharedLocked());
     }
 }
 
