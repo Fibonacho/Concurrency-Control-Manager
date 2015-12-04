@@ -26,7 +26,7 @@ void TransactionHandler::callRandom(const int pID, const int pTimes)
         std::cout << "---- callRandom Thread " << pID << " " << random << std::endl;
         mTransactions[random].call();
         // sleep random time - between 1 and 10 seconds
-        int r = RandomInt(10) + 1;
+        int r = 1 + RandomInt(10);
         std::cout << "sleep for " << r << " seconds " << std::endl;
         sleep(r);
     }
