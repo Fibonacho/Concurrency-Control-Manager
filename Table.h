@@ -33,6 +33,11 @@ public:
         //check if id has already been taken!?
         this->mChilds.push_back(row);
     }
+
+    long getRowCount()
+    {
+        return childCount();
+    }
 protected:
     int getNewID()
     {
