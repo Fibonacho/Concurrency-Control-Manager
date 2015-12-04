@@ -32,6 +32,10 @@ protected:
     // get number of children (e.g. number of rows in a table)
     const unsigned long childCount() const;
 public:
+    // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
+    bool allowExclusiveLock() const;
+    // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
+    bool allowSharedLock() const;
     Lock mLock;
     // tell if storage unit is empty
     const bool isEmpty() const;

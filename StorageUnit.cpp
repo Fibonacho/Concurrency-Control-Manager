@@ -21,6 +21,20 @@ StorageUnit::~StorageUnit()
     return mLock;
 }*/
 
+// returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
+bool StorageUnit::allowExclusiveLock() const
+{
+    // the ressource can be locked in exclusive mode if none child and parent is locked at all
+    return false;
+}
+
+// returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
+bool StorageUnit::allowSharedLock() const
+{
+    // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
+    return false;
+}
+
 const bool StorageUnit::isLeaf() const
 {
     return mChilds.size() == 0;
