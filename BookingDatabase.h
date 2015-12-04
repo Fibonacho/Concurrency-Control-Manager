@@ -157,7 +157,7 @@ namespace BookingDatabase {
     // - add rows to tables (flights and passengers)
     // - book flights (which creates rows in the table for reservations)
     // - display tables (i.e. print to console)
-    void initializeData()
+    void initializeData(std::string (&destinations)[10], std::string (&passengers)[20])
     {
         initRand();
         
@@ -165,32 +165,24 @@ namespace BookingDatabase {
         database.AddTable(flightsTable);
         database.AddTable(reservationTable);
         database.AddTable(seatTable);
-        
-        // inserts a new flight into the flight table / data structure and stores the id in the mFlightList
-        addFlight("Tokio", 150);
-        addFlight("New York", 100);
-        addFlight("Berlin", 250);
-        addFlight("London", 150);
-        addFlight("Salzburg", 130);
-        addFlight("Vienna", 220);
+
+        // inserts 20 new flights into the flight table / data structure and stores the id in the mFlightList
+        for (int i = 0; i < 2; i++)
+            for (const std::string &destination: destinations)
+                addFlight(destination, 20);
         flightsTable.display(); // print flightsTable to console
         
-        passengerTable.add("Eva");
-        passengerTable.add("Elvis");
-        passengerTable.add("Johanna");
-        passengerTable.add("Rick");
-        passengerTable.add("Glenn");
-        passengerTable.add("Carol");
-        passengerTable.add("Maggie");
-        passengerTable.add("Andrea");
-        passengerTable.add("Daryl");
-        passengerTable.add("Michonne");
-        passengerTable.display();
+        // inserts 20*i new passengers into passenger table
+        for (int i = 0; i < 5; i++)
+            for (const std::string &passenger: passengers)
+                passengerTable.add(passenger);
+        passengerTable.display(); // print passengersTable to console
         
+        /*/ book i flights
         for (int i = 0; i < 20; i++)
         {
             bookFlight();
-        }
+        } //*/
 
         reservationTable.display(); // print reservationTable to console
     }

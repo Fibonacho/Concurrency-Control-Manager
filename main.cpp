@@ -13,8 +13,16 @@
 #include "BookingDatabase.h"
 
 int main(int argc, const char * argv[]) {
+
+    std::string destinations[] = {"Tokio", "New York", "Berlin", "London", "Salzburg",
+        "Vienna", "Amsterdam", "Los Angeles", "San Francisco", "Rio de Janeiro"};
+    std::string passengers[]   = {"Johanna", "Elvis", "Eva", "Rick", "Glenn", "Maggie",
+        "Michonne", "Carol", "Daryl", "Andrea", "Joey", "Phoebe", "Chandler", "Monica",
+        "Rachel", "Ross", "Richard", "Carl", "John", "James"};
+    //int numbOfSeats = 1000;
+
     // initialize the booking database (creates the tables)
-    BookingDatabase::initializeData();
+    BookingDatabase::initializeData(destinations, passengers);
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandlerSerial();
     //BookingDatabase::initializeTransactionHandlerConcurrent();
