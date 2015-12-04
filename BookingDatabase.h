@@ -187,15 +187,11 @@ namespace BookingDatabase {
         passengerTable.add("Michonne");
         passengerTable.display();
         
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
-        bookFlight();
+        for (int i = 0; i < 20; i++)
+        {
+            bookFlight();
+        }
+
         reservationTable.display(); // print reservationTable to console
     }
 
