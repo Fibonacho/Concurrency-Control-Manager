@@ -16,23 +16,55 @@ StorageUnit::~StorageUnit()
         delete mParent;
 }
 
-/*const Lock StorageUnit::getLock() const
-{
-    return mLock;
-}*/
-
 // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
 bool StorageUnit::allowExclusiveLock() const
 {
-    // the ressource can be locked in exclusive mode if none child and parent is locked at all
-    return false;
+    // the ressource can be locked in exclusive mode if no child and no parent is locked at all
+    StorageUnit* mNode = mParent;
+    // tranverse over all parents until the root is reached
+    while (mNode != nullptr)
+    {
+        // check if the parent is locked (shared or exclusive)
+        if (mNode->mLock.isUnlocked())
+            return false;
+        mNode = mNode->mParent;
+    }
+    
+    for (auto child: mChilds)
+    {
+        if (child != nullptr)
+        {
+            if (child->mLock.isUnlocked())
+                return false;
+        }
+    }
+    return true;
 }
 
 // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
 bool StorageUnit::allowSharedLock() const
 {
     // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
-    return false;
+    // the ressource can be locked in exclusive mode if no child and no parent is locked at all
+    StorageUnit* mNode = mParent;
+    // tranverse over all parents until the root is reached
+    while (mNode != nullptr)
+    {
+        // check if the parent is locked (shared or exclusive)
+        if (mNode->mLock.isExclusiveLocked())
+            return false;
+        mNode = mNode->mParent;
+    }
+    
+    for (auto child: mChilds)
+    {
+        if (child != nullptr)
+        {
+            if (child->mLock.isExclusiveLocked())
+                return false;
+        }
+    }
+    return true;
 }
 
 const bool StorageUnit::isLeaf() const

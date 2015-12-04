@@ -1,6 +1,6 @@
 //  ---------------------------------------------------
-//  Flights:
-//  - Flights Table 
+//  UnitTestLocking:
+//  -
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -10,39 +10,45 @@
 //  Eva Lugstein  1121035  eva.lugstein2@stud.sbg.ac.at
 //  ---------------------------------------------------
 
-#ifndef FLIGHTS_H
-#define FLIGHTS_H
+#ifndef UNITTESTLOCKING_H
+#define UNITTESTLOCKING_H
 
-#include "Table.h"
-#include "Database.h"
-#include <string>
-#include "Database.h"
 
-namespace BookingDatabase {
-    class Flights: public Table
+#include "Database.h"
+#include "Flights.h"
+#include "Passengers.h"
+#include "Seats.h"
+#include "Reservations.h"
+#include <assert.h>
+    
+namespace UnitTestLocking {
+    // creates database
+    Database db;
+    // creates tables
+    BookingDatabase::Flights flightsTable(db);
+    BookingDatabase::Passengers passengerTable(db);
+    BookingDatabase::Reservations reservationTable(db);
+    BookingDatabase::Seats seatTable(db);
+    
+    void test()
     {
-    private:
-        struct Flight
-        {
-            int mID;
-            std::string mDestination;
-            
-            Flight(): mID(-1), mDestination("") {}
-            Flight(int pID, std::string pDestination): mID(pID), mDestination(pDestination) {}
-        };
-    public:
-        // add a flight (row) to the flight table
-        int add(std::string pDestination);
-        // display flights, i.e. print content of flight table to console
-        void display() const;
-        // get a random flight from the table
-        Flight getRandomFlight() const;
-        // get a random flight id by calling getRandomFlight() and accessing it's ID
-        int getRandomFlightID() const;
-
-        Flights(Database& database);
-        ~Flights();
-    };
+        db.AddTable(passengerTable); //this should be done in the constructor of the database
+        db.AddTable(flightsTable);
+        db.AddTable(reservationTable);
+        db.AddTable(seatTable);
+        
+        passengerTable.mLock.Exclusive();
+        //std::cout << database.() << std::endl;
+        if (db.allowExclusiveLock())
+            std::cout << "can be locked" << std::endl;
+        else
+            std::cout << "can't be locked" << std::endl;
+        //test different / all the cases of locking
+        
+        assert(!db.allowExclusiveLock());
+        // assert(false); this should only happen if there is a programming error
+        
+    }
 }
 
 #endif
