@@ -38,16 +38,18 @@ namespace UnitTestLocking {
         db.AddTable(seatTable);
         
         // 1 //////////////////////////////////////////////////////////////////
-        // lock (exclusively) and check if another exclusive lock is allowed
+        // lock (exclusively) and check if another exclusive lock is allowed //
+        std::cout << "TEST  1:   ";
         passengerTable.mLock.Exclusive();
         if (db.allowExclusiveLock())
-            std::cout << "db can be locked (exclusively)" << std::endl;
+            std::cout << "db can be locked again (exclusively)" << std::endl;
         else
-            std::cout << "db can't be locked (exclusively)" << std::endl;
+            std::cout << "db does not allow another (exclusive) lock" << std::endl;
         assert(!db.allowExclusiveLock());
-        
+
         // 2 //////////////////////////////////////////////////////////////////
-        // release (exclusive) lock and check if unlocked
+        // release (exclusive) lock and check if unlocked /////////////////////
+        std::cout << "TEST  2:   ";
         db.mLock.Release();
         if (db.mLock.isUnlocked())
             std::cout << "db is unlocked" << std::endl;
@@ -56,7 +58,8 @@ namespace UnitTestLocking {
         assert(db.mLock.isUnlocked());
 
         // 3 //////////////////////////////////////////////////////////////////
-        // lock (shared) and check if there's a shared lock
+        // lock (shared) and check if there's a shared lock ///////////////////
+        std::cout << "TEST  3:   ";
         reservationTable.mLock.Shared();
         if (reservationTable.mLock.isSharedLocked())
             std::cout << "db is locked (shared)" << std::endl;
@@ -65,7 +68,8 @@ namespace UnitTestLocking {
         assert(reservationTable.mLock.isSharedLocked());
 
         // 4 //////////////////////////////////////////////////////////////////
-        // lock (shared) and check if another shared lock is allowed
+        // lock (shared) and check if another shared lock is allowed //////////
+        std::cout << "TEST  4:   ";
         passengerTable.mLock.Shared();
         if (db.allowSharedLock())
             std::cout << "db allows further lock (shared)" << std::endl;
@@ -74,14 +78,28 @@ namespace UnitTestLocking {
         assert(db.allowSharedLock());
 
         // 5 //////////////////////////////////////////////////////////////////
-        // check if there are NOT more seats than flights
-        long seatCount   = seatTable.count();
-        long flightCount = flightsTable.count();
+        // check if there are NOT more seats than flights /////////////////////
+        std::cout << "TEST  5:   ";
+        long seatCount = seatTable.getRowCount();
+        long flightCount = flightsTable.getRowCount();
         if (seatCount >= flightCount)
             std::cout << "there are not more flights than seats" << std::endl;
         else
             std::cout << "there are more flights than seats" << std::endl;
         assert(seatCount >= flightCount);
+
+        // 6 //////////////////////////////////////////////////////////////////
+        // check: reservations > 0 => passengers > 0 //////////////////////////
+        std::cout << "TEST  6:   ";
+        long passengerCount = passengerTable.getRowCount();
+        long reservationCount = reservationTable.getRowCount();
+        if (reservationCount > 0 && passengerCount > 0)
+            std::cout << "number of reservations AND number of passengers > 0" << std::endl;
+        else if (reservationCount > 0)
+            std::cout << "number of reservations > 0 BUT number of passengers not" << std::endl;
+        else
+            std::cout << "number of reservations <= 0" << std::endl;
+        assert((reservationCount > 0 && passengerCount > 0) || reservationCount <= 0);
     }
 }
 
