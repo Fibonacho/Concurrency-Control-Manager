@@ -39,8 +39,6 @@ namespace BookingDatabase {
         Flight getRandomFlight() const;
         // get a random flight id by calling getRandomFlight() and accessing it's ID
         int getRandomFlightID() const;
-        // get number of flights
-        long count();
 
         Flights(Database& database);
         ~Flights();

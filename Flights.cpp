@@ -53,7 +53,3 @@ int BookingDatabase::Flights::add(std::string pDestination)
     return row->getData().mID;
 }
 
-long BookingDatabase::Flights::count()
-{
-    return childCount();
-}

@@ -41,11 +41,6 @@ std::vector<int> BookingDatabase::Seats::getSeats(int pFID) const
     return list;
 }
 
-long BookingDatabase::Seats::count()
-{
-    return childCount();
-}
-
 int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
 {
     Seat seat;
