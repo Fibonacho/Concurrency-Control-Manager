@@ -29,7 +29,7 @@ namespace BookingDatabase {
             Passenger(): mPID(-1), mName("") {}
         };
     public:
-        Passengers(Database& database);
+        Passengers(Database* database);
         ~Passengers();
         // add a passenger (row) to the passenger table
         int add(std::string pName);

@@ -3,7 +3,7 @@
 #include "Row.h"
 #include "Common.h"
 
-BookingDatabase::Flights::Flights(Database& database): Table(database)
+BookingDatabase::Flights::Flights(Database* database): Table(database)
 {
 }
 

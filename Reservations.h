@@ -33,7 +33,7 @@ namespace BookingDatabase {
             Reservation(): mPID(-1), mFID(-1), mSID(-1) {}
         };
         
-        Reservations(Database& database);
+        Reservations(Database* database);
         ~Reservations();
         
         // book a flight for passenger pPID and flight pFID

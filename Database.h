@@ -23,7 +23,7 @@ private:
     //ConcurrencyManager mConcurrencyManager;
 public:
     // adds a table to the childs of the database 
-    void AddTable(StorageUnit& table);
+    void AddTable(StorageUnit* table);
     Database();
     ~Database();
 };

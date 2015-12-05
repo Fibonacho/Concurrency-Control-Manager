@@ -40,7 +40,7 @@ namespace BookingDatabase {
         // get a random flight id by calling getRandomFlight() and accessing it's ID
         int getRandomFlightID() const;
 
-        Flights(Database& database);
+        Flights(Database* database);
         ~Flights();
     };
 }

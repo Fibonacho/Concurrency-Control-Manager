@@ -16,7 +16,7 @@ Database::~Database()
 
 }
 
-void Database::AddTable(StorageUnit& table)
+void Database::AddTable(StorageUnit* table)
 {
-    mChilds.push_back(&table);
+    mChilds.push_back(table);
 }

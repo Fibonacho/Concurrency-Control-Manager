@@ -25,22 +25,17 @@ namespace UnitTestLocking {
     // create database
     Database db;
     // create tables
-    BookingDatabase::Flights flightsTable(db);
-    BookingDatabase::Passengers passengerTable(db);
-    BookingDatabase::Reservations reservationTable(db);
-    BookingDatabase::Seats seatTable(db);
+    BookingDatabase::Flights flights(&db);
+    BookingDatabase::Passengers passengers(&db);
+    BookingDatabase::Reservations reservations(&db);
+    BookingDatabase::Seats seats(&db);
     
     void test()
     {
-        db.AddTable(passengerTable); //this should be done in the constructor of the database
-        db.AddTable(flightsTable);
-        db.AddTable(reservationTable);
-        db.AddTable(seatTable);
-        
         // 1 //////////////////////////////////////////////////////////////////
         // lock (exclusively) and check if another exclusive lock is allowed //
         std::cout << "TEST  1:   ";
-        passengerTable.mLock.Exclusive();
+        passengers.mLock.Exclusive();
         if (db.allowExclusiveLock())
             std::cout << "db can be locked again (exclusively)" << std::endl;
         else
@@ -60,17 +55,17 @@ namespace UnitTestLocking {
         // 3 //////////////////////////////////////////////////////////////////
         // lock (shared) and check if there's a shared lock ///////////////////
         std::cout << "TEST  3:   ";
-        reservationTable.mLock.Shared();
-        if (reservationTable.mLock.isSharedLocked())
+        reservations.mLock.Shared();
+        if (reservations.mLock.isSharedLocked())
             std::cout << "db is locked (shared)" << std::endl;
         else
             std::cout << "db is not locked (shared)" << std::endl;
-        assert(reservationTable.mLock.isSharedLocked());
+        assert(reservations.mLock.isSharedLocked());
 
         // 4 //////////////////////////////////////////////////////////////////
         // lock (shared) and check if another shared lock is allowed //////////
         std::cout << "TEST  4:   ";
-        passengerTable.mLock.Shared();
+        passengers.mLock.Shared();
         if (db.allowSharedLock())
             std::cout << "db allows further lock (shared)" << std::endl;
         else
@@ -82,8 +77,8 @@ namespace UnitTestLocking {
         // 5 //////////////////////////////////////////////////////////////////
         // check if there are NOT more seats than flights /////////////////////
         std::cout << "TEST  5:   ";
-        long seatCount = seatTable.getRowCount();
-        long flightCount = flightsTable.getRowCount();
+        long seatCount = seats.getRowCount();
+        long flightCount = flights.getRowCount();
         if (seatCount >= flightCount)
             std::cout << "there are not more flights than seats" << std::endl;
         else
@@ -93,8 +88,8 @@ namespace UnitTestLocking {
         // 6 //////////////////////////////////////////////////////////////////
         // check: reservations > 0 => passengers > 0 //////////////////////////
         std::cout << "TEST  6:   ";
-        long passengerCount = passengerTable.getRowCount();
-        long reservationCount = reservationTable.getRowCount();
+        long passengerCount = passengers.getRowCount();
+        long reservationCount = reservations.getRowCount();
         if (reservationCount > 0 && passengerCount > 0)
             std::cout << "number of reservations AND number of passengers > 0" << std::endl;
         else if (reservationCount > 0)
@@ -107,7 +102,7 @@ namespace UnitTestLocking {
         // lock parent (exclusively) and check if child is also locked ////////
         std::cout << "TEST  7:   ";
         db.mLock.Exclusive();
-        if (flightsTable.mLock.isExclusiveLocked())
+        if (flights.mLock.isExclusiveLocked())
             std::cout << "db is locked exclusively, table is also" << std::endl;
         else
             std::cout << "db is locked exclusively, table is not" << std::endl; // intended behavior?
@@ -117,7 +112,7 @@ namespace UnitTestLocking {
         // lock child (table) exclusively and check if parent can be locked ///
         std::cout << "TEST  8:   ";
         db.mLock.Release();
-        reservationTable.mLock.Exclusive();
+        reservations.mLock.Exclusive();
         if (db.allowExclusiveLock())
             std::cout << "table is locked exclusively, db can also be locked" << std::endl;
         else

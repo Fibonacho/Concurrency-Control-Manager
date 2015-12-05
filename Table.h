@@ -20,9 +20,9 @@ class Table: public StorageUnit
 {
     int mID;
 public:
-    Table(Database& database): StorageUnit(database), mID(0)
+    Table(Database* database): StorageUnit(database), mID(0)
     {
-        //database.AddTable(*this);
+        database->AddTable(this);
     }
 
     virtual ~Table()

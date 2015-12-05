@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 
-BookingDatabase::Reservations::Reservations(Database& database): Table(database)
+BookingDatabase::Reservations::Reservations(Database* database): Table(database)
 {
 }
 

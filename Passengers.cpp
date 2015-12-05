@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Common.h"
 
-BookingDatabase::Passengers::Passengers(Database& database): Table(database)
+BookingDatabase::Passengers::Passengers(Database* database): Table(database)
 {
 }
 
