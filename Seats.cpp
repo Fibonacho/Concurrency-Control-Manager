@@ -9,7 +9,6 @@ BookingDatabase::Seats::Seats(Database* database): Table(database)
 
 BookingDatabase::Seats::~Seats()
 {
-    std::cout << "Seats destructur " << std::endl;
 }
 
 int BookingDatabase::Seats::returnSID(StorageUnit* su) const
@@ -49,7 +48,8 @@ int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
 
     Row<Seat>* row = new Row<Seat>(this, seat);
     addRow(row);
-    std::cout << "Added seat " << row->getData().mSID << " to flight " << pFID << " (" << &pFID << ")" << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "Added seat " << row->getData().mSID << " to flight " << pFID << " (" << &pFID << ")" << std::endl;
     return row->getData().mSID;
 }
 

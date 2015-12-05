@@ -1,7 +1,7 @@
 #include "Transaction.h"
 #include "StorageUnit.h"
 #include "Common.h"
-#include <thread>
+#include <iostream>
 
 Transaction::Transaction(Function pFunction): mFunction(pFunction)
 {
@@ -13,17 +13,17 @@ void Transaction::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pSt
 }
 
 
-void Transaction::call()
+void Transaction::call(const unsigned i)
 {
     acquireLocks();
     mFunction();
-    //std::thread t = GetCurrentThread();
-    //t->sleep_for(1000);
+
+    int waitingTime = RandomInt(100);
+    std::cout << "function waits " << waitingTime/1000.0 << " seconds" << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(waitingTime));
     
-    int r = RandomInt(1000000000);
-    for (int i = 0; i < r; i++) {}
-        
     releaseLocks();
+    std::cout << "Transaction " << i << " call successfully completed " << std::endl;
 }
 
 void Transaction::acquireLocks()
@@ -41,11 +41,14 @@ void Transaction::acquireLocks()
             locked = (XL || SL);
 
             if (!locked)
-                sleep(10); //try again later - should be handeled using an event listener
+            {
+                std::cout << "waiting ..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::milliseconds(10)); // try again in a second
+            }
         }
     }
 }
-    
+
 void Transaction::releaseLocks()
 {
     for (auto objectLocks: mObjectLocks)

@@ -8,12 +8,10 @@ StorageUnit::StorageUnit(StorageUnit* parent): mParent(parent)
 StorageUnit::~StorageUnit()
 {
     // free all the memory of the storage unit
-    std::cout << "~StorageUnit" << std::endl;
     for (auto child: mChilds)
-        if (child != nullptr)
-            delete child;
-    if (mParent != nullptr)
-        delete mParent;
+    {
+        if (child->mChilds.size() == 0) { }
+    }
 }
 
 // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
@@ -33,19 +31,6 @@ bool StorageUnit::ExclusiveLockable() const
             return false;
         mNode = mNode->mParent;
     }
-    
-    //childsUnlocked(mChilds);
-    
-    /*for (auto child: mChilds)
-    {
-        // more levels
-        if (child != nullptr)
-        {
-            if (!child->mLock.isUnlocked())
-                return false;
-        }
-    }
-    return true;*/
     return childsExclusiveLockable(this);
 }
 

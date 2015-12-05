@@ -6,3 +6,7 @@ LockManager::LockManager()
 {
 
 }
+
+LockManager::~LockManager()
+{
+}

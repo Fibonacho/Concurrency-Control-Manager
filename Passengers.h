@@ -30,7 +30,7 @@ namespace BookingDatabase {
         };
     public:
         Passengers(Database* database);
-        ~Passengers();
+        virtual ~Passengers();
         // add a passenger (row) to the passenger table
         int add(std::string pName);
         // get a random passenger from the table

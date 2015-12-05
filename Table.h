@@ -18,31 +18,17 @@
 
 class Table: public StorageUnit
 {
+private:
     int mID;
 public:
-    Table(Database* database): StorageUnit(database), mID(0)
-    {
-        database->AddTable(this);
-    }
-
-    virtual ~Table()
-    {
-    }
+    bool mDataConsoleOutput = false;
     
-    void addRow(StorageUnit* row) {
-        this->mChilds.push_back(row);
-    }
-
-    long getRowCount()
-    {
-        return childCount();
-    }
+    Table(Database* database);
+    virtual ~Table();
+    void addRow(StorageUnit* row);
+    long getRowCount();
 protected:
-    int getNewID()
-    {
-        mID++;
-        return mID;
-    }
+    int getNewID();
 };
 
 #endif

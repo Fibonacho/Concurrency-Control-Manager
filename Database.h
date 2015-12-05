@@ -27,7 +27,7 @@ public:
     // adds a table to the childs of the database, this is called automatically in the constructor of the table
     void AddTable(StorageUnit* table);
     Database(LockManager* const pLockManager);
-    ~Database();
+    virtual ~Database();
 };
 
 #endif

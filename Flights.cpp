@@ -9,7 +9,6 @@ BookingDatabase::Flights::Flights(Database* database): Table(database)
 
 BookingDatabase::Flights::~Flights()
 {
-    std::cout << "Flights destructur " << std::endl;
 }
 
 void BookingDatabase::Flights::display() const
@@ -48,7 +47,8 @@ int BookingDatabase::Flights::add(std::string pDestination)
     // add a value to the linked list
     Flight flight(getNewID(), pDestination);
     Row<Flight>* row = new Row<Flight>(this, flight);
-    std::cout << "Flight to " << pDestination << " is stored." << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "Flight to " << pDestination << " is stored." << std::endl;
     addRow(row);
     return row->getData().mID;
 }

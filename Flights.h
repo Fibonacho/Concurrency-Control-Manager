@@ -41,7 +41,7 @@ namespace BookingDatabase {
         int getRandomFlightID() const;
 
         Flights(Database* database);
-        ~Flights();
+        virtual ~Flights();
     };
 }
 

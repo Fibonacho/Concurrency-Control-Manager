@@ -16,9 +16,9 @@
 
 #include "Lock.h"
 #include <vector>
+#include <thread>
 
 class StorageUnit;
-
 class Transaction
 {
 private:
@@ -52,7 +52,7 @@ public:
     // - first acquire all locks
     // - then execute the function using the function pointer
     // - in the end release the lock again
-    void call();
+    void call(const unsigned int i);
 };
 
 #endif

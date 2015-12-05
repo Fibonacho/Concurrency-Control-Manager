@@ -34,7 +34,7 @@ namespace BookingDatabase {
         };
         
         Reservations(Database* database);
-        ~Reservations();
+        virtual ~Reservations();
         
         // book a flight for passenger pPID and flight pFID
         bool book(int pFID, int pPID, std::vector<int> &pFlightSeatIDs);

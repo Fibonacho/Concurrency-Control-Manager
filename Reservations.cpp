@@ -40,7 +40,8 @@ void BookingDatabase::Reservations::getBookedFlights(const int pPID)
 {
     for (auto child: mChilds)
     {
-        std::cout << "List of flights of passenger " << pPID << ": ";
+        if (mDataConsoleOutput)
+            std::cout << "List of flights of passenger " << pPID << ": ";
         Row<Reservations::Reservation>* reservation = static_cast<Row<Reservations::Reservation>*>(child);
         if (reservation != nullptr)
         {
@@ -53,19 +54,22 @@ void BookingDatabase::Reservations::getBookedFlights(const int pPID)
 
 void BookingDatabase::Reservations::display() const
 {
-    std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
     for(auto res: mChilds)
     {
         Row<Reservation>* rowRes = static_cast<Row<Reservation>*>(res);
-        
-        std::cout << "FID: " << rowRes->getData().mFID << ", SID: " << rowRes->getData().mSID << ", PID: " << rowRes->getData().mPID << std::endl;
+        if (mDataConsoleOutput)
+            std::cout << "FID: " << rowRes->getData().mFID << ", SID: " << rowRes->getData().mSID << ", PID: " << rowRes->getData().mPID << std::endl;
     }
-    std::cout << "----------------------------" << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "----------------------------" << std::endl;
 }
 
 void BookingDatabase::Reservations::printReservationSum()
 {
-    std::cout << "Sum of Reservations: " << childCount() << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "Sum of Reservations: " << childCount() << std::endl;
 }
 
 bool BookingDatabase::Reservations::hasBooked(int pFID, int pPID) const
@@ -98,7 +102,8 @@ bool BookingDatabase::Reservations::book(int pFID, int pSID, int pPID)
     Reservation reservation(pPID, pSID, pFID);
     Row<Reservation>* row = new Row<Reservation>(this, reservation);
     addRow(row);
-    std::cout << "Added reservation to seat " << row->getData().mSID << " for passenger " << row->getData().mPID << " and flight " << row->getData().mFID << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "Added reservation to seat " << row->getData().mSID << " for passenger " << row->getData().mPID << " and flight " << row->getData().mFID << std::endl;
     return true;
 }
 

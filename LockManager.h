@@ -18,6 +18,7 @@ class LockManager
 {
 public:
     LockManager();
+    virtual ~LockManager();
 };
 
 #endif

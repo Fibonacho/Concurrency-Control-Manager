@@ -18,7 +18,8 @@ int BookingDatabase::Passengers::add(std::string pName)
     passenger.mPID = getNewID();
     Row<Passenger>* row = new Row<Passenger>(this, passenger);
     addRow(row);
-    std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
+    if (mDataConsoleOutput)
+        std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
     return row->getData().mPID;
 }
 
@@ -47,7 +48,6 @@ void BookingDatabase::Passengers::display() const
     for(auto passenger: mChilds)
     {
         Row<Passenger>* rowPassenger = static_cast<Row<Passenger>*>(passenger);
-        
         std::cout << rowPassenger->getData().mPID << " " << rowPassenger->getData().mName << std::endl;
     }
     std::cout << "----------------------------" << std::endl;

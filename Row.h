@@ -36,7 +36,7 @@ public:
     }
     Row(StorageUnit* table): StorageUnit(table) {};
     Row(StorageUnit* table, T pData): StorageUnit(table), mData(pData) {}; //this doesn't need a lock
-    ~Row() {std::cout << "row destructor " << std::endl;}
+    virtual ~Row() { }
 };
 
 #endif

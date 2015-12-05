@@ -46,7 +46,7 @@ namespace BookingDatabase {
         int getRandomSeatID() const;
 
         Seats(Database* database);
-        ~Seats();
+        virtual ~Seats();
     };
 }
 

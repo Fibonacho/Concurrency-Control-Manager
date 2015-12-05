@@ -9,13 +9,16 @@ TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
 
 TransactionHandler::~TransactionHandler()
 {
-
 }
 
 void TransactionHandler::callAll()
 {
+    int i = 0;
     for (auto transaction: mTransactions)
-        transaction.call();
+    {
+        transaction.call(i);
+        i++;
+    }
 }
 
 void TransactionHandler::callRandom(const int pID, const int pTimes)
@@ -23,12 +26,7 @@ void TransactionHandler::callRandom(const int pID, const int pTimes)
     for (int i = 0; i < pTimes; i++)
     {
         int random = RandomInt((int)mTransactions.size());
-        std::cout << "Thread " << pID << " calls random transaction number " << random << std::endl;
-        mTransactions[random].call();
-        // sleep random time - between 1 and 10 seconds
-        //int r = 1 + RandomInt(10);
-        //std::cout << "sleep for " << r << " seconds " << std::endl;
-        //sleep(r);
+        mTransactions[random].call(pID*i);
     }
 }
 
@@ -39,9 +37,11 @@ void TransactionHandler::run(const int pThreads, const int pCount)
     {
         // pCount threads call callRandom
         std::thread* t = new std::thread(&TransactionHandler::callRandom, this, i, pCount);
-        t->join();
         mThreads.push_back(t);
     }
+    
+    for (auto thread: mThreads)
+        thread->join();
 }
 
 void TransactionHandler::addTransaction(Transaction pTransaction)
