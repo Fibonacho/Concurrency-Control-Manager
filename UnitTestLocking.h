@@ -34,25 +34,25 @@ namespace UnitTestLocking {
     {
         // lock an table of the database exclusively and check if the database can be locked (which should not be the case)
         passengers.mLock.Exclusive();
-        assert(!db.ExclusivelyLockable());
+        assert(!db.ExclusiveLockable());
         // relase the lock on the passanger table
         passengers.mLock.Release();
         // check if the database now can exclusively be locked (which should be the case - since no child is locked anymore)
-        assert(db.ExclusivelyLockable());
+        assert(db.ExclusiveLockable());
         
         // now lock two tables / childs of the database and check if the database is still lockable
         passengers.mLock.Exclusive();
         seats.mLock.Shared();
         flights.mLock.Exclusive();
         // should not allowed to be locked
-        assert(!db.ExclusivelyLockable());
+        assert(!db.ExclusiveLockable());
         seats.mLock.Release();
-        assert(!db.ExclusivelyLockable());
+        assert(!db.ExclusiveLockable());
         flights.mLock.Release();
-        assert(!db.ExclusivelyLockable());
+        assert(!db.ExclusiveLockable());
         passengers.mLock.Release();
         // if all table locks get released it should be lockable
-        assert(db.ExclusivelyLockable());
+        assert(db.ExclusiveLockable());
         
         // lock the passenger table in shared mode
         passengers.mLock.Shared();
@@ -75,19 +75,47 @@ namespace UnitTestLocking {
 
         // if the db is locked in exclusive locked NO table can be locked in ANY mode
         db.mLock.Exclusive();
-        assert(!flights.ExclusivelyLockable());
+        assert(!flights.ExclusiveLockable());
         assert(!flights.SharedLockable());
-        assert(!passengers.ExclusivelyLockable());
+        assert(!passengers.ExclusiveLockable());
         assert(!passengers.SharedLockable());
-        assert(!seats.ExclusivelyLockable());
+        assert(!seats.ExclusiveLockable());
         assert(!seats.SharedLockable());
-        assert(!passengers.ExclusivelyLockable());
+        assert(!passengers.ExclusiveLockable());
         assert(!passengers.SharedLockable());
         db.mLock.Release();
         
-        // now check if that also works for rows
+        // now check if this that also works for rows ...
+        // add a row to the table flights
+        flights.add("Perth");
+        // get the row storage unit object
+        StorageUnit* FirstFlight = flights.getFirstChild(); //Row<Flight> object
         
+        // lock the database in exclusive mode
+        db.mLock.Exclusive();
+        // check if the row can then be locked in shared mode (which should not be possible)
+        assert(!FirstFlight->SharedLockable());
+        // release the lock on the database
+        db.mLock.Release();
         
+        // and then lock the row in exclusive mode
+        FirstFlight->mLock.Exclusive();
+        // if row is locked in exclusive mode neither the flight table can be locked in any mode ...
+        assert(!flights.SharedLockable());
+        assert(!flights.ExclusiveLockable());
+        // ... nor the database itself
+        assert(!db.SharedLockable());
+        assert(!db.ExclusiveLockable());
+        // but lock the passenger, seat or reservation table is fine since the row was a flight row
+        assert(passengers.ExclusiveLockable());
+        assert(seats.ExclusiveLockable());
+        assert(reservations.ExclusiveLockable());
+        // relase the row level lock
+        FirstFlight->mLock.Release();
+        // not it should be possible to lock the flights table in shared mode or any other
+        assert(flights.SharedLockable());
+        assert(flights.ExclusiveLockable());
+        FirstFlight->mLock.Release();
         
         // 5 //////////////////////////////////////////////////////////////////
         // check if there are NOT more seats than flights /////////////////////

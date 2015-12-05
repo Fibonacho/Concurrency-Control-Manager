@@ -47,7 +47,7 @@ int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
     seat.mSID = getNewID();
     seat.mFID = pFID;
 
-    Row<Seat>* row = new Row<Seat>(*this, seat);
+    Row<Seat>* row = new Row<Seat>(this, seat);
     addRow(row);
     std::cout << "Added seat " << row->getData().mSID << " to flight " << pFID << " (" << &pFID << ")" << std::endl;
     return row->getData().mSID;

@@ -96,7 +96,7 @@ bool BookingDatabase::Reservations::book(int pFID, int pSID, int pPID)
         return false;
     
     Reservation reservation(pPID, pSID, pFID);
-    Row<Reservation>* row = new Row<Reservation>(*this, reservation);
+    Row<Reservation>* row = new Row<Reservation>(this, reservation);
     addRow(row);
     std::cout << "Added reservation to seat " << row->getData().mSID << " for passenger " << row->getData().mPID << " and flight " << row->getData().mFID << std::endl;
     return true;

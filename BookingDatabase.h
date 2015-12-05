@@ -117,7 +117,7 @@ namespace BookingDatabase {
     {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted
-        // this locking is on a table level but it should also be easy to do the locking on row level
+        // this locking is on a table level but could also be extended to row level locking
 
         Transaction transaction1(getReservationSum);
         // get shared lock on reservation

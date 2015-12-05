@@ -16,7 +16,7 @@ int BookingDatabase::Passengers::add(std::string pName)
     Passenger passenger;
     passenger.mName = pName;
     passenger.mPID = getNewID();
-    Row<Passenger>* row = new Row<Passenger>(*this, passenger);
+    Row<Passenger>* row = new Row<Passenger>(this, passenger);
     addRow(row);
     std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
     return row->getData().mPID;
