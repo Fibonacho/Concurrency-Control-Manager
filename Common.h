@@ -18,18 +18,6 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-#ifdef LINUX
-#include <unistd.h>
-#endif
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-// random double between 0 and max
-/*static double RandomDouble(const double max) {
-    srand ((unsigned int)time(NULL));
-    return max * (static_cast<double>(rand()) / static_cast<double>(RAND_MAX));
-}*/
 
 static void initRand()
 {
@@ -41,16 +29,6 @@ static void initRand()
 static int RandomInt(const int max)
 {
     return (rand() % max);
-}
-
-// sleeps <duration>
-static void sleep(int duration)
-{
-#ifdef _WIN32
-    Sleep(duration); // Sleep takes milliseconds
-#else
-    usleep(1000 * duration);   // usleep takes sleep time in us (1 millionth of a second)
-#endif
 }
 
 #endif

@@ -35,6 +35,8 @@ namespace BookingDatabase {
     Seats seats(&db);
     TransactionHandler transactionHandler(db);
     
+    bool DataConsoleOutput = false;
+    
     // helperfunction - add a flight to the table
     void addFlight(const std::string pDestination, const int pSeats)
     {
@@ -50,11 +52,11 @@ namespace BookingDatabase {
         if (!reservations.isEmpty())
         {
             Reservations::Reservation randomReservation = reservations.getRandomReservation();
-            std::cout << "Random Reservation to be removed: " << randomReservation.mFID << ", " << randomReservation.mPID << std::endl;
+            if (DataConsoleOutput)
+                std::cout << "Random Reservation to be removed: " << randomReservation.mFID << ", " << randomReservation.mPID << std::endl;
             // remove this reservation
             reservations.removeRes(randomReservation.mFID, randomReservation.mPID);
         }
-        reservations.display();
     }
     
     // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
@@ -63,7 +65,8 @@ namespace BookingDatabase {
     {
         // get a Random Passenger ID
         const int randomPID = passengers.getRandomPassengerID();
-        std::cout << "Random Passenger to list bookings: " << randomPID << std::endl;
+        if (DataConsoleOutput)
+            std::cout << "Random Passenger to list bookings: " << randomPID << std::endl;
         reservations.getBookedFlights(randomPID);
     }
     
@@ -83,7 +86,6 @@ namespace BookingDatabase {
         int randomFID = flights.getRandomFlightID();
         std::vector<int> seatList = seats.getSeats(randomFID);
         reservations.book(randomFID, randomPID, seatList);
-        reservations.display();
     }
     
     // serial transaction handler:
