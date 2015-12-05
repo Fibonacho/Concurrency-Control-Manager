@@ -73,7 +73,7 @@ namespace UnitTestLocking {
         assert(FirstPassenger->SharedLockable());
         FirstPassenger->ReleaseLocks();
         
-        // lock an table of the database exclusively and check if the database can be locked (which should not be the case)
+        // lock a table of the database exclusively and check if the database can be locked (which should not be the case)
         passengers.ForceLockExclusive();
         assert(!db.ExclusiveLockable());
         // relase the lock on the passanger table
@@ -126,7 +126,7 @@ namespace UnitTestLocking {
         assert(!passengers.SharedLockable());
         db.ReleaseLocks();
         
-        // now check if this that also works for rows:
+        // now check if this also works for rows:
         // add a row to the table flights
         flights.add("Perth");
         // get the row storage unit object

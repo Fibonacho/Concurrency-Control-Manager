@@ -92,7 +92,7 @@ namespace BookingDatabase {
     // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
     // - add locks to transaction objects
     // - add transactions to transaction handler
-    void initializeTransactionHandlerSerial()
+    void initTransactionHandlerSerial()
     {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted
@@ -118,7 +118,7 @@ namespace BookingDatabase {
     // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
     // - add locks to transaction objects
     // - add transactions to transaction handler
-    void initializeTransactionHandlerConcurrent()
+    void initTransactionHandlerConcurrent()
     {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted

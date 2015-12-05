@@ -52,7 +52,7 @@ public:
     // - first acquire all locks
     // - then execute the function using the function pointer
     // - in the end release the lock again
-    void call(const unsigned int i);
+    void call();
 };
 
 #endif

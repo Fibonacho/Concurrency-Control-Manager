@@ -13,20 +13,18 @@ TransactionHandler::~TransactionHandler()
 
 void TransactionHandler::callAll()
 {
-    int i = 0;
     for (auto transaction: mTransactions)
     {
-        transaction.call(i);
-        i++;
+        transaction.call();
     }
 }
 
-void TransactionHandler::callRandom(const int pID, const int pTimes)
+void TransactionHandler::callRandom(const unsigned int pTimes)
 {
     for (int i = 0; i < pTimes; i++)
     {
         int random = RandomInt((int)mTransactions.size());
-        mTransactions[random].call(pID*i);
+        mTransactions[random].call();
     }
 }
 

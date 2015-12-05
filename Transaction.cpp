@@ -13,7 +13,7 @@ void Transaction::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pSt
 }
 
 
-void Transaction::call(const unsigned i)
+void Transaction::call()
 {
     acquireLocks();
     mFunction();
@@ -23,7 +23,7 @@ void Transaction::call(const unsigned i)
     std::this_thread::sleep_for(std::chrono::milliseconds(waitingTime));
     
     releaseLocks();
-    std::cout << "Transaction " << i << " call successfully completed " << std::endl;
+    //std::cout << "Transaction " << i << " call successfully completed " << std::endl;
 }
 
 void Transaction::acquireLocks()

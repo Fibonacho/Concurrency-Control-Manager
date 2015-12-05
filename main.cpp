@@ -26,16 +26,16 @@ int main(int argc, const char * argv[]) {
     passengerList.push_back("Rick");
     passengerList.push_back("Daryl");
     // this small value is only for easier testing, should later be 100 or seomthing
-    int AverageSeatCount = 10; // will later be solved differently
-
+    int AverageSeatCount = 10;
+    // The evaluation will be changed for the final evaluation
     // initialize the booking database (creates the tables)
     BookingDatabase::initializeData(destinationList, passengerList, AverageSeatCount);
     // initialize the transaction handler with the 4 transactions
-    BookingDatabase::initializeTransactionHandlerSerial();
+    BookingDatabase::initTransactionHandlerSerial();
     // BookingDatabase::initializeTransactionHandlerConcurrent();
     // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
     // BookingDatabase::db.ForceLockExclusive();
-    BookingDatabase::transactionHandler.run(10, 10);
+    BookingDatabase::transactionHandler.run(1, 10);
     std::cin.get();
     return 0;
 }
