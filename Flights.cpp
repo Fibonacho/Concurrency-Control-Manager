@@ -48,7 +48,7 @@ int BookingDatabase::Flights::add(std::string pDestination)
     // add a value to the linked list
     Flight flight(getNewID(), pDestination);
     Row<Flight>* row = new Row<Flight>(this, flight);
-    std::cout << pDestination << " ID stored." << std::endl;
+    std::cout << "Flight to " << pDestination << " is stored." << std::endl;
     addRow(row);
     return row->getData().mID;
 }

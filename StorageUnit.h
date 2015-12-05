@@ -23,6 +23,7 @@
 class StorageUnit
 {
 private:
+    // lock object
     Lock mLock;
     // checks recursively if the childs of pParent are lockable in exclusive mode
     bool childsExclusiveLockable(const StorageUnit* const pParent) const;

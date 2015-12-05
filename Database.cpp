@@ -5,8 +5,9 @@
 #include "Passengers.h"
 #include <stdlib.h>
 #include <time.h>
+#include "LockManager.h"
 
-Database::Database(): StorageUnit(nullptr)
+Database::Database(LockManager* pLockManager): StorageUnit(nullptr), mLockManager(pLockManager)
 {
 
 }

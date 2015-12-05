@@ -1,6 +1,7 @@
 #include "Transaction.h"
 #include "StorageUnit.h"
 #include "Common.h"
+#include <thread>
 
 Transaction::Transaction(Function pFunction): mFunction(pFunction)
 {
@@ -16,6 +17,12 @@ void Transaction::call()
 {
     acquireLocks();
     mFunction();
+    //std::thread t = GetCurrentThread();
+    //t->sleep_for(1000);
+    
+    int r = RandomInt(1000000000);
+    for (int i = 0; i < r; i++) {}
+        
     releaseLocks();
 }
 
@@ -29,20 +36,12 @@ void Transaction::acquireLocks()
         {
             // check if storage unit is not already locked
             // StorageUnit::Exclusive checks if the lock can be given and locks returns true / false if successful
-            //bool exclusive =
-            locked = (((objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive()) ||
-                      ((objectLock.mLockingMode == Lock::LockingMode::shared) && (objectLock.mStorageUnit->LockShared()) ));
-            /*{
-                //objectLock.mStorageUnit->mLock.Exclusive();
-                locked = true;
-            }*/
-            /*else if ((objectLock.mLockingMode == Lock::LockingMode::shared) && (!objectLock.mStorageUnit->Shared()))
-            {
-                //objectLock.mStorageUnit->mLock.Shared();
-                locked = true;
-            }*/
+            bool XL = (objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive();
+            bool SL = (objectLock.mLockingMode == Lock::LockingMode::shared) && objectLock.mStorageUnit->LockShared();
+            locked = (XL || SL);
+
             if (!locked)
-                sleep(10); //try again later
+                sleep(10); //try again later - should be handeled using an event listener
         }
     }
 }

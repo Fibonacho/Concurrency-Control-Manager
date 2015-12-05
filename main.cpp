@@ -16,19 +16,25 @@
 int main(int argc, const char * argv[]) {
     UnitTestLocking::test();
     
-    std::string destinations[] = {"Tokio", "NY", "Berlin", "London", "Salzburg",
-        "Vienna", "Amsterdam", "LA", "SF", "Rio de Janeiro"};
-    std::string passengers[]   = {"Johanna", "Elvis", "Eva", "Rick", "Glenn", "Maggie",
-        "Michonne", "Carol", "Daryl", "Andrea", "Joey", "Phoebe", "Chandler", "Monica",
-        "Rachel", "Ross", "Richard", "Carl", "John", "James"};
-    //int numbOfSeats = 1000;
+    std::vector<std::string> destinationList;
+    destinationList.push_back("Tokio");
+    destinationList.push_back("Salzburg");
+    destinationList.push_back("Amsterdam");
+    
+    std::vector<std::string> passengerList;
+    passengerList.push_back("Glenn");
+    passengerList.push_back("Rick");
+    passengerList.push_back("Daryl");
+    // this small value is only for easier testing
+    int AverageSeatCount = 10; // will later be solved differently
 
     // initialize the booking database (creates the tables)
-    BookingDatabase::initializeData(destinations, passengers);
+    BookingDatabase::initializeData(destinationList, passengerList, AverageSeatCount);
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandlerSerial();
     //BookingDatabase::initializeTransactionHandlerConcurrent();
     // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
+    BookingDatabase::db.ForceLockExclusive();
     BookingDatabase::transactionHandler.run(10, 2);
     std::cin.get();
     return 0;

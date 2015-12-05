@@ -24,6 +24,7 @@ class Transaction
 private:
     // c++ function pointer to a function with no arguments and the return value void (none)
     typedef void (*Function)(void);
+    //std::thread* mThread;
     
     struct ObjectLock
     {

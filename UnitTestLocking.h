@@ -23,7 +23,7 @@
     
 namespace UnitTestLocking {
     // create database
-    Database db;
+    Database db(nullptr);
     // create tables
     BookingDatabase::Flights flights(&db);
     BookingDatabase::Passengers passengers(&db);
@@ -32,6 +32,47 @@ namespace UnitTestLocking {
     
     void test()
     {
+        std::cout << "START Unit Test ------------------------ " << std::endl;
+        // lock an object in exclusive mode and check if it could be locked again (which should of course not be possible)
+        // and after check for shared locks (shared / shared) - where it is possible to lock twice
+        
+        // first for the database
+        db.ForceLockExclusive();
+        assert(!db.ExclusiveLockable());
+        assert(!db.SharedLockable());
+        db.ReleaseLocks();
+        // now with shared:
+        db.ForceLockShared();
+        assert(!db.ExclusiveLockable());
+        assert(db.SharedLockable());
+        db.ReleaseLocks();
+        
+        // then for the passenger table
+        passengers.ForceLockExclusive();
+        assert(!passengers.ExclusiveLockable());
+        assert(!passengers.SharedLockable());
+        passengers.ReleaseLocks();
+        // now with shared:
+        passengers.ForceLockShared();
+        assert(!passengers.ExclusiveLockable());
+        assert(passengers.SharedLockable());
+        passengers.ReleaseLocks();
+        
+        // and later for the rows of a flight
+        passengers.add("Test");
+        // get the row storage unit object
+        StorageUnit* FirstPassenger = passengers.getFirstChild(); //Row<Passenger> object
+        FirstPassenger->ForceLockExclusive();
+        assert(!FirstPassenger->ExclusiveLockable());
+        assert(!FirstPassenger->SharedLockable());
+        FirstPassenger->ReleaseLocks();
+        
+        // now with shared:
+        FirstPassenger->ForceLockShared();
+        assert(!FirstPassenger->ExclusiveLockable());
+        assert(FirstPassenger->SharedLockable());
+        FirstPassenger->ReleaseLocks();
+        
         // lock an table of the database exclusively and check if the database can be locked (which should not be the case)
         passengers.ForceLockExclusive();
         assert(!db.ExclusiveLockable());
@@ -85,7 +126,7 @@ namespace UnitTestLocking {
         assert(!passengers.SharedLockable());
         db.ReleaseLocks();
         
-        // now check if this that also works for rows ...
+        // now check if this that also works for rows:
         // add a row to the table flights
         flights.add("Perth");
         // get the row storage unit object
@@ -97,8 +138,10 @@ namespace UnitTestLocking {
         assert(!FirstFlight->SharedLockable());
         // release the lock on the database
         db.ReleaseLocks();
+        // now it's possible
+        assert(FirstFlight->SharedLockable());
         
-        // and then lock the row in exclusive mode
+        // then lock the row in exclusive mode
         FirstFlight->ForceLockExclusive();
         // if row is locked in exclusive mode neither the flight table can be locked in any mode ...
         assert(!flights.SharedLockable());
@@ -112,36 +155,11 @@ namespace UnitTestLocking {
         assert(reservations.ExclusiveLockable());
         // relase the row level lock
         FirstFlight->ReleaseLocks();
-        // not it should be possible to lock the flights table in shared mode or any other
+        // it should be possible to lock the flights table in shared mode or any other
         assert(flights.SharedLockable());
         assert(flights.ExclusiveLockable());
         FirstFlight->ReleaseLocks();
-        
-        // 5 //////////////////////////////////////////////////////////////////
-        // check if there are NOT more seats than flights /////////////////////
-        /*std::cout << "TEST  5:   ";
-        long seatCount = seats.getRowCount();
-        long flightCount = flights.getRowCount();
-        if (seatCount >= flightCount)
-            std::cout << "there are not more flights than seats" << std::endl;
-        else
-            std::cout << "there are more flights than seats" << std::endl;
-        assert(seatCount >= flightCount);
-
-        // 6 //////////////////////////////////////////////////////////////////
-        // check: reservations > 0 => passengers > 0 //////////////////////////
-        std::cout << "TEST  6:   ";
-        long passengerCount = passengers.getRowCount();
-        long reservationCount = reservations.getRowCount();
-        if (reservationCount > 0 && passengerCount > 0)
-            std::cout << "number of reservations AND number of passengers > 0" << std::endl;
-        else if (reservationCount > 0)
-            std::cout << "number of reservations > 0 BUT number of passengers not" << std::endl;
-        else
-            std::cout << "number of reservations <= 0" << std::endl;
-        assert((reservationCount > 0 && passengerCount > 0) || reservationCount <= 0);*/
-
-
+        std::cout << "END Unit Test ------------------------ " << std::endl;
     }
 }
 

@@ -19,6 +19,10 @@ StorageUnit::~StorageUnit()
 // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
 bool StorageUnit::ExclusiveLockable() const
 {
+    // check if the object itself is not locked in any mode
+    if (!mLock.isUnlocked())
+        return false;
+        
     // the ressource can be locked in exclusive mode if no child and no parent is locked at all
     StorageUnit* mNode = mParent;
     // tranverse over all parents until the root is reached
@@ -87,6 +91,10 @@ bool StorageUnit::childsExclusiveLockable(const StorageUnit* const pParent) cons
 // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
 bool StorageUnit::SharedLockable() const
 {
+    // check if the object itself is exclusively locked
+    if (mLock.isExclusiveLocked())
+        return false;
+    
     // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
     // the ressource can be locked in exclusive mode if no child and no parent is locked at all
     StorageUnit* mNode = mParent;

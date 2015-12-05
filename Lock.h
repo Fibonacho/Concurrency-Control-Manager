@@ -39,8 +39,6 @@ public:
     bool isUnlocked() const;
 private:
     LockingMode mLockingMode;
-    // if LockingMode is unlocked the lockOwner has to be nullptr
-    //Transaction mLockOwner;
 };
 
 #endif

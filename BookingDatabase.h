@@ -23,10 +23,12 @@
 #include "TransactionHandler.h"
 #include "Common.h"
 #include "Transaction.h"
+#include "LockManager.h"
 
 namespace BookingDatabase {
+    LockManager lockManager;
     // creates a databases and tables (+ link them)
-    Database db;
+    Database db(&lockManager);
     Flights flights(&db);
     Passengers passengers(&db);
     Reservations reservations(&db);
@@ -92,6 +94,7 @@ namespace BookingDatabase {
     {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted
+        // a serial schedule is obtained by locking the database in exclusive mode
         Transaction transaction1(getReservationSum);
         transaction1.addObjectLock(Lock::LockingMode::exclusive, &db);
         transactionHandler.addTransaction(transaction1);
@@ -144,28 +147,44 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(transaction4);
     }
 
+    // only for testing purposes
+    void checkData()
+    {
+        // do some data checks and warningss
+        // make sure there are no more flights than seats, otherweise you get a warning
+        if (seats.getRowCount() < flights.getRowCount())
+            std::cerr << "WARNING: there are not more flights than seats" << std::endl;
+        
+        if (reservations.getRowCount() > passengers.getRowCount())
+            std::cerr << "WARNING: more passengers than reservations!? this is not possible, dude!" << std::endl;
+    }
+    
     // initialize data:
     // - setup database
     // - add tables to database (tables for passengers, flights, reservations, seats)
     // - add rows to tables (flights and passengers)
     // - book flights (which creates rows in the table for reservations)
     // - display tables (i.e. print to console)
-    void initializeData(std::string (&destinations)[10], std::string (&passengerNames)[20])
+    void initializeData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
     {
         initRand();
-
+        
         // inserts 20 new flights into the flight table / data structure and stores the id in the mFlightList
-        for (int i = 0; i < 2; i++)
-            for (const std::string &destination: destinations)
-                addFlight(destination, 20);
+        for (auto destination: pDestinationList)
+        {
+            //add / substract some random seat offset
+            int offset = RandomInt(10);
+            addFlight(destination, AverageSeatCount+offset-5);
+        }
         flights.display(); // print flightsTable to console
         
-        // inserts 20*i new passengers into passenger table
-        for (int i = 0; i < 5; i++)
-            for (const std::string &passenger: passengerNames)
-                passengers.add(passenger);
+        // inserts passengers into passenger table
+        for (auto passenger: pPassengerList)
+            passengers.add(passenger);
         passengers.display(); // print passengersTable to console
-        reservations.display(); // print reservationTable to console
+        reservations.display(); // print reservationTable to console (should be empty)
+        
+        checkData();
     }
 
 }
