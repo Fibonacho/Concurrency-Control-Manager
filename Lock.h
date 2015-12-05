@@ -27,8 +27,8 @@ public:
     
     Lock();
     
-    void Exclusive(); //const Transaction pTransaction);
-    void Shared(); //const Transaction pTransaction);
+    void SetExclusive(); //const Transaction pTransaction);
+    void SetShared(); //const Transaction pTransaction);
     void Release();
     
     // returns true if locking mode is exclusive

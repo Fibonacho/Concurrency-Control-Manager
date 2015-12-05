@@ -28,17 +28,21 @@ void Transaction::acquireLocks()
         while (!locked)
         {
             // check if storage unit is not already locked
-            if ((objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->mLock.isUnlocked())
-            {
-                objectLock.mStorageUnit->mLock.Exclusive();
+            // StorageUnit::Exclusive checks if the lock can be given and locks returns true / false if successful
+            //bool exclusive =
+            locked = (((objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive()) ||
+                      ((objectLock.mLockingMode == Lock::LockingMode::shared) && (objectLock.mStorageUnit->LockShared()) ));
+            /*{
+                //objectLock.mStorageUnit->mLock.Exclusive();
                 locked = true;
-            }
-            else if ((objectLock.mLockingMode == Lock::LockingMode::shared) && (!objectLock.mStorageUnit->mLock.isExclusiveLocked()))
+            }*/
+            /*else if ((objectLock.mLockingMode == Lock::LockingMode::shared) && (!objectLock.mStorageUnit->Shared()))
             {
-                objectLock.mStorageUnit->mLock.Shared();
+                //objectLock.mStorageUnit->mLock.Shared();
                 locked = true;
-            }
-            else sleep(10); //try again later
+            }*/
+            if (!locked)
+                sleep(10); //try again later
         }
     }
 }
@@ -46,14 +50,14 @@ void Transaction::acquireLocks()
 void Transaction::releaseLocks()
 {
     for (auto objectLocks: mObjectLocks)
-        objectLocks.mStorageUnit->mLock.Release();
+        objectLocks.mStorageUnit->ReleaseLocks();
 }
 
 bool Transaction::isUnlocked() const
 {
     for (auto objectLocks: mObjectLocks)
     {
-        if (objectLocks.mStorageUnit->mLock.isExclusiveLocked() || objectLocks.mStorageUnit->mLock.isSharedLocked())
+        if (objectLocks.mStorageUnit->ExclusiveLockable())
             return false;
     }
     return true;

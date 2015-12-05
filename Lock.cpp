@@ -4,13 +4,13 @@ Lock::Lock(): mLockingMode(LockingMode::unlocked) //, mLockOwner(nullptr)
 {
 }
 
-void Lock::Exclusive() //const Transaction pTransaction)
+void Lock::SetExclusive() //const Transaction pTransaction)
 {
     mLockingMode = LockingMode::exclusive;
     //mLockOwner = pTransaction;
 }
 
-void Lock::Shared() //const Transaction pTransaction)
+void Lock::SetShared() //const Transaction pTransaction)
 {
     mLockingMode = LockingMode::shared;
     //mLockOwner = pTransaction;

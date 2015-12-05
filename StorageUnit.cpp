@@ -111,6 +111,47 @@ const bool StorageUnit::isRoot() const
     return mParent == nullptr;
 }
 
+bool StorageUnit::LockExclusive()
+{
+    if (ExclusiveLockable())
+    {
+        mLock.SetExclusive();
+        return true;
+    }
+    return false;
+}
+
+bool StorageUnit::LockShared()
+{
+    if (SharedLockable())
+    {
+        mLock.SetShared();
+        return true;
+    }
+    return false;
+}
+
+void StorageUnit::ForceLockExclusive()
+{
+    // DO ONLY USE FOR TESTING!
+    // DO ONLY USE FOR TESTING!
+    // DO ONLY USE FOR TESTING!
+    mLock.SetExclusive();
+}
+
+void StorageUnit::ForceLockShared()
+{
+    // DO ONLY USE FOR TESTING!
+    // DO ONLY USE FOR TESTING!
+    // DO ONLY USE FOR TESTING!
+    mLock.SetShared();
+}
+
+void StorageUnit::ReleaseLocks()
+{
+    mLock.Release();
+}
+
 const bool StorageUnit::isEmpty() const
 {
     return isLeaf(); // a leaf or e.g. table or database is empty
