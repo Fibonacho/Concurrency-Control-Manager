@@ -30,7 +30,6 @@ public:
     }
     
     void addRow(StorageUnit* row) {
-        //check if id has already been taken!?
         this->mChilds.push_back(row);
     }
 

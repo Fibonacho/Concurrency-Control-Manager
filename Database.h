@@ -19,10 +19,8 @@
 
 class Database: public StorageUnit
 {
-private:
-    //ConcurrencyManager mConcurrencyManager;
 public:
-    // adds a table to the childs of the database 
+    // adds a table to the childs of the database, this is called automatically in the constructor of the table
     void AddTable(StorageUnit* table);
     Database();
     ~Database();

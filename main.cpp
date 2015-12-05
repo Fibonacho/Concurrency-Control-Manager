@@ -14,9 +14,10 @@
 #include "UnitTestLocking.h"
 
 int main(int argc, const char * argv[]) {
-
-    std::string destinations[] = {"Tokio", "New York", "Berlin", "London", "Salzburg",
-        "Vienna", "Amsterdam", "Los Angeles", "San Francisco", "Rio de Janeiro"};
+    UnitTestLocking::test();
+    
+    std::string destinations[] = {"Tokio", "NY", "Berlin", "London", "Salzburg",
+        "Vienna", "Amsterdam", "LA", "SF", "Rio de Janeiro"};
     std::string passengers[]   = {"Johanna", "Elvis", "Eva", "Rick", "Glenn", "Maggie",
         "Michonne", "Carol", "Daryl", "Andrea", "Joey", "Phoebe", "Chandler", "Monica",
         "Rachel", "Ross", "Richard", "Carl", "John", "James"};
@@ -27,11 +28,8 @@ int main(int argc, const char * argv[]) {
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initializeTransactionHandlerSerial();
     //BookingDatabase::initializeTransactionHandlerConcurrent();
-    //BookingDatabase::transactionHandler.callAll();
-    //BookingDatabase::transactionHandler.callRandom(-1);
     // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
     BookingDatabase::transactionHandler.run(10, 2);
-    UnitTestLocking::test();
     std::cin.get();
     return 0;
 }

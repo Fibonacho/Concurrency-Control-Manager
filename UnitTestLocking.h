@@ -32,48 +32,63 @@ namespace UnitTestLocking {
     
     void test()
     {
-        // 1 //////////////////////////////////////////////////////////////////
-        // lock (exclusively) and check if another exclusive lock is allowed //
-        std::cout << "TEST  1:   ";
+        // lock an table of the database exclusively and check if the database can be locked (which should not be the case)
         passengers.mLock.Exclusive();
-        if (db.allowExclusiveLock())
-            std::cout << "db can be locked again (exclusively)" << std::endl;
-        else
-            std::cout << "db does not allow another (exclusive) lock" << std::endl;
-        assert(!db.allowExclusiveLock());
-
-        // 2 //////////////////////////////////////////////////////////////////
-        // release (exclusive) lock and check if unlocked /////////////////////
-        std::cout << "TEST  2:   ";
-        db.mLock.Release();
-        if (db.mLock.isUnlocked())
-            std::cout << "db is unlocked" << std::endl;
-        else
-            std::cout << "db is not unlocked" << std::endl;
-        assert(db.mLock.isUnlocked());
-
-        // 3 //////////////////////////////////////////////////////////////////
-        // lock (shared) and check if there's a shared lock ///////////////////
-        std::cout << "TEST  3:   ";
-        reservations.mLock.Shared();
-        if (reservations.mLock.isSharedLocked())
-            std::cout << "db is locked (shared)" << std::endl;
-        else
-            std::cout << "db is not locked (shared)" << std::endl;
-        assert(reservations.mLock.isSharedLocked());
-
-        // 4 //////////////////////////////////////////////////////////////////
-        // lock (shared) and check if another shared lock is allowed //////////
-        std::cout << "TEST  4:   ";
+        assert(!db.ExclusivelyLockable());
+        // relase the lock on the passanger table
+        passengers.mLock.Release();
+        // check if the database now can exclusively be locked (which should be the case - since no child is locked anymore)
+        assert(db.ExclusivelyLockable());
+        
+        // now lock two tables / childs of the database and check if the database is still lockable
+        passengers.mLock.Exclusive();
+        seats.mLock.Shared();
+        flights.mLock.Exclusive();
+        // should not allowed to be locked
+        assert(!db.ExclusivelyLockable());
+        seats.mLock.Release();
+        assert(!db.ExclusivelyLockable());
+        flights.mLock.Release();
+        assert(!db.ExclusivelyLockable());
+        passengers.mLock.Release();
+        // if all table locks get released it should be lockable
+        assert(db.ExclusivelyLockable());
+        
+        // lock the passenger table in shared mode
         passengers.mLock.Shared();
-        if (db.allowSharedLock())
-            std::cout << "db allows further lock (shared)" << std::endl;
-        else
-            std::cout << "db does not allow further lock (shared)" << std::endl;
-        assert(db.allowSharedLock());
-        db.mLock.Release();
-        assert(db.mLock.isUnlocked());
+        // should be fine to lock the passenger table or the database in shared mode
+        assert(passengers.SharedLockable());
+        assert(db.SharedLockable());
+        
+        // but any table is locked exclusively
+        flights.mLock.Exclusive();
+        // it is not possible anymore to lock the database in shared mode
+        assert(!db.SharedLockable());
+        // Release all locks again
+        flights.mLock.Release();
+        // now it is... (only passengers is locked in shared)
+        assert(db.SharedLockable());
+        // release the shared lock of passengers
+        passengers.mLock.Release();
+        // now nothing is locked is should be even more clear
+        assert(db.SharedLockable());
 
+        // if the db is locked in exclusive locked NO table can be locked in ANY mode
+        db.mLock.Exclusive();
+        assert(!flights.ExclusivelyLockable());
+        assert(!flights.SharedLockable());
+        assert(!passengers.ExclusivelyLockable());
+        assert(!passengers.SharedLockable());
+        assert(!seats.ExclusivelyLockable());
+        assert(!seats.SharedLockable());
+        assert(!passengers.ExclusivelyLockable());
+        assert(!passengers.SharedLockable());
+        db.mLock.Release();
+        
+        // now check if that also works for rows
+        
+        
+        
         // 5 //////////////////////////////////////////////////////////////////
         // check if there are NOT more seats than flights /////////////////////
         std::cout << "TEST  5:   ";
@@ -98,27 +113,7 @@ namespace UnitTestLocking {
             std::cout << "number of reservations <= 0" << std::endl;
         assert((reservationCount > 0 && passengerCount > 0) || reservationCount <= 0);
 
-        // 7 //////////////////////////////////////////////////////////////////
-        // lock parent (exclusively) and check if child is also locked ////////
-        std::cout << "TEST  7:   ";
-        db.mLock.Exclusive();
-        if (flights.mLock.isExclusiveLocked())
-            std::cout << "db is locked exclusively, table is also" << std::endl;
-        else
-            std::cout << "db is locked exclusively, table is not" << std::endl; // intended behavior?
-        //assert(flightsTable.mLock.isExclusiveLocked());
 
-        // 8 //////////////////////////////////////////////////////////////////
-        // lock child (table) exclusively and check if parent can be locked ///
-        std::cout << "TEST  8:   ";
-        db.mLock.Release();
-        reservations.mLock.Exclusive();
-        if (db.allowExclusiveLock())
-            std::cout << "table is locked exclusively, db can also be locked" << std::endl;
-        else
-            std::cout << "table is locked exclusively, db can not be locked" << std::endl;
-        assert(!db.allowExclusiveLock());
-        db.mLock.Release();
     }
 }
 

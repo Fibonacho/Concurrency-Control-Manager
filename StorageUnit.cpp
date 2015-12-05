@@ -17,7 +17,7 @@ StorageUnit::~StorageUnit()
 }
 
 // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
-bool StorageUnit::allowExclusiveLock() const
+bool StorageUnit::ExclusivelyLockable() const
 {
     // the ressource can be locked in exclusive mode if no child and no parent is locked at all
     StorageUnit* mNode = mParent;
@@ -25,7 +25,7 @@ bool StorageUnit::allowExclusiveLock() const
     while (mNode != nullptr)
     {
         // check if the parent is locked (shared or exclusive)
-        if (mNode->mLock.isUnlocked())
+        if (!mNode->mLock.isUnlocked())
             return false;
         mNode = mNode->mParent;
     }
@@ -34,7 +34,7 @@ bool StorageUnit::allowExclusiveLock() const
     {
         if (child != nullptr)
         {
-            if (child->mLock.isUnlocked())
+            if (!child->mLock.isUnlocked())
                 return false;
         }
     }
@@ -42,7 +42,7 @@ bool StorageUnit::allowExclusiveLock() const
 }
 
 // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
-bool StorageUnit::allowSharedLock() const
+bool StorageUnit::SharedLockable() const
 {
     // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
     // the ressource can be locked in exclusive mode if no child and no parent is locked at all

@@ -25,18 +25,16 @@
 #include "Transaction.h"
 
 namespace BookingDatabase {
-    // creates database
+    // creates a databases and tables (+ link them)
     Database db;
-    // creates tables
     Flights flights(&db);
     Passengers passengers(&db);
     Reservations reservations(&db);
     Seats seats(&db);
-    // adds tables to database
     
     TransactionHandler transactionHandler(db);
     
-    // add a flight to the table
+    // helperfunction - add a flight to the table
     void addFlight(std::string pDestination, int pSeats)
     {
         int FlightID = flights.add(pDestination);
@@ -47,7 +45,6 @@ namespace BookingDatabase {
     // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
     void removeReservation()
     {
-        // 2PL: get exclusive lock on reservation row + shared lock on reservation
         // if reservation exists
         if (!reservations.isEmpty())
         {
@@ -130,6 +127,7 @@ namespace BookingDatabase {
         transactionHandler.addTransaction(transaction1);
         
         Transaction transaction2(removeReservation);
+        // 2PL: get exclusive lock on reservation row + shared lock on reservation
         transaction1.addObjectLock(Lock::LockingMode::exclusive, &reservations);
         transactionHandler.addTransaction(transaction2);
         
@@ -163,13 +161,6 @@ namespace BookingDatabase {
             for (const std::string &passenger: passengerNames)
                 passengers.add(passenger);
         passengers.display(); // print passengersTable to console
-        
-        /*/ book i flights
-        for (int i = 0; i < 20; i++)
-        {
-            bookFlight();
-        } //*/
-
         reservations.display(); // print reservationTable to console
     }
 
