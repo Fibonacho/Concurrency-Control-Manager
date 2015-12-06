@@ -167,7 +167,7 @@ namespace BookingDatabase {
     // - add rows to tables (flights and passengers)
     // - book flights (which creates rows in the table for reservations)
     // - display tables (i.e. print to console)
-    void initializeData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
+    void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
     {
         initRand();
         
