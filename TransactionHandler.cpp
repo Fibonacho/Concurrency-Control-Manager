@@ -19,9 +19,9 @@ void TransactionHandler::callAll()
     }
 }
 
-void TransactionHandler::callRandom(const unsigned int pTimes)
+void TransactionHandler::callRandom(const int id, const unsigned int pTimes)
 {
-    for (int i = 0; i < pTimes; i++)
+    for (unsigned int i = 0; i < pTimes; i++)
     {
         int random = RandomInt((int)mTransactions.size());
         mTransactions[random].call();

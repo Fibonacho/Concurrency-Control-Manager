@@ -37,6 +37,6 @@ public:
     // call a random transaction pTimes times (at least once)
     // from thread with id pID
     // sleep after calling transaction
-    void callRandom(const unsigned int pTimes = 1);
+    void callRandom(const int id, const unsigned int pTimes = 1);
     void addTransaction(Transaction pTransaction);
 };
