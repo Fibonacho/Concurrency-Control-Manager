@@ -19,7 +19,7 @@ void TransactionHandler::callAll()
     }
 }
 
-void TransactionHandler::callRandom(const int id, const unsigned int pTimes)
+void TransactionHandler::callRandom(const unsigned int pTimes)
 {
     for (unsigned int i = 0; i < pTimes; i++)
     {
@@ -34,7 +34,7 @@ void TransactionHandler::run(const int pThreads, const int pCount)
     for (int i = 0; i < pThreads; i++)
     {
         // pCount threads call callRandom
-        std::thread* t = new std::thread(&TransactionHandler::callRandom, this, i, pCount);
+        std::thread* t = new std::thread(&TransactionHandler::callRandom, this, pCount);
         mThreads.push_back(t);
     }
     
