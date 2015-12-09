@@ -22,8 +22,10 @@ class StorageUnit;
 class Transaction
 {
 private:
-    // c++ function pointer to a function with no arguments and the return value void (none)
-    typedef void (*Function)(void);
+    // c++ function pointer to a function with no arguments
+    // and the return value bool
+    // (true if transaction was successful, false otherwise)
+    typedef bool (*Function)(void);
     //std::thread* mThread;
     
     struct ObjectLock

@@ -46,9 +46,9 @@ namespace BookingDatabase {
     
     // cancel(flight_id, passenger_id): cancel reservation for passenger on a flight
     // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
-    void removeReservation()
+    bool removeReservation()
     {
-        // if reservation exists
+        // if any reservation exists
         if (!reservations.isEmpty())
         {
             Reservations::Reservation randomReservation = reservations.getRandomReservation();
@@ -57,28 +57,32 @@ namespace BookingDatabase {
             // remove this reservation
             reservations.removeRes(randomReservation.mFID, randomReservation.mPID);
         }
+        return false;
     }
     
     // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
     // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
-    void getBookedFlights()
+    bool getBookedFlights()
     {
         // get a Random Passenger ID
         const int randomPID = passengers.getRandomPassengerID();
         if (DataConsoleOutput)
             std::cout << "Random Passenger to list bookings: " << randomPID << std::endl;
         reservations.getBookedFlights(randomPID);
+
+        return false;
     }
     
     // total_reservations(): return the total sum of all reservations on all flights
     // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
-    void getReservationSum()
+    bool getReservationSum()
     {
         reservations.printReservationSum();
+        return true;
     }
     
     // book(flight_id, passenger_id): book a seat for a passenger on a flight
-    void bookFlight()
+    bool bookFlight()
     {
         // get an existing passenger
         int randomPID = passengers.getRandomPassengerID();
@@ -86,6 +90,8 @@ namespace BookingDatabase {
         int randomFID = flights.getRandomFlightID();
         std::vector<int> seatList = seats.getSeats(randomFID);
         reservations.book(randomFID, randomPID, seatList);
+
+        return false;
     }
     
     // serial transaction handler:
@@ -152,8 +158,8 @@ namespace BookingDatabase {
     // only for testing purposes
     void checkData()
     {
-        // do some data checks and warningss
-        // make sure there are no more flights than seats, otherweise you get a warning
+        // do some data checks and warnings
+        // make sure there are not more flights than seats, otherwise you get a warning
         if (seats.getRowCount() < flights.getRowCount())
             std::cerr << "WARNING: there are not more flights than seats" << std::endl;
         
