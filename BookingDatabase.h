@@ -55,9 +55,10 @@ namespace BookingDatabase {
             if (DataConsoleOutput)
                 std::cout << "Random Reservation to be removed: " << randomReservation.mFID << ", " << randomReservation.mPID << std::endl;
             // remove this reservation
-            reservations.removeRes(randomReservation.mFID, randomReservation.mPID);
+            bool ok = reservations.removeRes(randomReservation.mFID, randomReservation.mPID);
+            return ok;
         }
-        return false;
+        return false; // at this point, no reservation was removed (maybe there was not any)
     }
     
     // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
@@ -89,9 +90,9 @@ namespace BookingDatabase {
         // get an existing flight - make sure they are not deleted (locks)
         int randomFID = flights.getRandomFlightID();
         std::vector<int> seatList = seats.getSeats(randomFID);
-        reservations.book(randomFID, randomPID, seatList);
+        bool ok = reservations.book(randomFID, randomPID, seatList);
 
-        return false;
+        return ok;
     }
     
     // serial transaction handler:
