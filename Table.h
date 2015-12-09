@@ -26,6 +26,7 @@ public:
     Table(Database* database);
     virtual ~Table();
     void addRow(StorageUnit* row);
+    // call childCount() from StorageUnit
     long getRowCount();
 protected:
     int getNewID();

@@ -32,7 +32,7 @@ namespace UnitTestLocking {
     
     void test()
     {
-        std::cout << "START Unit Test ------------------------ " << std::endl;
+        std::cout << "START: Unit Test ------------------------ " << std::endl;
         // lock an object in exclusive mode and check if it could be locked again (which should of course not be possible)
         // and after check for shared locks (shared / shared) - where it is possible to lock twice
         
@@ -76,7 +76,7 @@ namespace UnitTestLocking {
         // lock a table of the database exclusively and check if the database can be locked (which should not be the case)
         passengers.ForceLockExclusive();
         assert(!db.ExclusiveLockable());
-        // relase the lock on the passanger table
+        // release the lock on the passenger table
         passengers.ReleaseLocks();
         // check if the database now can exclusively be locked (which should be the case - since no child is locked anymore)
         assert(db.ExclusiveLockable());
@@ -159,7 +159,7 @@ namespace UnitTestLocking {
         assert(flights.SharedLockable());
         assert(flights.ExclusiveLockable());
         FirstFlight->ReleaseLocks();
-        std::cout << "END Unit Test ------------------------ " << std::endl;
+        std::cout << "END:   Unit Test ------------------------ " << std::endl;
     }
 }
 

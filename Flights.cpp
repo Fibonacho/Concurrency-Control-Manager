@@ -14,7 +14,7 @@ BookingDatabase::Flights::~Flights()
 void BookingDatabase::Flights::display() const
 {
     std::cout << "----------------------------" << std::endl << "Display Flights: " << std::endl;
-    for(auto flight: mChilds)
+    for (auto flight: mChilds)
     {
         Row<Flight>* rowFlight = static_cast<Row<Flight>*>(flight);
         std::cout << rowFlight->getData().mID << " " << rowFlight->getData().mDestination << std::endl;

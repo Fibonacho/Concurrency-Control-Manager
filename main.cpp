@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
     passengerList.push_back("Glenn");
     passengerList.push_back("Rick");
     passengerList.push_back("Daryl");
-    // this small value is only for easier testing, should later be 100 or seomthing
+    // this small value is only for easier testing, should later be 100 or something
     int AverageSeatCount = 10;
     // The evaluation will be changed for the final evaluation
     // initialize the booking database (creates the tables)
