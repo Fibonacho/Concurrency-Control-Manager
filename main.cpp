@@ -10,10 +10,15 @@
 //  ---------------------------------------------------
 
 #include <iostream>
+#include <chrono>
 #include "BookingDatabase.h"
 #include "UnitTestLocking.h"
 
 int main(int argc, const char * argv[]) {
+
+    // timestamp (begin)
+    std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
+
     UnitTestLocking::test();
     
     std::vector<std::string> destinationList;
@@ -42,6 +47,13 @@ int main(int argc, const char * argv[]) {
     // run(pThreads, pCount) --> run pThreads that call callRandom() pCount times
     // BookingDatabase::db.ForceLockExclusive();
     BookingDatabase::transactionHandler.run(1, 10);
+
+    // timestamp (end)
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+
+    std::cout << "Duration: " << duration << " microseconds" << std::endl;
     std::cin.get();
     return 0;
 }
