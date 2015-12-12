@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
     int AverageSeatCount = 75;
     // The evaluation will be changed for the final evaluation
     // initialize the booking database (creates the tables)
-    BookingDatabase::initData(destinationList, passengerList, AverageSeatCount, MaxSeatCount); //destination-/passenger-count
+    BookingDatabase::initData(destinationList, passengerList, AverageSeatCount, MaxSeatCount);
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initTransactionHandlerSerial();
     // BookingDatabase::initializeTransactionHandlerConcurrent();

@@ -15,6 +15,7 @@
 #ifndef BOOKINGDATABASE_H
 #define BOOKINGDATABASE_H
 
+#include <algorithm>
 #include <sstream>
 #include "Database.h"
 #include "Flights.h"
@@ -182,14 +183,14 @@ namespace BookingDatabase {
         initRand();
         
         // insert 50 new flights into the flight table / data structure and store the id in the mFlightList
-        int f = 50;
         int numbOfSeats;
-        while (f >= 1)
+        for (unsigned int f = 1; f <= 50 / pDestinationList.size(); f++)
         {
             for (auto destination : pDestinationList)
             {
-                if (f == 1)
+                if (f == 50)
                 {
+                    // take remaining seats for last flight
                     numbOfSeats = MaxSeatCount;
                 }
                 else
@@ -205,18 +206,16 @@ namespace BookingDatabase {
                 std::string target = sstm.str();
 
                 if (numbOfSeats < 0)
-                    numbOfSeats = numbOfSeats * (-1);
+                    numbOfSeats = std::max(numbOfSeats, 0);
 
                 addFlight(target, numbOfSeats);
                 //std::cout << "Flight number: " << f << ", max: " << MaxSeatCount << ", numb of seats: " << numbOfSeats << std::endl;
-                f--;
             }
         }
         flights.display(); // print flightsTable to console
         
         // insert 100 passengers into passenger table
-        int p = 100;
-        while (p >= 1)
+        for (unsigned int p = 1; p <= 100 / pPassengerList.size(); p++)
         {
             for (auto passenger : pPassengerList)
             {
@@ -226,7 +225,6 @@ namespace BookingDatabase {
                 std::string name = sstm.str();
 
                 passengers.add(name);
-                p--;
             }
         }
         passengers.display();   // print passengersTable to console
