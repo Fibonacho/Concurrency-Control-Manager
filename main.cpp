@@ -20,16 +20,22 @@ int main(int argc, const char * argv[]) {
     destinationList.push_back("Tokio");
     destinationList.push_back("Salzburg");
     destinationList.push_back("Amsterdam");
+    destinationList.push_back("New York");
+    destinationList.push_back("Vienna");
     
     std::vector<std::string> passengerList;
+    passengerList.push_back("Lori");
     passengerList.push_back("Glenn");
     passengerList.push_back("Rick");
     passengerList.push_back("Daryl");
-    // this small value is only for easier testing, should later be 100 or something
-    int AverageSeatCount = 10;
+
+    // flights are generated with a max seat count of 1000, which are randomly distributed on the flights
+    int MaxSeatCount = 5000;
+    // flights have an average seat count
+    int AverageSeatCount = 75;
     // The evaluation will be changed for the final evaluation
     // initialize the booking database (creates the tables)
-    BookingDatabase::initData(destinationList, passengerList, AverageSeatCount);
+    BookingDatabase::initData(destinationList, passengerList, AverageSeatCount, MaxSeatCount); //destination-/passenger-count
     // initialize the transaction handler with the 4 transactions
     BookingDatabase::initTransactionHandlerSerial();
     // BookingDatabase::initializeTransactionHandlerConcurrent();
