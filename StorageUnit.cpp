@@ -82,7 +82,7 @@ bool StorageUnit::SharedLockable() const
     
     // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
     StorageUnit* mNode = mParent;
-    // tranverse over all parents until the root is reached
+    // traverse over all parents until the root is reached
     while (mNode != nullptr)
     {
         // check if the parent is locked (shared or exclusive)
@@ -90,7 +90,7 @@ bool StorageUnit::SharedLockable() const
             return false;
         mNode = mNode->mParent;
     }
-    // the ressource can be locked in exclusive mode if no child and no parent is locked at all
+    // the resource can be locked in exclusive mode (if no child and no parent is locked at all)
     return childsSharedLockable(this);
 }
 
