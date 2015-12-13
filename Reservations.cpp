@@ -36,7 +36,7 @@ void BookingDatabase::Reservations::removeRes()
     mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
 }
 
-void BookingDatabase::Reservations::getBookedFlights(const int pPID)
+bool BookingDatabase::Reservations::getBookedFlights(const int pPID)
 {
     for (auto child: mChilds)
     {
@@ -50,6 +50,7 @@ void BookingDatabase::Reservations::getBookedFlights(const int pPID)
         }
         std::cout << std::endl;
     }
+    return true;
 }
 
 void BookingDatabase::Reservations::display() const
@@ -127,15 +128,17 @@ bool BookingDatabase::Reservations::book(int pFID, int pPID, std::vector<int> &p
     return booked;
 }
 
-BookingDatabase::Reservations::Reservation BookingDatabase::Reservations::getRandomReservation()
+BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandom()
 {
     if (mChilds.size() == 0)
-        return Reservation();
+        return nullptr;
         
     int random = RandomInt((int)mChilds.size());
     StorageUnit* child = mChilds[random];
     Row<Reservation>* childRow = static_cast<Row<Reservation>*>(child);
     if (childRow != nullptr)
-        return childRow->getData();
-    else return Reservation();
+    {
+        return childRow->getDataPtr();
+    }
+    else return nullptr;
 }

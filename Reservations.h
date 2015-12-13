@@ -45,7 +45,7 @@ namespace BookingDatabase {
         bool hasBooked(int pFID, int pPID) const;
         
         // get / print booked flights of a passenger with id pPID
-        void getBookedFlights(const int pPID);
+        bool getBookedFlights(const int pPID);
         // print number of reservations (sum of rows)
         void printReservationSum();
         // remove a random reservation
@@ -55,7 +55,7 @@ namespace BookingDatabase {
         // print every row in a new line
         void display() const;
         // get a random reservation
-        Reservation getRandomReservation();
+        Reservation* getRandom();
     };
 }
 

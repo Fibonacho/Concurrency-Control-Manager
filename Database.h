@@ -21,10 +21,10 @@ class LockManager;
 class Database: public StorageUnit
 {
 private:
-    // add a pointer to a lock manager
+    //add a pointer to a lock manager
     LockManager* const mLockManager;
 public:
-    // adds a table to the children of the database, this is called automatically in the constructor of the table
+    // adds a table to the childs of the database, this is called automatically in the constructor of the table
     void AddTable(StorageUnit* table);
     Database(LockManager* const pLockManager);
     virtual ~Database();

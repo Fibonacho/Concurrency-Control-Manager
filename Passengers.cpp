@@ -23,23 +23,23 @@ int BookingDatabase::Passengers::add(std::string pName)
     return row->getData().mPID;
 }
 
-BookingDatabase::Passengers::Passenger BookingDatabase::Passengers::getRandomPassenger() const
+BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandom()
 {
     if (mChilds.size() == 0)
-        return Passenger();
+        return nullptr;
     
     int random = RandomInt((int)mChilds.size());
     StorageUnit* passenger = mChilds[random];
     Row<Passenger>* passengerRow = static_cast<Row<Passenger>*>(passenger);
     if (passengerRow != nullptr)
-        return passengerRow->getData();
-    else return Passenger();
+        return passengerRow->getDataPtr();
+    else return nullptr;
 }
 
-int BookingDatabase::Passengers::getRandomPassengerID() const
+int BookingDatabase::Passengers::getRandomID()
 {
-    Passenger data = getRandomPassenger();
-    return data.mPID;
+    Passenger* data = getRandom();
+    return data->mPID;
 }
 
 void BookingDatabase::Passengers::display() const

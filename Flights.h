@@ -36,9 +36,9 @@ namespace BookingDatabase {
         // display flights, i.e. print content of flight table to console
         void display() const;
         // get a random flight from the table
-        Flight getRandomFlight() const;
+        Flight* getRandom() const;
         // get a random flight id by calling getRandomFlight() and accessing it's ID
-        int getRandomFlightID() const;
+        int getRandomID() const;
 
         Flights(Database* database);
         virtual ~Flights();

@@ -14,7 +14,7 @@ BookingDatabase::Flights::~Flights()
 void BookingDatabase::Flights::display() const
 {
     std::cout << "----------------------------" << std::endl << "Display Flights: " << std::endl;
-    for (auto flight: mChilds)
+    for(auto flight: mChilds)
     {
         Row<Flight>* rowFlight = static_cast<Row<Flight>*>(flight);
         std::cout << rowFlight->getData().mID << " " << rowFlight->getData().mDestination << std::endl;
@@ -22,23 +22,23 @@ void BookingDatabase::Flights::display() const
     std::cout << "----------------------------" << std::endl;
 }
 
-BookingDatabase::Flights::Flight BookingDatabase::Flights::getRandomFlight() const
+BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandom() const
 {
     if (mChilds.size() == 0)
-        return Flight();
+        return nullptr;
     
     int random = RandomInt((int)mChilds.size());
     StorageUnit* flight = mChilds[random];
     Row<Flight>* flightrow = static_cast<Row<Flight>*>(flight);
     if (flightrow != nullptr)
-        return flightrow->getData();
-    else return Flight();
+        return flightrow->getDataPtr();
+    else return nullptr;
 }
 
-int BookingDatabase::Flights::getRandomFlightID() const
+int BookingDatabase::Flights::getRandomID() const
 {
-    Flight data = getRandomFlight();
-    return data.mID;
+    Flight* data = getRandom();
+    return data->mID;
 }
 
 int BookingDatabase::Flights::add(std::string pDestination)

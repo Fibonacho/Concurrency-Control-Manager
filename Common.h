@@ -22,6 +22,7 @@
 static void initRand()
 {
     srand ((unsigned int)time(NULL));
+
 }
 
 // generate a random integer value in the range 0 to max-1

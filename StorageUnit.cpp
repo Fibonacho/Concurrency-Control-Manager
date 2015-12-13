@@ -23,7 +23,7 @@ bool StorageUnit::ExclusiveLockable() const
         
     // the ressource can be locked in exclusive mode if no child and no parent is locked at all
     StorageUnit* mNode = mParent;
-    // traverse over all parents until the root is reached
+    // tranverse over all parents until the root is reached
     while (mNode != nullptr)
     {
         // check if the parent is locked (shared or exclusive)
@@ -43,7 +43,7 @@ bool StorageUnit::childsSharedLockable(const StorageUnit* const pParent) const
             // should not be locked in exclusive mode
             if (child->mLock.isExclusiveLocked()) return false;
             
-            // if the table is filled with data also check the rows of the table
+            // if the table is filled with data also check of the rows of the table
             if (child->childCount() > 0)
             {
                 if (!childsSharedLockable(child))
@@ -82,7 +82,7 @@ bool StorageUnit::SharedLockable() const
     
     // the source can be locked in shared mode if none child and parent is locked in exclusive mode (shared is fine)
     StorageUnit* mNode = mParent;
-    // traverse over all parents until the root is reached
+    // tranverse over all parents until the root is reached
     while (mNode != nullptr)
     {
         // check if the parent is locked (shared or exclusive)
@@ -90,7 +90,7 @@ bool StorageUnit::SharedLockable() const
             return false;
         mNode = mNode->mParent;
     }
-    // the resource can be locked in exclusive mode (if no child and no parent is locked at all)
+    // the ressource can be locked in exclusive mode if no child and no parent is locked at all
     return childsSharedLockable(this);
 }
 
