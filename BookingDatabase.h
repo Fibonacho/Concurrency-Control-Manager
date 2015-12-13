@@ -38,8 +38,6 @@ namespace BookingDatabase {
     bool DataConsoleOutput = false;
     
     namespace Transaction1 {
-        // getReservationSum
-        
         // total_reservations(): return the total sum of all reservations on all flights
         // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
         bool getReservationSum()
@@ -47,21 +45,21 @@ namespace BookingDatabase {
             reservations.printReservationSum();
             return true;
         }
-       
     }
     
     namespace Transaction2 {
-        // removeReservation
-        Reservations::Reservation* RandomReservation = nullptr;
         // cancel(flight_id, passenger_id): cancel reservation for passenger on a flight
-        // if this transaction is performed on non-existing data (deleted during time), it does not have any influence (won't find a reservation)
+        // if this transaction is performed on non-existing data (deleted during time)
+        // it does not have any influence (won't find a reservation)
+        
+        Reservations::Reservation* RandomReservation = nullptr;
+        
         bool removeReservation()
         {
+            // if reservation exists
             if (RandomReservation != nullptr)
             {
-                // get a random reservation
-                // delete this random reservation
-                // if reservation exists
+                // delete the random reservation
                 if (DataConsoleOutput)
                     std::cout << "Random Reservation to be removed: " << RandomReservation->mFID << ", " << RandomReservation->mPID << std::endl;
                 // remove this reservation
@@ -76,25 +74,28 @@ namespace BookingDatabase {
                 RandomReservation = reservations.getRandom();
             else
                 RandomReservation = nullptr;
+            //returns true if a RandomReservation is successfully set
             return (RandomReservation != nullptr);
         }
     }
     
     namespace Transaction3 {
-        // getBookedFlights
+        // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
+        // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
         
         int RandomPID = -1;
         
+        // get a random reservation ID
         bool getRandomPassengerID()
         {
             RandomPID = passengers.getRandomID();
+            // returns true if a random passenger was found (the id is grater than 0)
             return (RandomPID > 0);
         }
         
-        // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
-        // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
         bool getBookedFlights()
         {
+            // print the booked flights of the random PID if one was found
             if (RandomPID > 0)
             {
                 if (DataConsoleOutput)
@@ -105,27 +106,32 @@ namespace BookingDatabase {
         }
     }
 
-    namespace Transaction4 {
+    namespace Transaction4
+    {
+        // book(flight_id, passenger_id): book a seat for a passenger on a flight
+        // first get a random passenger ID and a flight ID
+        // then, get the seat list for this flight
+        // then, call reservations.book using those as parameters
         
-        // bookFlight
         int RandomPID = -1;
         int RandomFID = -1;
         std::vector<int> seatList;
 
-        // get an existing passenger
+        // get an existing passenger / make sure they are not deleted
         bool getRandomPID()
         {
             RandomPID = passengers.getRandomID();
             return (RandomPID > 0);
         }
         
-        // get an existing flight - make sure they are not deleted (locks)
+        // get an existing flight / make sure they are not deleted
         bool getRandomFID()
         {
             RandomFID = flights.getRandomID();
             return (RandomFID > 0);
         }
         
+        // get all setas from the flight
         bool getSeatList()
         {
             seatList.clear();
@@ -133,17 +139,13 @@ namespace BookingDatabase {
             return true;
         }
         
-        // book(flight_id, passenger_id): book a seat for a passenger on a flight
+        // book a flight, true is returned if the reservation was successful
         bool bookFlight()
         {
             return reservations.book(RandomFID, RandomPID, seatList);
         }
     }
-    
-    //Transaction 2 objects
-
-    Passengers::Passenger* RandomPassenger = nullptr;
-    
+   
     // helperfunction - add a flight to the table
     void addFlight(const std::string pDestination, const int pSeats)
     {
@@ -159,40 +161,35 @@ namespace BookingDatabase {
     {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted
-        // a serial schedule is obtained by locking the database in exclusive mode
-        Transaction transaction1;
+        // a serial schedule is obtained by locking the db exclusively in any command of any transaction
+        
+        Transaction transactions[4];
+        
+        // Transaction 1 (print reservation sum), has only one command
         Command* command1 = new Command(Transaction1::getReservationSum);
         command1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transaction1.addCommand(command1);
+        transactions[0].addCommand(command1);
         
-        //Transaction transaction1(getReservationSum);
-        //transaction1.addObjectLock(Lock::LockingMode::exclusive, &db);
-        //transactionHandler.addTransaction(transaction1);
-        
-        Transaction transaction2;
+        // Transaction 2 (remove reservatio)
+        // has two commands; get a random reservation to remove and then remove it
         Command* command2_0 = new Command(Transaction2::getRandomReservation);
         command2_0->addObjectLock(Lock::LockingMode::exclusive, &db);
         Command* command2_1 = new Command(Transaction2::removeReservation);
         command2_1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transaction2.addCommand(command2_0);
-        transaction2.addCommand(command2_1);
+        transactions[1].addCommand(command2_0);
+        transactions[1].addCommand(command2_1);
         
-        //Transaction transaction2(removeReservation);
-        //transaction2.addObjectLock(Lock::LockingMode::exclusive, &db);
-        //transactionHandler.addTransaction(transaction2);
-        
-        Transaction transaction3;
+        // Transaction 3 (get booked flights)
+        // has two commands: get random passenger and book flights of this passenger
         Command* command3_0 = new Command(Transaction3::getRandomPassengerID);
         command3_0->addObjectLock(Lock::LockingMode::exclusive, &db);
         Command* command3_1 = new Command(Transaction3::getBookedFlights);
         command3_1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transaction3.addCommand(command3_0);
-        transaction3.addCommand(command3_1);
+        transactions[2].addCommand(command3_0);
+        transactions[2].addCommand(command3_1);
         
-        //Transaction transaction3(getBookedFlights);
-        //transaction3.addObjectLock(Lock::LockingMode::exclusive, &db);
-        //transactionHandler.addTransaction(transaction3);
-        
+        // Transaction 4 (book flight)
+        // has 4 commands: get random passenger and flight, get all seats from this flight and the booking itself
         Transaction transaction4;
         Command* command4_0 = new Command(Transaction4::getRandomPID);
         command4_0->addObjectLock(Lock::LockingMode::exclusive, &db);
@@ -202,18 +199,14 @@ namespace BookingDatabase {
         command4_2->addObjectLock(Lock::LockingMode::exclusive, &db);
         Command* command4_3 = new Command(Transaction4::bookFlight);
         command4_3->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transaction3.addCommand(command4_0);
-        transaction3.addCommand(command4_1);
-        transaction3.addCommand(command4_2);
-        transaction3.addCommand(command4_3);
+        transactions[3].addCommand(command4_0);
+        transactions[3].addCommand(command4_1);
+        transactions[3].addCommand(command4_2);
+        transactions[3].addCommand(command4_3);
         
-        //Transaction transaction4(bookFlight);
-        //transaction4.addObjectLock(Lock::LockingMode::exclusive, &db);
-        //transactionHandler.addTransaction(transaction4);
-        transactionHandler.addTransaction(transaction1);
-        transactionHandler.addTransaction(transaction2);
-        transactionHandler.addTransaction(transaction3);
-        transactionHandler.addTransaction(transaction4);
+        // add all transactions to the transactionHandler
+        for (int i = 0; i < 4; i++)
+            transactionHandler.addTransaction(transactions[i]);
     }
 
     // concurrent transaction handler:
@@ -227,52 +220,26 @@ namespace BookingDatabase {
         // this locking is on a table level but could also be extended to row level locking
         
         // get shared lock on reservation
-        Transaction transaction1;
+        Transaction transactions[4];
+        
         Command* command1 = new Command(Transaction1::getReservationSum);
         command1->addObjectLock(Lock::LockingMode::shared, &reservations);
-        transaction1.addCommand(command1);
-    
-        // Transaction transaction2(removeReservation);
-        // get exclusive lock on reservation row + shared lock on reservation
-        // transaction2.addObjectLock(Lock::LockingMode::exclusive, &reservations);
+        transactions[0].addCommand(command1);
         
-        transactionHandler.addTransaction(transaction1);
-        
-        Transaction transaction2;
         Command* command2_0 = new Command(Transaction2::getRandomReservation);
         command2_0->addObjectLock(Lock::LockingMode::shared, &reservations);
         Command* command2_1 = new Command(Transaction2::removeReservation);
         command2_1->addObjectLock(Lock::LockingMode::exclusive, &reservations);
-        transaction2.addCommand(command2_0);
-        transaction2.addCommand(command2_1);
-        transactionHandler.addTransaction(transaction2);
+        transactions[1].addCommand(command2_0);
+        transactions[1].addCommand(command2_1);
         
-        // Transaction transaction3(getBookedFlights);
-        // get shared lock on passenger and reservation
-        // transaction3.addObjectLock(Lock::LockingMode::shared, &reservations);
-        // transaction3.addObjectLock(Lock::LockingMode::shared, &passengers);
-        
-        
-        Transaction transaction3;
         Command* command3_0 = new Command(Transaction3::getRandomPassengerID);
         command3_0->addObjectLock(Lock::LockingMode::shared, &passengers);
         Command* command3_1 = new Command(Transaction3::getBookedFlights);
         command3_1->addObjectLock(Lock::LockingMode::shared, &reservations);
-        transaction3.addCommand(command3_0);
-        transaction3.addCommand(command3_1);
-        transactionHandler.addTransaction(transaction3);
+        transactions[2].addCommand(command3_0);
+        transactions[2].addCommand(command3_1);
         
-        //Transaction transaction3(getBookedFlights);
-        //transaction3.addObjectLock(Lock::LockingMode::exclusive, &db);
-        //transactionHandler.addTransaction(transaction3);
-        // Transaction transaction4(bookFlight);
-        // get passenger, flight, seat shared lock und exclusive lock on booking
-        // transaction4.addObjectLock(Lock::LockingMode::shared, &passengers);
-        // transaction4.addObjectLock(Lock::LockingMode::shared, &flights);
-        // transaction4.addObjectLock(Lock::LockingMode::shared, &seats);
-        // transaction4.addObjectLock(Lock::LockingMode::exclusive, &reservations);
-        
-        Transaction transaction4;
         Command* command4_0 = new Command(Transaction4::getRandomPID);
         command4_0->addObjectLock(Lock::LockingMode::shared, &passengers);
         Command* command4_1 = new Command(Transaction4::getRandomFID);
@@ -281,11 +248,14 @@ namespace BookingDatabase {
         command4_2->addObjectLock(Lock::LockingMode::shared, &seats);
         Command* command4_3 = new Command(Transaction4::bookFlight);
         command4_3->addObjectLock(Lock::LockingMode::exclusive, &reservations);
-        transaction4.addCommand(command4_0);
-        transaction4.addCommand(command4_1);
-        transaction4.addCommand(command4_2);
-        transaction4.addCommand(command4_3);
-        transactionHandler.addTransaction(transaction4);
+        
+        transactions[3].addCommand(command4_0);
+        transactions[3].addCommand(command4_1);
+        transactions[3].addCommand(command4_2);
+        transactions[3].addCommand(command4_3);
+        
+        for (int i = 0; i < 4; i++)
+            transactionHandler.addTransaction(transactions[i]);
     }
 
     // only for testing purposes

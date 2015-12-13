@@ -15,7 +15,7 @@ void Command::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorag
 
 void Command::acquireLocks()
 {
-    // could take a while
+    // could take a while (because the command is maybe waiting)
     for (auto objectLock: mObjectLocks)
     {
         bool locked = false;
@@ -49,5 +49,5 @@ void Command::call()
     int waitingTime = RandomInt(100);
     std::cout << "function waits " << waitingTime/1000.0 << " seconds" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(waitingTime));
-    // releaseLocks();
+    // the locks are not release - they are released at the end (after all commands are executed)
 }

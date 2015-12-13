@@ -1,7 +1,6 @@
 //  ---------------------------------------------------
 //  Transaction:
-//  - a transaction has a locking mode
-//  - a transaction can acquire a lock for a storage unit
+//  - a transaction is a list of commands (they have object locks)
 //
 //  Advanced Databases: Assignment 3 Concurrency Control
 //
@@ -14,10 +13,8 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-
 #include <vector>
 #include "Command.h"
-// a list of commands (each command has locks)
 
 class StorageUnit;
 
@@ -27,11 +24,13 @@ private:
     // c++ function pointer to a function with no arguments and the return value void (none)
     std::vector<Command*> mCommands;
     
-    // release a lock, i.e. set locking mode to 0 = Lock::LockingMode::unlocked
+    // release all locks of each command (i.e. set locking mode to 0 = Lock::LockingMode::unlocked)
     void releaseLocks();
 public:
     Transaction(); //Function pFunction
+    // add a command to the transaction
     void addCommand(Command* pCommand);
+    // call all command in the command list (iterates over all commands and "calls" them and then releases the locks again)
     void call();
 };
 

@@ -11,6 +11,7 @@ Transaction::Transaction()
 void Transaction::call()
 {
     for (auto command: mCommands)
+        // does call acquire locks internally 
         command->call();
     releaseLocks();
 }
