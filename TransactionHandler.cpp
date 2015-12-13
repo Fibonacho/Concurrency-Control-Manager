@@ -1,5 +1,6 @@
 #include "TransactionHandler.h"
 #include "Common.h"
+#include <sstream>
 #include <iostream>
 
 TransactionHandler::TransactionHandler(Database &pDatabase) //: mIndex(0)
@@ -35,11 +36,23 @@ void TransactionHandler::run(const int pThreads, const int pCount)
     {
         // pCount threads call callRandom
         std::thread* t = new std::thread(&TransactionHandler::callRandom, this, pCount);
+
+        // store thread id and begin time of thread
+        mRuntime.mID = t->get_id();
+        mRuntime.mTimepoint = std::chrono::high_resolution_clock::now();
+        mThreadRuntime.push_back(mRuntime);
+
         mThreads.push_back(t);
     }
     
     for (auto thread: mThreads)
+    {
         thread->join();
+        std::chrono::high_resolution_clock::time_point begin = mRuntime.mTimepoint;
+        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+
+        // TODO: update mRuntime.mTimepoint with runtime (end - begin)
+    }
 }
 
 void TransactionHandler::addTransaction(Transaction pTransaction)
@@ -47,3 +60,10 @@ void TransactionHandler::addTransaction(Transaction pTransaction)
     mTransactions.push_back(pTransaction);
 }
 
+void TransactionHandler::printRuntimes()
+{
+    for (auto runtime: mThreadRuntime)
+    {
+        // print runtime.mTimepoint (to string)
+    }
+}

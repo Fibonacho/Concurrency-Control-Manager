@@ -12,7 +12,6 @@ void Transaction::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pSt
     mObjectLocks.push_back(ObjectLock(pLockingMode, pStorageUnit));
 }
 
-
 void Transaction::call()
 {
     acquireLocks();

@@ -22,10 +22,24 @@ private:
     std::vector<Transaction> mTransactions;
     std::vector<std::thread*> mThreads;
     Database* mDatabase;
+
 public:
     TransactionHandler(Database &pDatabase);
     ~TransactionHandler();
-    
+
+    // union object to store a thread's id together with its runtime
+    union ThreadRuntime
+    {
+        ThreadRuntime() {}
+        // cID, cTP ("c" for "constructor")
+        ThreadRuntime(std::thread::id cID, std::chrono::high_resolution_clock::time_point cTP): mID(cID), mTimepoint(cTP) {}
+        ~ThreadRuntime() {}
+        std::thread::id mID;
+        std::chrono::high_resolution_clock::time_point mTimepoint;
+    } mRuntime;
+    // vector to store runtime values of every thread
+    std::vector<ThreadRuntime> mThreadRuntime;
+
     // pThreads threads call callRandom(), pCount times
     // repeat some number of times (pCount)
     // select a transaction type randomly (callRandom)
@@ -39,4 +53,5 @@ public:
     // sleep after calling transaction
     void callRandom(const unsigned int pTimes = 1);
     void addTransaction(Transaction pTransaction);
+    void printRuntimes();
 };
