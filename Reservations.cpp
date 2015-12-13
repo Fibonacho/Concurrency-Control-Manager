@@ -67,10 +67,11 @@ void BookingDatabase::Reservations::display() const
         std::cout << "----------------------------" << std::endl;
 }
 
-void BookingDatabase::Reservations::printReservationSum()
+bool BookingDatabase::Reservations::printReservationSum()
 {
     if (mDataConsoleOutput)
         std::cout << "Sum of Reservations: " << childCount() << std::endl;
+    return true;
 }
 
 bool BookingDatabase::Reservations::hasBooked(int pFID, int pPID) const

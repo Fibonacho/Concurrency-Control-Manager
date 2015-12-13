@@ -47,7 +47,7 @@ namespace BookingDatabase {
         // get / print booked flights of a passenger with id pPID
         bool getBookedFlights(const int pPID);
         // print number of reservations (sum of rows)
-        void printReservationSum();
+        bool printReservationSum();
         // remove a random reservation
         // i.e. delete a random row from the reservations table
         void removeRes();

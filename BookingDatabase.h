@@ -43,8 +43,7 @@ namespace BookingDatabase {
         // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
         bool getReservationSum()
         {
-            reservations.printReservationSum();
-            return true;
+            return reservations.printReservationSum();
         }
     }
     

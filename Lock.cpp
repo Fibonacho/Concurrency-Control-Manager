@@ -19,10 +19,13 @@ void Lock::SetShared(Transaction* pTransaction)
 
 bool Lock::Upgrade(Transaction* pTransaction)
 {
-    if (mLockOwner == pTransaction)
+    if (mLockingMode == LockingMode::shared)
     {
-        mLockingMode = LockingMode::exclusive;
-        return true;
+        if (mLockOwner == pTransaction)
+        {
+            mLockingMode = LockingMode::exclusive;
+            return true;
+        }
     }
     return false;
 }

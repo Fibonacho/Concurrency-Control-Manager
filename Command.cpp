@@ -34,7 +34,8 @@ void Command::acquireLocks()
             if ((!locked) && (objectLock.mLockingMode == Lock::LockingMode::exclusive))
             {
                 // Lockupgrade
-               // locked = objectLock.mStorageUnit->LockUpgrade(mTransaction);
+                bool l = objectLock.mStorageUnit->LockUpgrade(mTransaction);
+                locked = l;
             }
             
             if (!locked)
