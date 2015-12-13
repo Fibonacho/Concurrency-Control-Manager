@@ -20,6 +20,7 @@
 #include <vector>
 #include "Lock.h"
 
+class Transaction;
 class StorageUnit
 {
 private:
@@ -45,8 +46,9 @@ public:
     bool SharedLockable() const;
     
     // set the lock to exclusive or shared after checking if it's even allowed
-    bool LockExclusive();
-    bool LockShared();
+    bool LockUpgrade(Transaction* pTransaction);
+    bool LockExclusive(Transaction* pTransaction);
+    bool LockShared(Transaction* pTransaction);
     // releases the locks
     void ReleaseLocks();
     

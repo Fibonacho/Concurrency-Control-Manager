@@ -1,5 +1,6 @@
 #include "StorageUnit.h"
 #include <iostream>
+#include "Transaction.h"
 
 StorageUnit::StorageUnit(StorageUnit* parent): mParent(parent)
 {
@@ -104,24 +105,33 @@ const bool StorageUnit::isRoot() const
     return mParent == nullptr;
 }
 
-bool StorageUnit::LockExclusive()
+bool StorageUnit::LockUpgrade(Transaction* pTransaction)
+{
+    return mLock.Upgrade(pTransaction);
+}
+
+bool StorageUnit::LockExclusive(Transaction* pTransaction)
 {
     if (ExclusiveLockable())
     {
-        mLock.SetExclusive();
+        mLock.SetExclusive(pTransaction);
         return true;
     }
-    return false;
+    // return true if the object is already locked in exclusive mode by this transaction
+    
+    bool a = mLock.isOwner(pTransaction, Lock::LockingMode::exclusive);
+    return a;
 }
 
-bool StorageUnit::LockShared()
+bool StorageUnit::LockShared(Transaction* pTransaction)
 {
     if (SharedLockable())
     {
-        mLock.SetShared();
+        mLock.SetShared(pTransaction);
         return true;
     }
-    return false;
+    // return true if the object is already locked in shared mode by this transaction
+    return mLock.isOwner(pTransaction, Lock::LockingMode::shared);
 }
 
 void StorageUnit::ForceLockExclusive()
@@ -129,7 +139,7 @@ void StorageUnit::ForceLockExclusive()
     // DO ONLY USE FOR TESTING!
     // DO ONLY USE FOR TESTING!
     // DO ONLY USE FOR TESTING!
-    mLock.SetExclusive();
+    mLock.SetExclusive(nullptr);
 }
 
 void StorageUnit::ForceLockShared()
@@ -137,7 +147,7 @@ void StorageUnit::ForceLockShared()
     // DO ONLY USE FOR TESTING!
     // DO ONLY USE FOR TESTING!
     // DO ONLY USE FOR TESTING!
-    mLock.SetShared();
+    mLock.SetShared(nullptr);
 }
 
 void StorageUnit::ReleaseLocks()

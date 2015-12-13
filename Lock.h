@@ -14,8 +14,7 @@
 #ifndef LOCK_H
 #define LOCK_H
 
-//typedef void (*Transaction)(void);
-
+class Transaction;
 class Lock
 {
 public:
@@ -27,8 +26,10 @@ public:
     
     Lock();
     
-    void SetExclusive(); //const Transaction pTransaction);
-    void SetShared(); //const Transaction pTransaction);
+    void SetExclusive(Transaction* pTransaction);
+    void SetShared(Transaction* pTransaction);
+    bool Upgrade(Transaction* pTransaction);
+    bool isOwner(Transaction* pTransaction, LockingMode pLockingMode);
     void Release();
     
     // returns true if locking mode is exclusive
@@ -38,6 +39,7 @@ public:
     // returns true if the resource is unlocked (locking mode is 0)
     bool isUnlocked() const;
 private:
+    Transaction* mLockOwner;
     LockingMode mLockingMode;
 };
 

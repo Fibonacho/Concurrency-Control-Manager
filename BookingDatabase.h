@@ -25,6 +25,7 @@
 #include "Transaction.h"
 #include "LockManager.h"
 
+typedef bool (*Function)(void);
 namespace BookingDatabase {
     LockManager lockManager;
     // creates a databases and tables (+ link them)
@@ -153,6 +154,13 @@ namespace BookingDatabase {
         seats.add(FlightID, pSeats);
     }
     
+    // helper function to create a serial command
+    void newSerialCommand(Transaction* pTransaction, Function pFunction)
+    {
+        Command* command = new Command(pTransaction, pFunction);
+        command->addObjectLock(Lock::LockingMode::exclusive, &db);
+    }
+    
     // serial transaction handler:
     // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
     // - add locks to transaction objects
@@ -162,47 +170,23 @@ namespace BookingDatabase {
         // Add all necessary locks to the transactions
         // they will be acquired before the transaction is excecuted
         // a serial schedule is obtained by locking the db exclusively in any command of any transaction
-        
         Transaction transactions[4];
-        
         // Transaction 1 (print reservation sum), has only one command
-        Command* command1 = new Command(Transaction1::getReservationSum);
-        command1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transactions[0].addCommand(command1);
-        
+        newSerialCommand(&transactions[0], Transaction1::getReservationSum);
         // Transaction 2 (remove reservatio)
         // has two commands; get a random reservation to remove and then remove it
-        Command* command2_0 = new Command(Transaction2::getRandomReservation);
-        command2_0->addObjectLock(Lock::LockingMode::exclusive, &db);
-        Command* command2_1 = new Command(Transaction2::removeReservation);
-        command2_1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transactions[1].addCommand(command2_0);
-        transactions[1].addCommand(command2_1);
-        
+        newSerialCommand(&transactions[1], Transaction2::getRandomReservation);
+        newSerialCommand(&transactions[1], Transaction2::removeReservation);
         // Transaction 3 (get booked flights)
         // has two commands: get random passenger and book flights of this passenger
-        Command* command3_0 = new Command(Transaction3::getRandomPassengerID);
-        command3_0->addObjectLock(Lock::LockingMode::exclusive, &db);
-        Command* command3_1 = new Command(Transaction3::getBookedFlights);
-        command3_1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transactions[2].addCommand(command3_0);
-        transactions[2].addCommand(command3_1);
-        
+        newSerialCommand(&transactions[2], Transaction3::getRandomPassengerID);
+        newSerialCommand(&transactions[2], Transaction3::getBookedFlights);
         // Transaction 4 (book flight)
-        // has 4 commands: get random passenger and flight, get all seats from this flight and the booking itself
-        Transaction transaction4;
-        Command* command4_0 = new Command(Transaction4::getRandomPID);
-        command4_0->addObjectLock(Lock::LockingMode::exclusive, &db);
-        Command* command4_1 = new Command(Transaction4::getRandomFID);
-        command4_1->addObjectLock(Lock::LockingMode::exclusive, &db);
-        Command* command4_2 = new Command(Transaction4::getSeatList);
-        command4_2->addObjectLock(Lock::LockingMode::exclusive, &db);
-        Command* command4_3 = new Command(Transaction4::bookFlight);
-        command4_3->addObjectLock(Lock::LockingMode::exclusive, &db);
-        transactions[3].addCommand(command4_0);
-        transactions[3].addCommand(command4_1);
-        transactions[3].addCommand(command4_2);
-        transactions[3].addCommand(command4_3);
+        // has 4 commands: get random passenger + flight, get seats from flight and booking itself
+        newSerialCommand(&transactions[3], Transaction4::getRandomFID);
+        newSerialCommand(&transactions[3], Transaction4::getSeatList);
+        newSerialCommand(&transactions[3], Transaction4::getRandomPID);
+        newSerialCommand(&transactions[3], Transaction4::bookFlight);
         
         // add all transactions to the transactionHandler
         for (int i = 0; i < 4; i++)
@@ -222,38 +206,30 @@ namespace BookingDatabase {
         // get shared lock on reservation
         Transaction transactions[4];
         
-        Command* command1 = new Command(Transaction1::getReservationSum);
+        Command* command1 = new Command(&transactions[0], Transaction1::getReservationSum);
         command1->addObjectLock(Lock::LockingMode::shared, &reservations);
-        transactions[0].addCommand(command1);
         
-        Command* command2_0 = new Command(Transaction2::getRandomReservation);
+        Command* command2_0 = new Command(&transactions[1], Transaction2::getRandomReservation);
         command2_0->addObjectLock(Lock::LockingMode::shared, &reservations);
-        Command* command2_1 = new Command(Transaction2::removeReservation);
+        Command* command2_1 = new Command(&transactions[1], Transaction2::removeReservation);
+        // upgrade:
         command2_1->addObjectLock(Lock::LockingMode::exclusive, &reservations);
-        transactions[1].addCommand(command2_0);
-        transactions[1].addCommand(command2_1);
         
-        Command* command3_0 = new Command(Transaction3::getRandomPassengerID);
+        Command* command3_0 = new Command(&transactions[2], Transaction3::getRandomPassengerID);
         command3_0->addObjectLock(Lock::LockingMode::shared, &passengers);
-        Command* command3_1 = new Command(Transaction3::getBookedFlights);
+        Command* command3_1 = new Command(&transactions[2], Transaction3::getBookedFlights);
         command3_1->addObjectLock(Lock::LockingMode::shared, &reservations);
-        transactions[2].addCommand(command3_0);
-        transactions[2].addCommand(command3_1);
         
-        Command* command4_0 = new Command(Transaction4::getRandomPID);
+        Command* command4_0 = new Command(&transactions[3], Transaction4::getRandomPID);
         command4_0->addObjectLock(Lock::LockingMode::shared, &passengers);
-        Command* command4_1 = new Command(Transaction4::getRandomFID);
+        Command* command4_1 = new Command(&transactions[3], Transaction4::getRandomFID);
         command4_1->addObjectLock(Lock::LockingMode::shared, &flights);
-        Command* command4_2 = new Command(Transaction4::getSeatList);
+        Command* command4_2 = new Command(&transactions[3], Transaction4::getSeatList);
         command4_2->addObjectLock(Lock::LockingMode::shared, &seats);
-        Command* command4_3 = new Command(Transaction4::bookFlight);
+        Command* command4_3 = new Command(&transactions[3], Transaction4::bookFlight);
         command4_3->addObjectLock(Lock::LockingMode::exclusive, &reservations);
         
-        transactions[3].addCommand(command4_0);
-        transactions[3].addCommand(command4_1);
-        transactions[3].addCommand(command4_2);
-        transactions[3].addCommand(command4_3);
-        
+        // add all transactions to the transactionHandler
         for (int i = 0; i < 4; i++)
             transactionHandler.addTransaction(transactions[i]);
     }

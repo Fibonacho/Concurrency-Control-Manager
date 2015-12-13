@@ -1,25 +1,41 @@
 #include "Lock.h"
+#include "Transaction.h"
 
-Lock::Lock(): mLockingMode(LockingMode::unlocked) //, mLockOwner(nullptr)
+Lock::Lock(): mLockingMode(LockingMode::unlocked), mLockOwner(nullptr)
 {
 }
 
-void Lock::SetExclusive() //const Transaction pTransaction)
+void Lock::SetExclusive(Transaction* pTransaction)
 {
     mLockingMode = LockingMode::exclusive;
-    //mLockOwner = pTransaction;
+    mLockOwner = pTransaction;
 }
 
-void Lock::SetShared() //const Transaction pTransaction)
+void Lock::SetShared(Transaction* pTransaction)
 {
     mLockingMode = LockingMode::shared;
-    //mLockOwner = pTransaction;
+    mLockOwner = pTransaction;
+}
+
+bool Lock::Upgrade(Transaction* pTransaction)
+{
+    if (mLockOwner == pTransaction)
+    {
+        mLockingMode = LockingMode::exclusive;
+        return true;
+    }
+    return false;
+}
+
+bool Lock::isOwner(Transaction* pTransaction, LockingMode pLockingMode)
+{
+    return ((mLockOwner == pTransaction) && (pLockingMode == mLockingMode));
 }
 
 void Lock::Release()
 {
     mLockingMode = LockingMode::unlocked;
-    //mLockOwner = nullptr;
+    mLockOwner = nullptr;
 }
 
 bool Lock::isExclusiveLocked() const

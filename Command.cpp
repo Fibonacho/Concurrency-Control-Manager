@@ -3,9 +3,11 @@
 #include <iostream>
 #include <thread>
 #include "Common.h"
+#include "Transaction.h"
 
-Command::Command(Function pFunction): mFunction(pFunction)
+Command::Command(Transaction* pTransaction, Function pFunction): mTransaction(pTransaction), mFunction(pFunction)
 {
+     mTransaction->addCommand(this);
 }
 
 void Command::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit)
@@ -23,9 +25,17 @@ void Command::acquireLocks()
         {
             // check if storage unit is not already locked
             // StorageUnit::Exclusive checks if the lock can be given and locks returns true / false if successful
-            bool XL = (objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive();
-            bool SL = (objectLock.mLockingMode == Lock::LockingMode::shared) && objectLock.mStorageUnit->LockShared();
+            bool XL = (objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive(mTransaction);
+            bool SL = (objectLock.mLockingMode == Lock::LockingMode::shared) && objectLock.mStorageUnit->LockShared(mTransaction);
             locked = (XL || SL);
+            
+            // check for lock upgrades
+            // check for upgrades
+            if ((!locked) && (objectLock.mLockingMode == Lock::LockingMode::exclusive))
+            {
+                // Lockupgrade
+               // locked = objectLock.mStorageUnit->LockUpgrade(mTransaction);
+            }
             
             if (!locked)
             {

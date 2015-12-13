@@ -20,11 +20,14 @@
 #include <vector>
 
 class StorageUnit;
+class Transaction;
 class Command
 {
 private:
     typedef bool (*Function)(void);
     Function mFunction;
+    // the parent of the command
+    Transaction* mTransaction;
 
     struct ObjectLock
     {
@@ -40,7 +43,7 @@ private:
     // if an object has to be locked in shared mode, it only has to be NOT in exclusive lock mode
     void acquireLocks();
 public:
-    Command(Function pFunction);
+    Command(Transaction* pTransaction, Function pFunction);
     // release the locks stored in the object lock list
     void releaseLocks();
     // call a command
