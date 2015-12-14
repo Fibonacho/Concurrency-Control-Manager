@@ -15,6 +15,8 @@
 #ifndef BOOKINGDATABASE_H
 #define BOOKINGDATABASE_H
 
+#include <algorithm>
+#include <sstream>
 #include "Database.h"
 #include "Flights.h"
 #include "Passengers.h"
@@ -251,24 +253,58 @@ namespace BookingDatabase {
     // - add rows to tables (flights and passengers)
     // - book flights (which creates rows in the table for reservations)
     // - display tables (i.e. print to console)
-    void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
+    void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount, int MaxSeatCount, int PassengerCount, int FlightCount)
     {
         initRand();
         
-        // inserts 20 new flights into the flight table / data structure and stores the id in the mFlightList
-        for (auto destination: pDestinationList)
+        int numbOfSeats;
+        int flight = 0;
+        for (unsigned int f = 1; f <= FlightCount / pDestinationList.size(); f++)
         {
-            //add / substract some random seat offset
-            int offset = RandomInt(10);
-            addFlight(destination, AverageSeatCount+offset-5);
+            // inserts <FlightCount> new flights into the flight table / data structure and stores the id in the mFlightList
+            for (auto destination: pDestinationList)
+            {
+                flight++; // count flight sum
+                // for the last flight, take the remaining seats of MaxSeatCount
+                if (flight == FlightCount)
+                    numbOfSeats = MaxSeatCount;
+                else
+                {
+                    // add / substract some random seat offset
+                    int offset = RandomInt(FlightCount);
+                    numbOfSeats = AverageSeatCount + offset - 5;
+                    MaxSeatCount -= numbOfSeats;
+                }
+
+                // add number to destination name, to distinguish between flights by name
+                std::stringstream sstm;
+                sstm << destination << "_" << f;
+                std::string target = sstm.str();
+
+                if (numbOfSeats < 0)
+                    numbOfSeats = std::max(numbOfSeats, 0);
+
+                addFlight(target, numbOfSeats);
+                //std::cout << "Flight target: " << target << ", max: " << MaxSeatCount << ", numb of seats: " << numbOfSeats << std::endl;
+            }
         }
         flights.display(); // print flightsTable to console
         
-        // inserts passengers into passenger table
-        for (auto passenger: pPassengerList)
-            passengers.add(passenger);
-        passengers.display(); // print passengersTable to console
-        reservations.display(); // print reservationTable to console (should be empty)
+        // inserts <PassengerCount> passengers into passenger table
+        for (unsigned int p = 1; p <= PassengerCount / pPassengerList.size(); p++)
+        {
+            for (auto passenger : pPassengerList)
+            {
+                // add number to passenger name, to distinguish between passengers by name
+                std::stringstream sstm;
+                sstm << passenger << "_" << p;
+                std::string name = sstm.str();
+
+                passengers.add(name);
+            }
+        }
+        passengers.display();   // print passengersTable to console
+        reservations.display(); // print reservationsTable to console (should be empty at this point)
         
         checkData();
     }
