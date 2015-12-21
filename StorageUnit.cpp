@@ -1,5 +1,5 @@
 #include "StorageUnit.h"
-#include <iostream>
+//#include <iostream>
 #include "Transaction.h"
 
 StorageUnit::StorageUnit(StorageUnit* parent): mParent(parent)
@@ -16,8 +16,10 @@ StorageUnit::~StorageUnit()
 }
 
 // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
-bool StorageUnit::ExclusiveLockable() const
+bool StorageUnit::ExclusiveLockable()
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
+    
     // check if the object itself is not locked in any mode
     if (!mLock.isUnlocked())
         return false;
@@ -35,7 +37,7 @@ bool StorageUnit::ExclusiveLockable() const
     return childsExclusiveLockable(this);
 }
 
-bool StorageUnit::childsSharedLockable(const StorageUnit* const pParent) const
+bool StorageUnit::childsSharedLockable(const StorageUnit* const pParent)
 {
     for (auto child: pParent->mChilds)
     {
@@ -55,7 +57,7 @@ bool StorageUnit::childsSharedLockable(const StorageUnit* const pParent) const
     return true;
 }
 
-bool StorageUnit::childsExclusiveLockable(const StorageUnit* const pParent) const
+bool StorageUnit::childsExclusiveLockable(const StorageUnit* const pParent)
 {
     for (auto child: pParent->mChilds)
     {
@@ -75,8 +77,9 @@ bool StorageUnit::childsExclusiveLockable(const StorageUnit* const pParent) cons
 }
 
 // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
-bool StorageUnit::SharedLockable() const
+bool StorageUnit::SharedLockable()
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
     // check if the object itself is exclusively locked
     if (mLock.isExclusiveLocked())
         return false;
@@ -107,11 +110,13 @@ const bool StorageUnit::isRoot() const
 
 bool StorageUnit::LockUpgrade(Transaction* pTransaction)
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
     return mLock.Upgrade(pTransaction);
 }
 
 bool StorageUnit::LockExclusive(Transaction* pTransaction)
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
     if (ExclusiveLockable())
     {
         mLock.SetExclusive(pTransaction);
@@ -125,6 +130,7 @@ bool StorageUnit::LockExclusive(Transaction* pTransaction)
 
 bool StorageUnit::LockShared(Transaction* pTransaction)
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
     if (SharedLockable())
     {
         mLock.SetShared(pTransaction);
@@ -152,6 +158,7 @@ void StorageUnit::ForceLockShared()
 
 void StorageUnit::ReleaseLocks()
 {
+    //std::lock_guard<std::mutex> guard(mLockMutex);
     mLock.Release();
 }
 
@@ -165,14 +172,14 @@ const unsigned long StorageUnit::childCount() const
     return mChilds.size();
 }
 
-StorageUnit* StorageUnit::getChild(const unsigned int pIndex)
+StorageUnit* const StorageUnit::getChild(const unsigned int pIndex)
 {
     if (pIndex > childCount())
         return nullptr;
     else return mChilds[pIndex];
 }
 
-StorageUnit* StorageUnit::getFirstChild()
+StorageUnit* const StorageUnit::getFirstChild()
 {
     if (isEmpty())
         return nullptr;

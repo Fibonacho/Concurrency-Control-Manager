@@ -1,8 +1,9 @@
 #include "Reservations.h"
 #include "Row.h"
 #include "Common.h"
-#include <iostream>
+// #include <iostream>
 #include <algorithm>
+#include "LogFile.h"
 
 BookingDatabase::Reservations::Reservations(Database* database): Table(database)
 {
@@ -21,7 +22,7 @@ bool BookingDatabase::Reservations::removeRes(int pFID, int pPID)
         {
             if ((reservation->getData().mPID == pPID) && (reservation->getData().mFID == pFID))
             {
-                mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
+                //mChilds.erase(std::remove(mChilds.begin(), mChilds.end(), child), mChilds.end());
                 return true;
                 break;
             }
@@ -40,37 +41,35 @@ bool BookingDatabase::Reservations::getBookedFlights(const int pPID)
 {
     for (auto child: mChilds)
     {
-        if (mDataConsoleOutput)
-            std::cout << "List of flights of passenger " << pPID << ": ";
+        //if (mDataConsoleOutput) std::cout << "List of flights of passenger " << pPID << ": ";
         Row<Reservations::Reservation>* reservation = static_cast<Row<Reservations::Reservation>*>(child);
         if (reservation != nullptr)
         {
-            if (reservation->getData().mPID == pPID)
-                std::cout << reservation->getData().mFID << " " << std::endl;
+            //if ((mDataConsoleOutput) && (reservation->getData().mPID == pPID))
+            //    std::cout << reservation->getData().mFID << " " << std::endl;
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
     return true;
 }
 
 void BookingDatabase::Reservations::display() const
 {
-    if (mDataConsoleOutput)
-        std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
+    //if (mDataConsoleOutput) std::cout << "----------------------------" << std::endl << "Display Reservations: " << std::endl;
     for(auto res: mChilds)
     {
         Row<Reservation>* rowRes = static_cast<Row<Reservation>*>(res);
-        if (mDataConsoleOutput)
-            std::cout << "FID: " << rowRes->getData().mFID << ", SID: " << rowRes->getData().mSID << ", PID: " << rowRes->getData().mPID << std::endl;
+        //if (mDataConsoleOutput)
+        //    std::cout << "FID: " << rowRes->getData().mFID << ", SID: " << rowRes->getData().mSID << ", PID: " << rowRes->getData().mPID << std::endl;
     }
-    if (mDataConsoleOutput)
-        std::cout << "----------------------------" << std::endl;
+    //if (mDataConsoleOutput)
+    //    std::cout << "----------------------------" << std::endl;
 }
 
 bool BookingDatabase::Reservations::printReservationSum()
 {
-    if (mDataConsoleOutput)
-        std::cout << "Sum of Reservations: " << childCount() << std::endl;
+    //if (mDataConsoleOutput)
+    //mLogFile.write("Sum of Reservations: " + std::to_string(childCount()));
     return true;
 }
 
@@ -104,8 +103,8 @@ bool BookingDatabase::Reservations::book(int pFID, int pSID, int pPID)
     Reservation reservation(pPID, pSID, pFID);
     Row<Reservation>* row = new Row<Reservation>(this, reservation);
     addRow(row);
-    if (mDataConsoleOutput)
-        std::cout << "Added reservation to seat " << row->getData().mSID << " for passenger " << row->getData().mPID << " and flight " << row->getData().mFID << std::endl;
+    //if (mDataConsoleOutput)
+     //   mLogFile.write("Added reservation to seat " + std::to_string(row->getData().mSID) + " for passenger " + std::to_string(row->getData().mPID) + " and flight " + std::to_string(row->getData().mFID));
     return true;
 }
 
@@ -129,7 +128,7 @@ bool BookingDatabase::Reservations::book(int pFID, int pPID, std::vector<int> &p
     return booked;
 }
 
-BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandom()
+const BookingDatabase::Reservations::Reservation* BookingDatabase::Reservations::getRandom()
 {
     if (mChilds.size() == 0)
         return nullptr;

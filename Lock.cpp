@@ -30,7 +30,7 @@ bool Lock::Upgrade(Transaction* pTransaction)
     return false;
 }
 
-bool Lock::isOwner(Transaction* pTransaction, LockingMode pLockingMode)
+bool Lock::isOwner(Transaction* pTransaction, LockingMode pLockingMode) const
 {
     return ((mLockOwner == pTransaction) && (pLockingMode == mLockingMode));
 }

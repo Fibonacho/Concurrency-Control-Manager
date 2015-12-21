@@ -16,26 +16,30 @@
 #define ROW_H
 
 #include "StorageUnit.h"
-#include <iostream>
+// #include <iostream>
+#include <mutex>
 
 template <typename T>
 class Row: public StorageUnit
 {
 private:
     T mData;
+    //std::mutex mRead;
+    //std::mutex mWrite;
 public:
     T getData() const
     {
         // needs a shared lock
         return mData;
     }
-    T* getDataPtr()
+    const T* getDataPtr() const
     {
         return &mData;
     }
     void setData(T pData) //this needs to lock
     {
         // needs an exclusive lock
+        // std::lock_guard<std::mutex> guard(mWrite);
         mData = pData;
     }
     Row(StorageUnit* table): StorageUnit(table) {};

@@ -18,23 +18,27 @@
 
 #include "Lock.h"
 #include <vector>
+//#inclue "LogFile.h"
+#include <mutex>
 
 class StorageUnit;
 class Transaction;
 class Command
 {
 private:
+    //LogFile* mLogFile;
     typedef bool (*Function)(void);
     Function mFunction;
     // the parent of the command
-    Transaction* mTransaction;
-
+    Transaction* const mTransaction;
+    std::mutex m;
+    
     struct ObjectLock
     {
         Lock::LockingMode mLockingMode;
-        StorageUnit* mStorageUnit;
+        StorageUnit* const mStorageUnit;
         
-        ObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit): mLockingMode(pLockingMode), mStorageUnit(pStorageUnit) {}
+        ObjectLock(Lock::LockingMode pLockingMode, StorageUnit* const pStorageUnit): mLockingMode(pLockingMode), mStorageUnit(pStorageUnit) {}
     };
     std::vector<ObjectLock> mObjectLocks;
     
@@ -43,7 +47,9 @@ private:
     // if an object has to be locked in shared mode, it only has to be NOT in exclusive lock mode
     void acquireLocks();
 public:
-    Command(Transaction* pTransaction, Function pFunction);
+    Command(Transaction* const pTransaction, Function pFunction); //, LogFile* pLogFile);
+    Command(const Command& pCommand); // LogFile* pLogFile);
+   
     // release the locks stored in the object lock list
     void releaseLocks();
     // call a command
@@ -52,7 +58,7 @@ public:
     // - the locks are not released yet; this is done in the transaction itself
     void call();
     // add a necessary object lock to the list / those storage units added will be acquired before the command is executed
-    void addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit);
+    void addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* const pStorageUnit);
 };
 
 #endif

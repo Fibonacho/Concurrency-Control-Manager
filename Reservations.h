@@ -55,7 +55,7 @@ namespace BookingDatabase {
         // print every row in a new line
         void display() const;
         // get a random reservation
-        Reservation* getRandom();
+        const Reservation* getRandom();
     };
 }
 

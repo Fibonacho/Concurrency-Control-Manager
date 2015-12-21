@@ -33,7 +33,7 @@ namespace BookingDatabase {
         // add a passenger (row) to the passenger table
         int add(std::string pName);
         // get a random passenger from the table
-        Passenger* getRandom();
+        const Passenger* getRandom();
         // get a random passenger id by calling getRandomPassenger() and accessing it's ID
         int getRandomID();
         // display passengers, i.e. print content of passenger table to console

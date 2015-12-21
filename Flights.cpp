@@ -1,9 +1,11 @@
 #include "Flights.h"
-#include <iostream>
+//#include <iostream>
 #include "Row.h"
 #include "Common.h"
+//#include "LogFile.h"
+#include <string>
 
-BookingDatabase::Flights::Flights(Database* database): Table(database)
+BookingDatabase::Flights::Flights(Database* database): Table(database) //, mLogFile(pLogFile)  LogFile* pLogFile
 {
 }
 
@@ -13,16 +15,16 @@ BookingDatabase::Flights::~Flights()
 
 void BookingDatabase::Flights::display() const
 {
-    std::cout << "----------------------------" << std::endl << "Display Flights: " << std::endl;
+    //mLogFile->write("---------------------------- Display Flights: ");
     for(auto flight: mChilds)
     {
         Row<Flight>* rowFlight = static_cast<Row<Flight>*>(flight);
-        std::cout << rowFlight->getData().mID << " " << rowFlight->getData().mDestination << std::endl;
+    //    mLogFile->write(std::to_string(rowFlight->getData().mID) + " " + rowFlight->getData().mDestination);
     }
-    std::cout << "----------------------------" << std::endl;
+    //mLogFile->write("----------------------------");
 }
 
-BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandom() const
+const BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandom() const
 {
     if (mChilds.size() == 0)
         return nullptr;
@@ -37,7 +39,7 @@ BookingDatabase::Flights::Flight* BookingDatabase::Flights::getRandom() const
 
 int BookingDatabase::Flights::getRandomID() const
 {
-    Flight* data = getRandom();
+    const Flight* const data = getRandom();
     return data->mID;
 }
 
@@ -47,9 +49,8 @@ int BookingDatabase::Flights::add(std::string pDestination)
     // add a value to the linked list
     Flight flight(getNewID(), pDestination);
     Row<Flight>* row = new Row<Flight>(this, flight);
-    if (mDataConsoleOutput)
-        std::cout << "Flight to " << pDestination << " is stored." << std::endl;
+    //if (mDataConsoleOutput)
+    //    mLogFile.write("Flight to " + pDestination + " is stored.");
     addRow(row);
     return row->getData().mID;
 }
-

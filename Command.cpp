@@ -1,16 +1,22 @@
 #include "Command.h"
 #include "StorageUnit.h"
-#include <iostream>
+// #include <iostream>
 #include <thread>
 #include "Common.h"
 #include "Transaction.h"
+//#include "LogFile.h"
+#include <iostream>
 
-Command::Command(Transaction* pTransaction, Function pFunction): mTransaction(pTransaction), mFunction(pFunction)
+Command::Command(Transaction* const pTransaction, Function pFunction): mTransaction(pTransaction), mFunction(pFunction)
 {
      mTransaction->addCommand(this);
 }
 
-void Command::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* pStorageUnit)
+Command::Command(const Command& pCommand): mTransaction(pCommand.mTransaction), mFunction(pCommand.mFunction)
+{
+}
+
+void Command::addObjectLock(Lock::LockingMode pLockingMode, StorageUnit* const pStorageUnit)
 {
     mObjectLocks.push_back(ObjectLock(pLockingMode, pStorageUnit));
 }
@@ -25,6 +31,7 @@ void Command::acquireLocks()
         {
             // check if storage unit is not already locked
             // StorageUnit::Exclusive checks if the lock can be given and locks returns true / false if successful
+            m.lock();
             bool XL = (objectLock.mLockingMode == Lock::LockingMode::exclusive) && objectLock.mStorageUnit->LockExclusive(mTransaction);
             bool SL = (objectLock.mLockingMode == Lock::LockingMode::shared) && objectLock.mStorageUnit->LockShared(mTransaction);
             locked = (XL || SL);
@@ -37,11 +44,13 @@ void Command::acquireLocks()
                 bool l = objectLock.mStorageUnit->LockUpgrade(mTransaction);
                 locked = l;
             }
+            m.unlock();
             
             if (!locked)
             {
-                std::cout << "waiting ..." << std::endl;
-                std::this_thread::sleep_for(std::chrono::milliseconds(10)); // try again in a second
+                std::cout << "waiting ... " << std::endl;
+                //mLogFile->write("waiting ...");
+                std::this_thread::sleep_for(std::chrono::milliseconds(50)); // try again in a second
             }
         }
     }
@@ -56,9 +65,12 @@ void Command::releaseLocks()
 void Command::call()
 {
     acquireLocks();
+    //m.lock();
     mFunction();
+    //m.unlock();
     int waitingTime = RandomInt(100);
-    std::cout << "function waits " << waitingTime/1000.0 << " seconds" << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(waitingTime));
+    auto a = (waitingTime/100.0);
+    // mLogFile->write("Command::call - duration: " + std::to_string(a) + " seconds");
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     // the locks are not release - they are released at the end (after all commands are executed)
 }

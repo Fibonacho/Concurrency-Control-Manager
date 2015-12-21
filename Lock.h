@@ -29,7 +29,7 @@ public:
     void SetExclusive(Transaction* pTransaction);
     void SetShared(Transaction* pTransaction);
     bool Upgrade(Transaction* pTransaction);
-    bool isOwner(Transaction* pTransaction, LockingMode pLockingMode);
+    bool isOwner(Transaction* pTransaction, LockingMode pLockingMode) const;
     void Release();
     
     // returns true if locking mode is exclusive

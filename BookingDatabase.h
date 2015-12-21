@@ -24,6 +24,10 @@
 #include "Common.h"
 #include "Transaction.h"
 #include "LockManager.h"
+#include <algorithm>
+#include <sstream>
+//#include <mutex>
+//#include "LogFile.h"
 
 typedef bool (*Function)(void);
 namespace BookingDatabase {
@@ -35,15 +39,23 @@ namespace BookingDatabase {
     Reservations reservations(&db);
     Seats seats(&db);
     TransactionHandler transactionHandler(db);
+    //LogFile* mLogFile = nullptr;
     
     bool DataConsoleOutput = false;
     
     namespace Transaction1 {
         // total_reservations(): return the total sum of all reservations on all flights
         // this transaction can't be called on non-existing data, table could be empty, then 0 is printed
+        
+        // should always return true
+        //std::mutex m;
+        
         bool getReservationSum()
         {
-            return reservations.printReservationSum();
+            //m.lock();
+            bool a = reservations.printReservationSum();
+            //m.unlock();
+            return a;
         }
     }
     
@@ -51,57 +63,76 @@ namespace BookingDatabase {
         // cancel(flight_id, passenger_id): cancel reservation for passenger on a flight
         // if this transaction is performed on non-existing data (deleted during time)
         // it does not have any influence (won't find a reservation)
+        // std::mutex m1, m2;
         
-        Reservations::Reservation* RandomReservation = nullptr;
-        
+        const Reservations::Reservation* RandomReservation = nullptr;
+            
         bool removeReservation()
         {
+            // m1.lock();
             // if reservation exists
             if (RandomReservation != nullptr)
             {
                 // delete the random reservation
-                if (DataConsoleOutput)
-                    std::cout << "Random Reservation to be removed: " << RandomReservation->mFID << ", " << RandomReservation->mPID << std::endl;
+                //if (DataConsoleOutput)
+                //    mLogFile->write("Random Reservation to be removed: " + std::to_string(RandomReservation->mFID) + ", " + std::to_string(RandomReservation->mPID));
                 // remove this reservation
-                return reservations.removeRes(RandomReservation->mFID, RandomReservation->mPID);
+                bool a = reservations.removeRes(RandomReservation->mFID, RandomReservation->mPID);
+                // m1.unlock();
+                return a;
             }
+            // m1.unlock();
             return false;
         }
         
+        // returns false if no reservation is found
         bool getRandomReservation()
         {
+            // m2.lock();
             if (!reservations.isEmpty())
                 RandomReservation = reservations.getRandom();
             else
                 RandomReservation = nullptr;
             //returns true if a RandomReservation is successfully set
-            return (RandomReservation != nullptr);
+            bool a = (RandomReservation != nullptr);
+            // m2.unlock();
+            return a;
         }
     }
     
     namespace Transaction3 {
         // my_flights(passenger_id): return the set of flights on which a passenger has a reservation
         // if this transaction is performed on non-existing data (deleted during time), it does not have an influence (no booking is found)
+        // std::mutex m1, m2;
         
         int RandomPID = -1;
         
         // get a random reservation ID
-        bool getRandomPassengerID()
+        // should return a valid passanger in any case if the table is filled
+        bool getRandomPID()
         {
+            // m1.lock();
             RandomPID = passengers.getRandomID();
             // returns true if a random passenger was found (the id is grater than 0)
-            return (RandomPID > 0);
+            bool a = (RandomPID > 0);
+            // m1.unlock();
+            return a;
         }
         
+        // is always successful if the passanger exists (if table is filled)
         bool getBookedFlights()
         {
+            // m2.lock();
             // print the booked flights of the random PID if one was found
             if (RandomPID > 0)
             {
-                if (DataConsoleOutput)
-                    std::cout << "Random Passenger to list bookings: " << RandomPID << std::endl;
-                return reservations.getBookedFlights(RandomPID);
+                //if (DataConsoleOutput)
+                //    mLogFile->write("Random Passenger to list bookings: " + std::to_string(RandomPID));
+                bool a = reservations.getBookedFlights(RandomPID);
+                // m2.unlock();
+                return a;
             }
+            // m2.unlock();
             return false;
         }
     }
@@ -116,33 +147,50 @@ namespace BookingDatabase {
         int RandomPID = -1;
         int RandomFID = -1;
         std::vector<int> seatList;
+        // std::mutex m1, m2, m3, m4;
 
         // get an existing passenger / make sure they are not deleted
+        // returns true if passanger exists in table (is filled)
         bool getRandomPID()
         {
+            // m1.lock();
             RandomPID = passengers.getRandomID();
-            return (RandomPID > 0);
+            bool a = (RandomPID > 0);
+            // m1.unlock();
+            return a;
         }
         
         // get an existing flight / make sure they are not deleted
+        // returns true if flights exist in table (is filled)
         bool getRandomFID()
         {
+            // m2.lock();
             RandomFID = flights.getRandomID();
-            return (RandomFID > 0);
+            bool a = (RandomFID > 0);
+            // m2.unlock();
+            return a;
         }
         
         // get all setas from the flight
+        // should always return true if the database is initialized properly
         bool getSeatList()
         {
+            // m3.lock();
+            int i = RandomFID;
             seatList.clear();
-            seatList = seats.getSeats(RandomFID);
-            return true;
+            seatList = seats.getSeats(i);
+            bool a = (seatList.size() > 0);
+            // m3.unlock();
+            return a;
         }
         
         // book a flight, true is returned if the reservation was successful
         bool bookFlight()
         {
-            return reservations.book(RandomFID, RandomPID, seatList);
+            // m4.lock();
+            bool a = reservations.book(RandomFID, RandomPID, seatList);
+            // m4.unlock();
+            return a;
         }
     }
    
@@ -160,32 +208,44 @@ namespace BookingDatabase {
         command->addObjectLock(Lock::LockingMode::exclusive, &db);
     }
     
+    // Add all necessary locks to the transactions
+    // they will be acquired before the transaction is excecuted
+    // a serial schedule is obtained by locking the db exclusively in any command of any transaction
+    Transaction transactions[4];
+    
     // serial transaction handler:
     // - create transactions (getReservationSum, removeReservation, getBookedFlights, bookFlight)
     // - add locks to transaction objects
     // - add transactions to transaction handler
     void initTransactionHandlerSerial()
     {
-        // Add all necessary locks to the transactions
-        // they will be acquired before the transaction is excecuted
-        // a serial schedule is obtained by locking the db exclusively in any command of any transaction
-        Transaction transactions[4];
         // Transaction 1 (print reservation sum), has only one command
-        newSerialCommand(&transactions[0], Transaction1::getReservationSum);
+        Command* c1 = new Command(&transactions[0], Transaction1::getReservationSum);
+        c1->addObjectLock(Lock::LockingMode::exclusive, &db);
+        
         // Transaction 2 (remove reservatio)
         // has two commands; get a random reservation to remove and then remove it
-        newSerialCommand(&transactions[1], Transaction2::getRandomReservation);
-        newSerialCommand(&transactions[1], Transaction2::removeReservation);
+        Command* c2 = new Command(&transactions[1], Transaction2::getRandomReservation);
+        c2->addObjectLock(Lock::LockingMode::exclusive, &db);
+        Command* c3 = new Command(&transactions[1], Transaction2::removeReservation);
+        c3->addObjectLock(Lock::LockingMode::exclusive, &db);
+        
         // Transaction 3 (get booked flights)
         // has two commands: get random passenger and book flights of this passenger
-        newSerialCommand(&transactions[2], Transaction3::getRandomPassengerID);
-        newSerialCommand(&transactions[2], Transaction3::getBookedFlights);
-        // Transaction 4 (book flight)
-        // has 4 commands: get random passenger + flight, get seats from flight and booking itself
-        newSerialCommand(&transactions[3], Transaction4::getRandomFID);
-        newSerialCommand(&transactions[3], Transaction4::getSeatList);
-        newSerialCommand(&transactions[3], Transaction4::getRandomPID);
-        newSerialCommand(&transactions[3], Transaction4::bookFlight);
+        Command* c4 = new Command(&transactions[2], Transaction3::getRandomPID);
+        c4->addObjectLock(Lock::LockingMode::exclusive, &db);
+        Command* c5 = new Command(&transactions[2], Transaction3::getBookedFlights);
+        c5->addObjectLock(Lock::LockingMode::exclusive, &db);
+        
+        Command* c6 = new Command(&transactions[3], Transaction4::getRandomFID);
+        c6->addObjectLock(Lock::LockingMode::exclusive, &db);
+        Command* c7 = new Command(&transactions[3], Transaction4::getSeatList);
+        c7->addObjectLock(Lock::LockingMode::exclusive, &db);
+        Command* c8 = new Command(&transactions[3], Transaction4::getRandomPID);
+        c8->addObjectLock(Lock::LockingMode::exclusive, &db);
+        Command* c9 = new Command(&transactions[3], Transaction4::bookFlight);
+        c9->addObjectLock(Lock::LockingMode::exclusive, &db);
+
         
         // add all transactions to the transactionHandler
         for (int i = 0; i < 4; i++)
@@ -202,9 +262,6 @@ namespace BookingDatabase {
         // they will be acquired before the transaction is excecuted
         // this locking is on a table level but could also be extended to row level locking
         
-        // get shared lock on reservation
-        Transaction transactions[4];
-        
         Command* command1 = new Command(&transactions[0], Transaction1::getReservationSum);
         command1->addObjectLock(Lock::LockingMode::shared, &reservations);
         
@@ -214,7 +271,7 @@ namespace BookingDatabase {
         // upgrade:
         command2_1->addObjectLock(Lock::LockingMode::exclusive, &reservations);
         
-        Command* command3_0 = new Command(&transactions[2], Transaction3::getRandomPassengerID);
+        Command* command3_0 = new Command(&transactions[2], Transaction3::getRandomPID);
         command3_0->addObjectLock(Lock::LockingMode::shared, &passengers);
         Command* command3_1 = new Command(&transactions[2], Transaction3::getBookedFlights);
         command3_1->addObjectLock(Lock::LockingMode::shared, &reservations);
@@ -238,11 +295,11 @@ namespace BookingDatabase {
     {
         // do some data checks and warningss
         // make sure there are no more flights than seats, otherweise you get a warning
-        if (seats.getRowCount() < flights.getRowCount())
-            std::cerr << "WARNING: there are not more flights than seats" << std::endl;
+        //if (seats.getRowCount() < flights.getRowCount())
+            //std::cerr << "WARNING: there are not more flights than seats" << std::endl;
         
-        if (reservations.getRowCount() > passengers.getRowCount())
-            std::cerr << "WARNING: more passengers than reservations!? this is not possible, dude!" << std::endl;
+        //if (reservations.getRowCount() > passengers.getRowCount())
+        //    std::cerr << "WARNING: more passengers than reservations!? this is not possible, dude!" << std::endl;
     }
     
     // initialize data:
@@ -251,22 +308,66 @@ namespace BookingDatabase {
     // - add rows to tables (flights and passengers)
     // - book flights (which creates rows in the table for reservations)
     // - display tables (i.e. print to console)
-    void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
+    void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount, int MaxSeatCount, int PassengerCount, int FlightCount)
+    
+    //void initData(std::vector<std::string>& pDestinationList, std::vector<std::string>& pPassengerList, int AverageSeatCount)
     {
         initRand();
         
         // inserts 20 new flights into the flight table / data structure and stores the id in the mFlightList
-        for (auto destination: pDestinationList)
+        //for (auto destination: pDestinationList)
+        int numbOfSeats;
+        int flight = 0;
+        for (unsigned int f = 1; f <= FlightCount / pDestinationList.size(); f++)
         {
             //add / substract some random seat offset
-            int offset = RandomInt(10);
-            addFlight(destination, AverageSeatCount+offset-5);
+            //int offset = RandomInt(10);
+            //addFlight(destination, AverageSeatCount+offset-5);
+            // inserts <FlightCount> new flights into the flight table / data structure and stores the id in the mFlightList
+            for (auto destination: pDestinationList)
+            {
+                flight++; // count flight sum
+                // for the last flight, take the remaining seats of MaxSeatCount
+                if (flight == FlightCount)
+                    numbOfSeats = MaxSeatCount;
+                else
+                {
+                    // add / substract some random seat offset
+                    int offset = RandomInt(FlightCount);
+                    numbOfSeats = AverageSeatCount + offset - 5;
+                    MaxSeatCount -= numbOfSeats;
+                }
+                // add number to destination name, to distinguish between flights by name
+                std::stringstream sstm;
+                sstm << destination << "_" << f;
+                std::string target = sstm.str();
+                
+                if (numbOfSeats < 0)
+                    numbOfSeats = std::max(numbOfSeats, 0);
+                
+                addFlight(target, numbOfSeats);
+                //std::cout << "Flight target: " << target << ", max: " << MaxSeatCount << ", numb of seats: " << numbOfSeats << std::endl;
+            }
         }
         flights.display(); // print flightsTable to console
         
         // inserts passengers into passenger table
-        for (auto passenger: pPassengerList)
-            passengers.add(passenger);
+        //for (auto passenger: pPassengerList)
+        //    passengers.add(passenger);
+        
+        // inserts <PassengerCount> passengers into passenger table
+        for (unsigned int p = 1; p <= PassengerCount / pPassengerList.size(); p++)
+        {
+            for (auto passenger : pPassengerList)
+            {
+            // add number to passenger name, to distinguish between passengers by name
+                std::stringstream sstm;
+                sstm << passenger << "_" << p;
+                std::string name = sstm.str();
+                passengers.add(name);
+            }
+        }
+        
         passengers.display(); // print passengersTable to console
         reservations.display(); // print reservationTable to console (should be empty)
         

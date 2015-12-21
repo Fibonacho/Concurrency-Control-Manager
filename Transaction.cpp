@@ -1,6 +1,6 @@
 #include "Transaction.h"
 #include "StorageUnit.h"
-#include <iostream>
+// #include <iostream>
 #include "Command.h"
 #include <thread>
 
@@ -10,9 +10,11 @@ Transaction::Transaction()
 
 void Transaction::call()
 {
+    //std::cout << "a" << std::endl;
     for (auto command: mCommands)
         // does call acquire locks internally 
         command->call();
+    
     releaseLocks();
 }
 

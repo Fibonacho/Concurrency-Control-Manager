@@ -1,7 +1,9 @@
 #include "Passengers.h"
 #include "Row.h"
-#include <iostream>
+// #include <iostream>
 #include "Common.h"
+#include "LogFile.h"
+#include <string>
 
 BookingDatabase::Passengers::Passengers(Database* database): Table(database)
 {
@@ -18,12 +20,11 @@ int BookingDatabase::Passengers::add(std::string pName)
     passenger.mPID = getNewID();
     Row<Passenger>* row = new Row<Passenger>(this, passenger);
     addRow(row);
-    if (mDataConsoleOutput)
-        std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
+    //if (mDataConsoleOutput) std::cout << "Passenger " << row->getData().mPID << " " << pName << std::endl;
     return row->getData().mPID;
 }
 
-BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandom()
+const BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandom()
 {
     if (mChilds.size() == 0)
         return nullptr;
@@ -38,17 +39,18 @@ BookingDatabase::Passengers::Passenger* BookingDatabase::Passengers::getRandom()
 
 int BookingDatabase::Passengers::getRandomID()
 {
-    Passenger* data = getRandom();
+    const Passenger* const data = getRandom();
     return data->mPID;
 }
 
 void BookingDatabase::Passengers::display() const
 {
-    std::cout << "----------------------------" << std::endl << "Display Passengers: " << std::endl;
+    //std::cout << "----------------------------" << std::endl << "Display Passengers: " << std::endl;
+    //mLogFile.write("--------------- display passengers: ");
     for(auto passenger: mChilds)
     {
         Row<Passenger>* rowPassenger = static_cast<Row<Passenger>*>(passenger);
-        std::cout << rowPassenger->getData().mPID << " " << rowPassenger->getData().mName << std::endl;
+       // mLogFile.write(std::to_string(rowPassenger->getData().mPID) + " " + rowPassenger->getData().mName);
     }
-    std::cout << "----------------------------" << std::endl;
+   // mLogFile.write("---------------");
 }

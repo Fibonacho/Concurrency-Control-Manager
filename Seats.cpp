@@ -1,7 +1,8 @@
 #include "Seats.h"
 #include "Row.h"
 #include "Common.h"
-#include <iostream>
+// #include <iostream>
+#include "LogFile.h"
 
 BookingDatabase::Seats::Seats(Database* database): Table(database)
 {
@@ -49,7 +50,11 @@ int BookingDatabase::Seats::add(int pFID) //, int pCount) //pFID as pointer
     Row<Seat>* row = new Row<Seat>(this, seat);
     addRow(row);
     if (mDataConsoleOutput)
-        std::cout << "Added seat " << row->getData().mSID << " to flight " << pFID << " (" << &pFID << ")" << std::endl;
+    {
+        //std::string s = "Added seat " + row->getData().mSID + " to flight " + pFID;
+        //mLog.write(s);
+        //std::cout <<  << std::endl;
+    }
     return row->getData().mSID;
 }
 

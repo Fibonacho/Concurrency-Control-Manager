@@ -20,7 +20,8 @@
 #include "Seats.h"
 #include "Reservations.h"
 #include <assert.h>
-    
+#include "LogFile.h"
+
 namespace UnitTestLocking {
     // create database
     Database db(nullptr);
@@ -32,7 +33,7 @@ namespace UnitTestLocking {
     
     void test()
     {
-        std::cout << "START Unit Test ------------------------ " << std::endl;
+        //mLogFile.write("START Unit Test ------------------------ ");
         // lock an object in exclusive mode and check if it could be locked again (which should of course not be possible)
         // and after check for shared locks (shared / shared) - where it is possible to lock twice
         
@@ -159,7 +160,7 @@ namespace UnitTestLocking {
         assert(flights.SharedLockable());
         assert(flights.ExclusiveLockable());
         FirstFlight->ReleaseLocks();
-        std::cout << "END Unit Test ------------------------ " << std::endl;
+        //mLogFile.write("END Unit Test ------------------------ ");
     }
 }
 

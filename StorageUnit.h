@@ -19,17 +19,19 @@
 
 #include <vector>
 #include "Lock.h"
+//#include <mutex>
 
 class Transaction;
 class StorageUnit
 {
 private:
+    //std::mutex mLockMutex;
     // lock object
     Lock mLock;
     // checks recursively if the childs of pParent are lockable in exclusive mode
-    bool childsExclusiveLockable(const StorageUnit* const pParent) const;
+    bool childsExclusiveLockable(const StorageUnit* const pParent);
     // checks recursively if the childs of pParent are lockable in shared mode
-    bool childsSharedLockable(const StorageUnit* const pParent) const;
+    bool childsSharedLockable(const StorageUnit* const pParent);
 protected:
     std::vector<StorageUnit*> mChilds;
     StorageUnit* mParent;
@@ -41,9 +43,9 @@ protected:
     const unsigned long childCount() const;
 public:
     // returns true if the resource can be locked in exclusive mode (checks the locks of the childs / parents)
-    bool ExclusiveLockable() const;
+    bool ExclusiveLockable();
     // returns true if the resource can be locked in shared mode (checks the locks of the childs / parents)
-    bool SharedLockable() const;
+    bool SharedLockable();
     
     // set the lock to exclusive or shared after checking if it's even allowed
     bool LockUpgrade(Transaction* pTransaction);
@@ -60,8 +62,8 @@ public:
     // tell if storage unit is empty
     const bool isEmpty() const;
     
-    StorageUnit* getChild(const unsigned int pIndex);
-    StorageUnit* getFirstChild();
+    StorageUnit* const getChild(const unsigned int pIndex);
+    StorageUnit* const getFirstChild();
     StorageUnit(StorageUnit* parent);
     virtual ~StorageUnit();
 };

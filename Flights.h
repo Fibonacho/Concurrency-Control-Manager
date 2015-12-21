@@ -17,11 +17,13 @@
 #include "Database.h"
 #include <string>
 #include "Database.h"
+#include "LogFile.h"
 
 namespace BookingDatabase {
     class Flights: public Table
     {
     private:
+        //LogFile* mLogFile;
         struct Flight
         {
             int mID;
@@ -36,11 +38,11 @@ namespace BookingDatabase {
         // display flights, i.e. print content of flight table to console
         void display() const;
         // get a random flight from the table
-        Flight* getRandom() const;
+        const Flight* getRandom() const;
         // get a random flight id by calling getRandomFlight() and accessing it's ID
         int getRandomID() const;
 
-        Flights(Database* database);
+        Flights(Database* database); //, LogFile* pLogFile);
         virtual ~Flights();
     };
 }

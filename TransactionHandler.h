@@ -15,6 +15,8 @@
 #include <vector>
 #include "Transaction.h"
 #include <thread>
+//#include <mutex>
+#include <queue>
 
 class TransactionHandler
 {
@@ -22,6 +24,9 @@ private:
     std::vector<Transaction> mTransactions;
     std::vector<std::thread*> mThreads;
     Database* mDatabase;
+    //std::mutex m;
+    //std::mutex m1;
+    std::queue<Transaction*> mQueue;
 public:
     TransactionHandler(Database &pDatabase);
     ~TransactionHandler();
@@ -34,6 +39,7 @@ public:
     void run(const int pThreads, const int pCount);
     // call all transactions from Transaction-vector mTransactions
     void callAll();
+    void work();
     // call a random transaction pTimes times (at least once)
     // from thread with id pID
     // sleep after calling transaction
